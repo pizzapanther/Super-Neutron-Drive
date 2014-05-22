@@ -1,0 +1,88 @@
+#menuBar {
+  height: 42px;
+}
+
+#appWrapper {
+  height: ~"calc(100% - 43px)";
+  position: relative;
+}
+
+#leftSide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 300px;
+  vertical-align: top;
+  
+  .menu {
+    padding: 5px 0;
+  }
+}
+
+#mainApp {
+  position: absolute;
+  left: 300px;
+  top: 0;
+  height: 100%;
+  width: ~"calc(100% - 300px)";
+  vertical-align: top;
+  
+  > div {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+#tabs {
+  height: 29px;
+  width: 100%;
+  position: relative;
+  
+  #tab-list {
+    position: absolute;
+    height: 100%;
+    right: 0;
+    
+    .btn-group {
+      height: 100%;
+    }
+    
+    button {
+      height: 100%;
+      border: 0;
+      box-shadow: none;
+    }
+    
+    ul {
+      left: auto;
+      right: 2px;
+      top: 22px;
+    }
+  }
+  
+  .tab {
+    position: absolute;
+    bottom: 0;
+    height: 25px;
+    width: 75px;
+    overflow: hidden;
+    
+    > div:first-child {
+      width: 50px;
+      overflow: hidden;
+      float: left;
+    }
+    
+    > div:last-child {
+      width: 23px;
+      float: left;
+      text-align: right;
+    }
+  }
+}
+
+#editor {
+  height: ~"calc(100% - 30px)";
+  width: 100%;
+}

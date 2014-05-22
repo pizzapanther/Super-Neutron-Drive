@@ -1,0 +1,75 @@
+@bg: #dcdcdc;
+@fg: #333;
+@editorBg: #fff;
+
+.theme(textmate) {
+  
+}
+
+.theme(terminal) {
+  @bg: #000;
+  @fg: #fff;
+}
+
+
+@themes: 'textmate', 'terminal';
+
+body {
+  .for(@themes); .-each(@color) {
+    @name: e(@color);
+    &.@{name}-theme {
+      .theme(@name);
+      
+      @lineColor: darken(@bg, 20%);
+      
+      color: @fg;
+      background-color: @bg;
+      
+      #menuBar {
+        border-bottom: 1px solid @lineColor;
+      }
+      
+      #leftSide {
+        border-right: 1px solid @lineColor;
+      }
+      
+      #tabs {
+        border-bottom: 1px solid @lineColor;
+        
+        .tab {
+          border-top: 1px solid @lineColor;
+          border-left: 1px solid @lineColor;
+          border-right: 1px solid @lineColor;
+        }
+        
+        #tab-list {
+          border-left: 1px solid @lineColor;
+        }
+      }
+      
+      .btn {
+        border: 1px solid @lineColor;
+      }
+      
+      .dropdown-menu {
+        background-color: @editorBg;
+        color: @fg;
+        
+        > li > a {
+          color: @fg;
+          
+          &:hover {
+            
+          }
+        }
+      }
+      
+      
+      #leftSide {
+        .menu {
+          border-bottom: 1px solid @lineColor;
+        }
+      }
+    }
+  }
+}

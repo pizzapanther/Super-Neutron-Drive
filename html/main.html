@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="ndrive">
+  <head>
+    <title>Super Neutron Drive</title>
+    <meta charset="utf-8">
+    <link href='/css/fonts.css' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="textmate-theme">
+    <div id="mainWrapper">
+      <div id="menuBar" ng-controller="MenuCtrl">
+        <div class="nfont">Neutron Drive</div>
+        <div>{{ manifest.version }}</div>
+      </div>
+      <div id="appWrapper">
+        <div id="leftSide" ng-include="'side-tools.html'"></div>
+        <div id="mainApp" ng-include="'main-app.html'" onload="load_editor()"></div>
+        <div id="rightSide"></div>
+      </div>
+    </div>
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/lib/ng/angular.min.js"></script>
+    <script src="/lib/ng/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    
+    <script src="/lib/ace/src-min/ace.js"></script>
+    
+    <script src="/js/app.js"></script>
+    <script src="/js/ctrl-main.js"></script>
+    <script src="/js/ctrl-menu.js"></script>
+    <script src="/js/ctrl-side.js"></script>
+  </body>
+</html>

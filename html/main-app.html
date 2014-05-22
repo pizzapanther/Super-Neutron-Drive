@@ -1,0 +1,19 @@
+<div ng-controller="MainCtrl">
+  <div id="tabs">
+    <div id="tab-list">
+      <div class="btn-group">
+        <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li ng-repeat="tab in tabs"><a href="#">{{ tab.name }}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="tab" ng-repeat="tab in tabs" style="left: {{ tab.position($index) }}px">
+      <div>{{ tab.name }}</div>
+      <div>&times;</div>
+    </div>
+  </div>
+  <div id="editor"></div>
+</div>

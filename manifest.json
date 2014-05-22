@@ -1,0 +1,27 @@
+{
+  "name": "Super Neutron Drive",
+  "short_name": "N-Drive",
+  "description": "Code editor for local, cloud, and remote development",
+  "version": "14.5.1",
+  
+  "app": {
+    "background": {
+      "scripts": ["js/background.js"]
+    }
+  },
+  
+  "icons": {
+    "128": "img/icon-128.png"
+  },
+  
+  "offline_enabled": true,
+  
+  "permissions": [
+    "fullscreen",
+    "identity",
+    
+    "https://accounts.google.com/*",
+    "https://www.google.com/*",
+    "https://www.googleapis.com/*"
+  ]
+}
