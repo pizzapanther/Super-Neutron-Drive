@@ -1,10 +1,55 @@
 #menuBar {
   height: 42px;
+  
+  .pull-left {
+    img {
+      width: 32px;
+      margin: 5px 10px 0 10px;
+      display: block;
+      float: left;
+    }
+    
+    span {
+      display: block;
+      float: left;
+      
+      &.nfont {
+        font-size: 32px;
+        margin-top: -4px;
+      }
+      
+      &.version {
+        font-size: 12px;
+        margin: 16px 0 0 10px;
+      }
+    }
+  }
+}
+
+#no-editor {
+  text-align: center;
+  
+  .nfont {
+    font-size: 32px;
+    margin: 40px 0 20px 0;
+  }
+  
+  img {
+    width: 128px;
+  }
 }
 
 #appWrapper {
   height: ~"calc(100% - 43px)";
   position: relative;
+}
+
+.errorModal {
+  i {
+    display: block;
+    text-align: center;
+    font-size: 48px;
+  }
 }
 
 #leftSide {
@@ -15,8 +60,48 @@
   width: 300px;
   vertical-align: top;
   
+  > div {
+    height: 100%;
+    width: 100%;
+  }
+  
   .menu {
-    padding: 5px 0;
+    padding: 2px 0 0 0;
+    height: 29px;
+    
+    .btn {
+      padding: 3px 9px;
+      font-size: 12px;
+    }
+  }
+  
+  #projects {
+    height: ~'calc(100% - 28px)';
+    width: 100%;
+    overflow: auto;
+    
+    ul {
+      margin: 0 0 0 20px;
+      padding: 0;
+      list-style-type: none;
+      
+      &.project {
+        margin: 0 0 5px 0;
+        padding: 0 0 5px 5px;
+      }
+      
+      li {
+        margin: 0 2px 0 0;
+        padding: 0;
+        
+        white-space: nowrap;
+        
+        a {
+          cursor: pointer;
+          text-decoration: none;
+        }
+      }
+    }
   }
 }
 
@@ -52,6 +137,7 @@
       height: 100%;
       border: 0;
       box-shadow: none;
+      background-color: transparent;
     }
     
     ul {
@@ -64,20 +150,39 @@
   .tab {
     position: absolute;
     bottom: 0;
-    height: 25px;
-    width: 75px;
+    height: 26px;
+    width: 120px;
     overflow: hidden;
+    border-top-right-radius: 30px 60px;
+    border-top-left-radius: 30px 60px;
+    padding: 2px 8px 1px 8px;
     
-    > div:first-child {
-      width: 50px;
-      overflow: hidden;
-      float: left;
+    &.selected {
+      bottom: -1px;
+      z-index: 100;
     }
     
-    > div:last-child {
-      width: 23px;
-      float: left;
-      text-align: right;
+    > div {
+      position: relative;
+      
+      > div:first-child {
+        width: 92px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
+        font-size: 13px;
+        position: absolute;
+        top: 2px;
+        left: 0;
+      }
+      
+      > div:last-child {
+        font-weight: bold;
+        font-size: 17px;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
     }
   }
 }

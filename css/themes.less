@@ -1,6 +1,8 @@
-@bg: #dcdcdc;
+@bg: #f0f0f0;
 @fg: #333;
 @editorBg: #fff;
+@errorColor: #fe6545;
+@highlight: #dcdcdc;
 
 .theme(textmate) {
   
@@ -25,12 +27,28 @@ body {
       color: @fg;
       background-color: @bg;
       
+      .error-message, .error {
+        color: @errorColor;
+      }
+      
       #menuBar {
         border-bottom: 1px solid @lineColor;
       }
       
       #leftSide {
         border-right: 1px solid @lineColor;
+        
+        .menu {
+          border-bottom: 1px solid @lineColor;
+        }
+        
+        #projects {
+          background-color: @editorBg;
+          
+          ul.project {
+            border-bottom: 1px dotted @lineColor;
+          }
+        }
       }
       
       #tabs {
@@ -40,6 +58,17 @@ body {
           border-top: 1px solid @lineColor;
           border-left: 1px solid @lineColor;
           border-right: 1px solid @lineColor;
+          background-color: @bg;
+          
+          &.selected {
+            background-color: @highlight;
+          }
+          
+          > div {
+            > div:last-child:hover {
+              color: @errorColor;
+            }
+          }
         }
         
         #tab-list {
@@ -49,6 +78,7 @@ body {
       
       .btn {
         border: 1px solid @lineColor;
+        background-color: transparent;
       }
       
       .dropdown-menu {
@@ -64,11 +94,9 @@ body {
         }
       }
       
-      
-      #leftSide {
-        .menu {
-          border-bottom: 1px solid @lineColor;
-        }
+      .modal-content {
+        background-color: @editorBg;
+        color: @fg;
       }
     }
   }

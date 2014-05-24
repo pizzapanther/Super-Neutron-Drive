@@ -4,4 +4,21 @@
       <button class="btn" ng-click="project_modal()"><i class="fa fa-plus"></i></button>
     </div>
   </div>
+  <div id="projects">
+    <div>
+      <ul ng-repeat="project in projects" class="project {{ project.state }}">
+        <li>
+          <a ng-click="project.list_dir()">
+            <i class="{{ project.cls }}"></i>&nbsp;{{ project.name }}
+          </a>
+          <ul>
+            <li class="dir" ng-repeat="entry in project.dirs" ng-include="'side-dirlisting.html'"></li>
+            <li class="file" ng-repeat="file in project.files">
+              <ng-include src="'side-file.html'"></ng-include>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

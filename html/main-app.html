@@ -10,10 +10,16 @@
         </ul>
       </div>
     </div>
-    <div class="tab" ng-repeat="tab in tabs" style="left: {{ tab.position($index) }}px">
-      <div>{{ tab.name }}</div>
-      <div>&times;</div>
+    <div ng-class="{selected: $index == current_tab}" class="tab clickme" ng-repeat="tab in tabs" style="left: {{ tab.position($index) }}px">
+      <div>
+        <div title="{{ tab.path }}" ng-click="switch_tab($index)">{{ tab.name }}</div>
+        <div ng-click="remove_tab($index)">&times;</div>
+      </div>
     </div>
   </div>
-  <div id="editor"></div>
+  <div id="editor" ng-show="tabs.length > 0"></div>
+  <div id="no-editor" ng-show="tabs.length == 0">
+    <h3 class="nfont">Welcome to Super Neutron Drive</h3>
+    <img src="/img/icon-256.png" alt="">
+  </div>
 </div>

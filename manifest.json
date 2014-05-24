@@ -11,17 +11,15 @@
   },
   
   "icons": {
-    "128": "img/icon-128.png"
+    "128": "img/icon-128.png",
+    "64": "img/icon-64.png"
   },
   
   "offline_enabled": true,
   
   "permissions": [
     "fullscreen",
-    "identity",
-    
-    "https://accounts.google.com/*",
-    "https://www.google.com/*",
-    "https://www.googleapis.com/*"
+    "storage",
+    {"fileSystem": ["write", "retainEntries", "directory"]}
   ]
 }
