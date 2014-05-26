@@ -6,14 +6,16 @@
           <i class="fa fa-chevron-down"></i>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li ng-repeat="tab in tabs"><a href="#">{{ tab.name }}</a></li>
+          <li ng-repeat="tab in tabs"><a ng-click="switch_tab($index)" class="clickme">{{ tab.name }}</a></li>
         </ul>
       </div>
     </div>
-    <div ng-class="{selected: $index == current_tab}" class="tab clickme" ng-repeat="tab in tabs" style="left: {{ tab.position($index) }}px">
-      <div>
-        <div title="{{ tab.path }}" ng-click="switch_tab($index)">{{ tab.name }}</div>
-        <div ng-click="remove_tab($index)">&times;</div>
+    <div class="tab-scroll">
+      <div ng-class="{selected: $index == current_tab, unsaved: tab.md5sum != tab.saved_md5sum}" class="tab clickme" ng-repeat="tab in tabs" style="left: {{ tab.position($index) }}px">
+        <div>
+          <div title="{{ tab.path }}" ng-click="switch_tab($index)" class="name">{{ tab.name }}</div>
+          <div ng-click="remove_tab($index)">&times;</div>
+        </div>
       </div>
     </div>
   </div>

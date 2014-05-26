@@ -16,6 +16,9 @@
           <span class="nfont">Super Neutron Drive</span>
           <span class="version">V{{ manifest.version }}</span>
         </div>
+        <div class="pull-left" id="messages">
+          <div ng-repeat="(id, m) in messages" id="message-{{ m.id }}" class="{{ m.mtype }}">{{ m.text }}</div>
+        </div>
         <div class="clearfix"></div>
       </div>
       <div id="appWrapper">
@@ -34,6 +37,8 @@
     <script src="/js/backends/local.js"></script>
     
     <script src="/js/md5.js"></script>
+    <script src="/js/modes.js"></script>
+    <script src="/js/keyboard.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/ctrl-main.js"></script>
     <script src="/js/ctrl-menu.js"></script>

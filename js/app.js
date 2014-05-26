@@ -18,6 +18,28 @@ ndrive.run(function ($rootScope, $modal) {
   $rootScope.load_editor = function () {
     Editor = ace.edit("editor");
     Editor.setTheme("ace/theme/textmate");
+    
+    $rootScope.load_commands(0);
+  };
+  
+  $rootScope.load_commands = function (i) {
+    if (i < SHORTCUTS.length) {
+      var cmd = SHORTCUTS[i];
+      
+      Editor.commands.addCommand({
+        name: cmd.name,
+        bindKey: {
+          win: cmd.win,
+          mac: cmd.mac,
+          sender: 'editor'
+        },
+        exec: function(env, args, request) {
+          $rootScope.$emit('keyboard-' + cmd.event);
+        }
+      });
+      
+      $rootScope.load_commands(i + 1);
+    }
   };
   
   $rootScope.error_message = function (m) {

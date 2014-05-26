@@ -94,16 +94,18 @@ LocalFS.prototype.list_dir = function (parentEntry, entry) {
 LocalFS.prototype.open_file = function (file) {
   var self = this;
   
-  self.info.entry.getFile(file.path, {}, function(fileEntry) {
-    fileEntry.file(function (f) {
-      var reader = new FileReader();
-      reader.onloadend = function (e) {
-        self.scope.rootScope.$emit('addTab', file, this.result, self);
-      };
-      
-      reader.readAsText(f);
+  self.scope.rootScope.$emit('openTab', file.path, self.pid, function () {
+    self.info.entry.getFile(file.path, {}, function(fileEntry) {
+      fileEntry.file(function (f) {
+        var reader = new FileReader();
+        reader.onloadend = function (e) {
+          self.scope.rootScope.$emit('addTab', file, this.result, self);
+        };
+        
+        reader.readAsText(f);
+      }, function () { self.scope.rootScope.error_message('Error Opening: ' + file.name); });
     }, function () { self.scope.rootScope.error_message('Error Opening: ' + file.name); });
-  }, function () { self.scope.rootScope.error_message('Error Opening: ' + file.name); });
+  });
 };
 
 LocalFS.prototype.retain = function () {
@@ -111,6 +113,45 @@ LocalFS.prototype.retain = function () {
   
   this.scope.local_pids.push({name: this.name, pid: this.pid});
   LocalFS.store_projects(this.scope);
+};
+
+LocalFS.prototype.save = function (tab) {
+  var self = this;
+  var name = tab.name;
+  var path = tab.path;
+  var text = tab.session.getValue();
+  var md5sum = md5(text);
+  var mid = self.pid + md5(path);
+  
+  self.scope.rootScope.$emit('addMessage', mid, 'info', 'Saving: ' + name);
+  var errorHandler = function () {
+    self.scope.rootScope.$emit('addMessage', mid, 'error', 'Error Saving: ' + name, true);
+  };
+  
+  self.info.entry.getFile(path, {create: true}, function (fileEntry) {
+    fileEntry.createWriter(function(fileWriter) {
+      var truncated = false;
+      
+      fileWriter.onwriteend = function (e) {
+        if (!truncated) {
+          truncated = true;
+          this.truncate(this.position);
+          return;
+        }
+        
+        tab.saved_md5sum = md5sum;
+        tab.scope.$apply();
+        self.scope.rootScope.$emit('removeMessage', mid);
+      };
+      
+      fileWriter.onerror = function (e) {
+        errorHandler();
+      };
+      
+      var blob = new Blob([text], {type: 'text/plain'});
+      fileWriter.write(blob);
+    }, errorHandler);
+  }, errorHandler);
 };
 
 LocalFS.store_projects = function (scope) {
