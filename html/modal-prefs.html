@@ -1,0 +1,119 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+  <h4 class="modal-title">Preferences</h4>
+</div>
+<form role="form" ng-submit="save_prefs()">
+  <div class="modal-body">
+    <table>
+      <tr>
+        <td>
+          <div class="form-group">
+            <label for="prefs-theme">Theme:</label>
+            <select id="prefs-theme" class="form-control" ng-model="form.theme" ng-options="theme.key as theme.name for theme in themes"></select>
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <label for="prefs-keybind">Key Bindings:</label>
+            <select id="prefs-keybind" class="form-control" ng-model="form.keybind" ng-options="key.key as key.name for key in key_modes"></select>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="form-group">
+            <label for="prefs-soft_wrap">Soft Wrap:</label>
+            <select id="prefs-soft_wrap" class="form-control" ng-model="form.soft_wrap" ng-options="theme.key as theme.name for theme in wrap_modes"></select>
+          </div>
+        </td>
+        <td>
+          <div class="form-group">
+            <label for="prefs-fontsize">Font Size:</label>
+            <select id="prefs-fontsize" class="form-control" ng-model="form.fontsize" ng-options="key.key as key.name for key in font_modes"></select>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="form-group pull-left" style="margin-right: 40px">
+            <label for="prefs-print_margin">Margin:</label>
+            <input id="prefs-print_margin" class="form-control" ng-model="form.print_margin" type="number" step="1" style="width: 60px;">
+          </div>
+          <div class="form-group pull-left">
+            <label for="prefs-tabsize">Tab Size:</label>
+            <input id="prefs-tabsize" class="form-control" ng-model="form.tabsize" type="number" step="1" style="width: 60px;">
+          </div>
+          <div class="clearfix"></div>
+        </td>
+        <td>
+          
+        </td>
+      </tr>
+      <tr class="checks">
+        <td>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="form.hactive"> Highlight Active Line
+            </label>
+          </div>
+        </td>
+        <td>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="form.hword"> Highlight Selected Word
+            </label>
+          </div>
+        </td>
+      </tr>
+      <tr class="checks">
+        <td>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="form.invisibles"> Show Invisibles
+            </label>
+          </div>
+        </td>
+        <td>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="form.gutter"> Show Gutter
+            </label>
+          </div>
+        </td>
+      </tr>
+      <tr class="checks">
+        <td>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="form.pmargin"> Show Margin
+            </label>
+          </div>
+        </td>
+        <td>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="form.softab"> Use Soft Tab
+            </label>
+          </div>
+        </td>
+      </tr>
+      <tr class="checks">
+        <td>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="form.behave"> Code Behaviors
+            </label>
+          </div>
+        </td>
+        <td>
+          
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn pull-left" type="button" ng-click="default()">Load Defaults</button>
+    <button class="btn" type="submit">Save</button>
+    <button class="btn btn-cancel" type="button" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

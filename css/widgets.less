@@ -1,6 +1,14 @@
 #menuBar {
   height: 42px;
   
+  .btn {
+    padding: 4px 10px;
+  }
+  
+  #buttons {
+    margin: 5px 10px 0 0;
+  }
+  
   .pull-left {
     img {
       width: 32px;
@@ -72,7 +80,7 @@
 }
 
 #appWrapper {
-  height: ~"calc(100% - 43px)";
+  height: ~"calc(100% - 42px)";
   position: relative;
 }
 
@@ -84,6 +92,42 @@
   }
 }
 
+#leftSplitter {
+  position: absolute;
+  left: 300px;
+  top: 0;
+  height: 100%;
+  width: 9px;
+  z-index: 10;
+  
+  > div {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    
+    i {
+      position: absolute;
+      display: block;
+      top: ~'calc(50% - 22px)';
+      font-size: 12px;
+      left: 0;
+      cursor: pointer;
+      padding: 5px 1px;
+      margin: 0 0 5px 0;
+    }
+    
+    .mover {
+      width: 5px;
+      height: 22px;
+      position: absolute;
+      top: ~'calc(50% + 5px)';
+      left: 1px;
+      border-radius: 5px;
+      cursor: ew-resize;
+    }
+  }
+}
+
 #leftSide {
   position: absolute;
   left: 0;
@@ -91,6 +135,7 @@
   height: 100%;
   width: 300px;
   vertical-align: top;
+  z-index: 2;
   
   > div {
     height: 100%;
@@ -116,6 +161,7 @@
       margin: 0 0 0 20px;
       padding: 0;
       list-style-type: none;
+      width: 100%;
       
       &.project {
         margin: 0 0 5px 0;
@@ -125,12 +171,14 @@
       li {
         margin: 0 2px 0 0;
         padding: 0;
-        
+        width: 100%;
         white-space: nowrap;
         
         a {
           cursor: pointer;
           text-decoration: none;
+          width: 100%;
+          display: block;
         }
       }
     }
@@ -139,11 +187,12 @@
 
 #mainApp {
   position: absolute;
-  left: 300px;
+  left: 309px;
   top: 0;
   height: 100%;
-  width: ~"calc(100% - 300px)";
+  width: ~"calc(100% - 309px)";
   vertical-align: top;
+  z-index: 20;
   
   > div {
     height: 100%;
@@ -238,7 +287,31 @@
 }
 
 #editor {
-  height: ~"calc(100% - 30px)";
+  height: ~"calc(100% - 29px)";
   width: 100%;
   font-size: 16px;
+  
+  &.ace_editor {
+    font-family: 'Droid Sans Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  }
+}
+
+.prefModal {
+  table {
+    width: 100%;
+    border: 0;
+    border-collapse: collapse;
+    
+    tr.checks {
+      td {
+        .checkbox {
+          margin-bottom: 0;
+        }
+      }
+    }
+    
+    td:first-child {
+      padding: 0 20px 0 0;
+    }
+  }
 }

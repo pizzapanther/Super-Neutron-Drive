@@ -4,12 +4,14 @@
   font-weight: 400;
   src: local('Open Sans'), local('OpenSans'), url(/css/open-sans.woff) format('woff');
 }
+
 @font-face {
-  font-family: 'source-code-pro';
+  font-family: 'Droid Sans Mono';
   font-style: normal;
   font-weight: 400;
-  src: local('source-code-pro'), local('Source Code Pro'), local('SourceCodePro-Regular'), url(/css/source-code.woff) format('woff');
+  src: local('Droid Sans Mono'), local('DroidSansMono'), url(/css/droid-mono.woff) format('woff');
 }
+
 @font-face {
   font-family: 'VT323';
   font-style: normal;

@@ -75,6 +75,9 @@ LocalFS.prototype.list_dir = function (parentEntry, entry) {
       }
     }
     
+    dirs.sort(name_sort);
+    files.sort(name_sort);
+    
     if (parentEntry) {
       parentEntry.dirs = dirs;
       parentEntry.files = files;

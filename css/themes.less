@@ -36,6 +36,16 @@ body {
         color: @infoColor;
       }
       
+      .btn {
+        border: 1px solid @lineColor;
+        background-color: transparent;
+        color: @fg;
+        
+        &:hover {
+          color: @fg;
+        }
+      }
+      
       #menuBar {
         border-bottom: 1px solid @lineColor;
         
@@ -48,9 +58,19 @@ body {
         }
       }
       
-      #leftSide {
+      #leftSplitter {
         border-right: 1px solid @lineColor;
+        border-left: 1px solid @lineColor;
+        background-color: @bg;
         
+        > div {
+          .mover {
+            background-color: @fg;
+          }
+        }
+      }
+      
+      #leftSide {
         .menu {
           border-bottom: 1px solid @lineColor;
         }
@@ -66,6 +86,10 @@ body {
             color: @fg;
           }
         }
+      }
+      
+      #mainApp {
+        background-color: @bg;
       }
       
       #tabs {
@@ -96,11 +120,6 @@ body {
         #tab-list {
           border-left: 1px solid @lineColor;
         }
-      }
-      
-      .btn {
-        border: 1px solid @lineColor;
-        background-color: transparent;
       }
       
       .dropdown-menu {

@@ -1,0 +1,14 @@
+<div class="pull-left">
+  <img src="/img/icon-64.png" alt="">
+  <span class="nfont">Super Neutron Drive</span>
+  <span class="version">V{{ manifest.version }}</span>
+</div>
+<div class="pull-left" id="messages">
+  <div ng-repeat="(id, m) in messages" id="message-{{ m.id }}" class="{{ m.mtype }}">{{ m.text }}</div>
+</div>
+<div class="pull-right" id="buttons">
+  <div class="btn-group">
+    <button type="button" class="btn" ng-click="pref_modal()"><i class="fa fa-cog"></i></button>
+  </div>
+</div>
+<div class="clearfix"></div>

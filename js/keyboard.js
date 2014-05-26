@@ -35,10 +35,17 @@ var SHORTCUTS = [
   },
   
   {
-    name: 'Do Nothing',
+    name: 'Close Tab',
     win: 'Ctrl-W',
     mac: 'Command-W',
-    event: 'nothing'
+    event: 'close-tab'
+  },
+  
+  {
+    name: 'Close All Tabs',
+    win: 'Shift-Ctrl-W',
+    mac: 'Shift-Command-W',
+    event: 'close-tabs-all'
   },
   
   {
