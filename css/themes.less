@@ -80,10 +80,19 @@ body {
           
           ul.project {
             border-bottom: 1px dotted @lineColor;
+            
+            a.rm:hover {
+              color: @errorColor;
+              border: 1px solid @errorColor;
+            }
           }
           
           a {
             color: @fg;
+            
+            &:hover {
+              color: @infoColor;
+            }
           }
         }
       }

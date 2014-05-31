@@ -11,7 +11,6 @@ var EditSession = require('ace/edit_session').EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 
 var ndrive = angular.module('ndrive', ['ui.bootstrap']);
-
 ndrive.run(function ($rootScope, $modal) {
   $rootScope.manifest = chrome.runtime.getManifest();
   

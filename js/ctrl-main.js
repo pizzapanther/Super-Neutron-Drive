@@ -7,25 +7,30 @@ function Tab (name, path, id, project, text, session, scope) {
   this.md5sum = md5(text);
   this.saved_md5sum = this.md5sum;
   this.scope = scope;
+  this.saving = false;
   
   return this;
 }
 
 Tab.prototype.position = function (index) {
-  return 115 * index;
+  return 125 * index;
 };
 
 Tab.prototype.save = function (force) {
   var changed = false;
-  if (!force) {
-    var md5sum = md5(this.session.getValue());
-    if (md5sum != this.md5sum) {
-      changed = true;
-    }
-  }
   
-  if (force || changed) {
-    this.project.save(this);
+  if (!this.saving) {
+    if (!force) {
+      var md5sum = md5(this.session.getValue());
+      if (md5sum != this.md5sum) {
+        changed = true;
+      }
+    }
+    
+    if (force || changed) {
+      this.saving = true;
+      this.project.save(this);
+    }
   }
 };
 
@@ -39,7 +44,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   $scope.set_hasher = true;
   
   $scope.update_hash = function () {
-    if ($scope.current_tab) {
+    if ($scope.current_tab !== null) {
       $scope.tabs[$scope.current_tab].update_hash();
       $scope.$apply();
     }
@@ -226,10 +231,30 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     }
   });
   
+  $scope.error_simulation = function  () {
+    console.error('BUG!');
+    barf();
+  };
+  
+  $scope.remove_project_tabs = function (event, className, pid, callback) {
+    for (var j=0; j < $scope.tabs.length; j++) {
+      var t = $scope.tabs[j];
+      if (t.project.constructor.name == className && t.project.pid == pid) {
+        $scope.remove_tab(j);
+      }
+    }
+    
+    callback();
+  };
+  
   $rootScope.$on('addTab', $scope.add_tab);
   $rootScope.$on('openTab', $scope.open_tab);
   $rootScope.$on('setPrefs', $scope.set_prefs);
   
+  //from side ctrl
+  $rootScope.$on('removeProjectTabs', $scope.remove_project_tabs);
+  
+  $rootScope.$on('keyboard-error-sim', $scope.error_simulation);
   $rootScope.$on('keyboard-save', $scope.save_current);
   $rootScope.$on('keyboard-close-tab', $scope.close_tab);
   $rootScope.$on('keyboard-close-tabs-all', $scope.close_tab_all);

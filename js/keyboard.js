@@ -67,5 +67,12 @@ var SHORTCUTS = [
     win: 'Shift-Alt-T',
     mac: 'Shift-Alt-T',
     event: "switch-tabs-back"
-  }
+  },
+  
+  {
+    name: 'Error Sim',
+    win: 'Ctrl-E',
+    mac: 'Ctrl-E',
+    event: "error-sim"
+  },
 ];

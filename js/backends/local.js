@@ -129,6 +129,8 @@ LocalFS.prototype.save = function (tab) {
   self.scope.rootScope.$emit('addMessage', mid, 'info', 'Saving: ' + name);
   var errorHandler = function () {
     self.scope.rootScope.$emit('addMessage', mid, 'error', 'Error Saving: ' + name, true);
+    tab.saving = false;
+    tab.scope.$apply();
   };
   
   self.info.entry.getFile(path, {create: true}, function (fileEntry) {
@@ -143,8 +145,9 @@ LocalFS.prototype.save = function (tab) {
         }
         
         tab.saved_md5sum = md5sum;
-        tab.scope.$apply();
+        tab.saving = false;
         self.scope.rootScope.$emit('removeMessage', mid);
+        tab.scope.$apply();
       };
       
       fileWriter.onerror = function (e) {

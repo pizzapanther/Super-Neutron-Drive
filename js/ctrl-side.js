@@ -66,5 +66,34 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal) {
     $scope.projects.push(p);
   };
   
+  $scope.remove_project = function (project) {
+    var i = -1;
+    
+    if (project.constructor.name == 'LocalFS') {
+      for (var j=0; j < $scope.local_pids.length; j++) {
+        if ($scope.local_pids[j].pid == project.pid) {
+          i = j;
+          break;
+        }
+      }
+    }
+    
+    if (i >= 0) {
+      $rootScope.$emit('removeProjectTabs', project.constructor.name, project.pid, function () {
+        $scope.local_pids.splice(i, 1);
+        LocalFS.store_projects($scope);
+        
+        for (var j=0; j < $scope.projects.length; j++) {
+          var p = $scope.projects[j];
+          if (project.constructor.name == p.constructor.name && project.pid == p.pid) {
+            $scope.projects.splice(j, 1);
+            
+            break;
+          }
+        }
+      });
+    }
+  };
+  
   LocalFS.load_projects($scope);
 });

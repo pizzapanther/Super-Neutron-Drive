@@ -8,6 +8,7 @@
     <div>
       <ul ng-repeat="project in projects" class="project {{ project.state }}">
         <li>
+          <a class="clickme rm" ng-click="remove_project(project)">&times;</a>
           <a ng-click="project.list_dir()">
             <i class="{{ project.cls }}"></i>&nbsp;{{ project.name }}
           </a>

@@ -166,6 +166,19 @@
       &.project {
         margin: 0 0 5px 0;
         padding: 0 0 5px 5px;
+        
+        a.rm {
+          display: block;
+          float: right;
+          width: auto;
+          opacity: 0.7;
+          padding: 1px 7px 3px 7px;
+          
+          &:hover {
+            opacity: 1;
+            border-radius: 60px;
+          }
+        }
       }
       
       li {
@@ -179,6 +192,8 @@
           text-decoration: none;
           width: 100%;
           display: block;
+          margin-left: -27px;
+          padding-left: 27px;
         }
       }
     }
@@ -241,7 +256,7 @@
     position: absolute;
     bottom: 1px;
     height: 26px;
-    width: 120px;
+    width: 130px;
     overflow: hidden;
     border-top-right-radius: 30px 60px;
     border-top-left-radius: 30px 60px;
@@ -263,7 +278,7 @@
       position: relative;
       
       > div:first-child {
-        width: 92px;
+        width: 102px;
         overflow: hidden;
         text-overflow: ellipsis;
         text-align: center;
