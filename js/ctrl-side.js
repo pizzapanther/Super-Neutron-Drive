@@ -42,13 +42,13 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
   };
 };
 
-ndrive.controller('SideCtrl', function($scope, $rootScope, $modal) {
+ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   $scope.projects = [];
   $scope.local_pids = [];
   $scope.rootScope = $rootScope;
   
   $scope.project_modal = function () {
-    $scope.pmodal = $modal.open({
+    pmodal = $modal.open({
       templateUrl: 'modal-project.html',
       controller: ProjectInstanceCtrl,
       windowClass: 'projectModal',
@@ -57,6 +57,10 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal) {
         sideScope: function () { return $scope; }
       }
     });
+    
+    pmodal.opened.then(function () {
+      setTimeout(function () { $("#project-name").focus(); }, 100);
+    });
   };
   
   $scope.add_project = function (name, ptype, pinfo) {
@@ -64,6 +68,7 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal) {
     p.retain();
     
     $scope.projects.push(p);
+    $scope.save_projects();
   };
   
   $scope.remove_project = function (project) {
@@ -91,9 +96,72 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal) {
             break;
           }
         }
+        
+        $scope.save_projects();
       });
     }
   };
   
-  LocalFS.load_projects($scope);
+  $scope.project_down = function (index) {
+    if (index !== $scope.projects.length - 1) {
+      var p = $scope.projects.splice(index, 1)[0];
+      $scope.projects.splice(index + 1, 0, p);
+      $scope.$apply();
+      
+      return $scope.projects;
+    }
+    
+    return null;
+  };
+  
+  $scope.project_up = function (index) {
+    if (index !== 0) {
+      var p = $scope.projects.splice(index, 1)[0];
+      $scope.projects.splice(index - 1, 0, p);
+      $scope.$apply();
+      
+      return $scope.projects;
+    }
+    
+    return null;
+  };
+  
+  $scope.save_projects = function () {
+    var projs = [];
+    for (var i=0; i < $scope.projects.length; i++) {
+      var p = $scope.projects[i];
+      projs.push({name: p.name, pid: p.pid, type: p.className()});
+    }
+    
+    chrome.storage.local.set({'projects': JSON.stringify(projs)}, function() {
+      console.log('Projects saved');
+    });
+  };
+  
+  $scope.restore_project_order = function () {
+    chrome.storage.local.get('projects', function (obj) {
+      if (obj.projects) {
+        var projs = JSON.parse(obj.projects);
+        if (projs.length == $scope.projects.length) {
+          var new_projects = [];
+          
+          for (var j=0; j < projs.length; j++) {
+            var n = projs[j];
+            for (var i=0; i < $scope.projects.length; i++) {
+              var p = $scope.projects[i];
+              if (p.className() == n.type && p.pid == n.pid) {
+                new_projects.push(p);
+                break;
+              }
+            }
+          }
+          
+          $scope.projects = new_projects;
+          $scope.$apply();
+        }
+      }
+    });
+  };
+  
+  LocalFS.load_projects($scope, $q).then($scope.restore_project_order);
 });

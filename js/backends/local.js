@@ -12,6 +12,10 @@ function LocalFS (name, info, scope, pid) {
   return this;
 }
 
+LocalFS.prototype.className = function () {
+  return this.constructor.name;
+};
+
 LocalFS.prototype.list_dir = function (parentEntry, entry) {
   var self = this;
   
@@ -167,40 +171,53 @@ LocalFS.store_projects = function (scope) {
   });
 };
 
-LocalFS.load_projects = function (scope) {
-  chrome.storage.local.get('local_pids', function (obj) { LocalFS.load_projects_callback(obj, scope); });
+LocalFS.load_projects = function (scope, q) {
+  var deferred = q.defer();
+  
+  chrome.storage.local.get('local_pids', function (obj) {
+    LocalFS.load_projects_callback(obj, scope, deferred);
+  });
+  
+  return deferred.promise;
 };
 
-LocalFS.load_projects_callback = function (obj, scope) {
+LocalFS.load_projects_callback = function (obj, scope, promise) {
   if (obj && obj.local_pids) {
     scope.local_pids = JSON.parse(obj.local_pids);
+    scope.$apply();
     
     if (scope.local_pids.length > 0) {
-      LocalFS.restore_local(0, scope);
+      LocalFS.restore_local(0, scope, promise);
     }
     
-    scope.$apply();
+    else {
+      promise.resolve();
+    }
   }
 };
 
-LocalFS.restore_local = function (i, scope) {
+LocalFS.restore_local = function (i, scope, promise) {
   if (i < scope.local_pids.length) {
     try {
       chrome.fileSystem.restoreEntry(scope.local_pids[i].pid, function (saved) {
-        LocalFS.init(saved, scope, i);
+        LocalFS.init(saved, scope, i, promise);
       });
     }
     
     catch (e) {
       console.error(e);
       i = i + 1;
-      LocalFS.restore_local(i, scope);
+      LocalFS.restore_local(i, scope, promise);
     }
+  }
+  
+  else {
+    promise.resolve();
   }
 };
 
 
-LocalFS.init = function (entry, scope, i) {
+LocalFS.init = function (entry, scope, i, promise) {
   if (entry) {
     var local_dir = {entry: entry};
     
@@ -212,12 +229,12 @@ LocalFS.init = function (entry, scope, i) {
       scope.$apply();
       
       i = i + 1;
-      LocalFS.restore_local(i, scope);
+      LocalFS.restore_local(i, scope, promise);
     });
   }
   
   else {
     i = i + 1;
-    LocalFS.restore_local(i, scope);
+    LocalFS.restore_local(i, scope. promise);
   }
 };

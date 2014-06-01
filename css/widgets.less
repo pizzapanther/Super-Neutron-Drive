@@ -143,12 +143,21 @@
   }
   
   .menu {
-    padding: 2px 0 0 0;
+    padding: 0 5px;
     height: 29px;
     
     .btn {
       padding: 3px 9px;
       font-size: 12px;
+    }
+    
+    .buttons {
+      float: right;
+      padding: 2px 0 0 0;
+    }
+    
+    .tools {
+      padding: 4px 0 0 0;
     }
   }
   
@@ -157,15 +166,29 @@
     width: 100%;
     overflow: auto;
     
+    > div {
+      position: relative;
+    }
+    
     ul {
       margin: 0 0 0 20px;
       padding: 0;
       list-style-type: none;
-      width: 100%;
+      width: ~'calc(100% - 20px)';
       
       &.project {
         margin: 0 0 5px 0;
         padding: 0 0 5px 5px;
+        width: 100%;
+        
+        a.psort {
+          display: block;
+          float: right;
+          opacity: 0.7;
+          width: auto;
+          padding: 1px 3px 3px 3px;
+          cursor: row-resize;
+        }
         
         a.rm {
           display: block;
@@ -192,8 +215,10 @@
           text-decoration: none;
           width: 100%;
           display: block;
-          margin-left: -27px;
-          padding-left: 27px;
+          
+          &.prj {
+            width: ~'calc(100% - 40px)';
+          }
         }
       }
     }

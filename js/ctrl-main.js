@@ -173,7 +173,10 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   };
   
   $scope.remove_tab = function (index) {
-    delete $scope.tabs[index].session;
+    $scope.tabs[index].session.$stopWorker();
+    
+    //delete $scope.tabs[index].session;
+    
     $scope.tabs.splice(index, 1);
     if (index === $scope.current_tab) {
       if ($scope.tabs.length === 0) {

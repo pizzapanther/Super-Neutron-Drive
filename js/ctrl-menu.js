@@ -113,5 +113,6 @@ ndrive.controller('SplitterCtrl', function($scope, $rootScope) {
         console.log(dd.offsetX);
         $scope.move_side(dd.offsetX);
       }
-	});
+    }
+  );
 });
