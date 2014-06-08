@@ -47,8 +47,12 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   $scope.local_pids = [];
   $scope.rootScope = $rootScope;
   
+  $scope.hide_right = function () {
+    $rootScope.$emit('hideRightMenu');
+  };
+  
   $scope.project_modal = function () {
-    pmodal = $modal.open({
+    var pmodal = $modal.open({
       templateUrl: 'modal-project.html',
       controller: ProjectInstanceCtrl,
       windowClass: 'projectModal',

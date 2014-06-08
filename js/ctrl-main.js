@@ -43,6 +43,10 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   $scope.current_tab = null;
   $scope.set_hasher = true;
   
+  $scope.hide_right = function () {
+    $rootScope.$emit('hideRightMenu');
+  };
+  
   $scope.update_hash = function () {
     if ($scope.current_tab !== null) {
       $scope.tabs[$scope.current_tab].update_hash();
@@ -250,12 +254,26 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     callback();
   };
   
+  $scope.rename_tab = function (event, pid, id, entry) {
+    for (var i=0; i < $scope.tabs.length; i++) {
+      var tab = $scope.tabs[i];
+      if (tab.id == id && tab.project.pid == pid) {
+        tab.id = entry.id;
+        tab.name = entry.name;
+        tab.path = entry.path;
+        
+        return null;
+      }
+    }
+  };
+  
   $rootScope.$on('addTab', $scope.add_tab);
   $rootScope.$on('openTab', $scope.open_tab);
   $rootScope.$on('setPrefs', $scope.set_prefs);
   
   //from side ctrl
   $rootScope.$on('removeProjectTabs', $scope.remove_project_tabs);
+  $rootScope.$on('renameTab', $scope.rename_tab);
   
   $rootScope.$on('keyboard-error-sim', $scope.error_simulation);
   $rootScope.$on('keyboard-save', $scope.save_current);

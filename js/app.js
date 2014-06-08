@@ -10,7 +10,7 @@ var Editor = null;
 var EditSession = require('ace/edit_session').EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 
-var ndrive = angular.module('ndrive', ['ui.bootstrap']);
+var ndrive = angular.module('ndrive', ['ui.utils', 'ui.bootstrap']);
 ndrive.run(function ($rootScope, $modal) {
   $rootScope.manifest = chrome.runtime.getManifest();
   
@@ -48,6 +48,10 @@ ndrive.run(function ($rootScope, $modal) {
       windowClass: 'loadingModal errorModal',
       keyboard: true,
       resolve: {message: function () { return m; }}
+    });
+    
+    $rootScope.modal.opened.then(function () {
+      setTimeout(function () { $("#error-ok").focus() }, 100);
     });
   };
 });

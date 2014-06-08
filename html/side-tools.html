@@ -1,4 +1,4 @@
-<div ng-controller="SideCtrl">
+<div ng-controller="SideCtrl" ng-click="hide_right();">
   <div class="menu">
     <div class="buttons">
       <button class="btn" ng-click="project_modal()"><i class="fa fa-plus"></i></button>
@@ -12,7 +12,7 @@
       <ul ng-repeat="project in projects" class="project {{ project.state }}" data-pid="{{ project.pid }}" data-type="{{ project.className() }}">
         <li>
           <a class="clickme rm" ng-click="remove_project(project)">&times;</a>
-          <a class="psort" draggable><i class="fa fa-sort"></i></a>
+          <a class="psort" project-drag><i class="fa fa-sort"></i></a>
           <a class="prj" ng-click="project.list_dir()">
             <i class="{{ project.cls }}"></i>&nbsp;{{ project.name }}
           </a>

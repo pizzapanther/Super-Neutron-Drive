@@ -29,9 +29,15 @@ var PrefCtrl = function ($scope, $rootScope, $modalInstance) {
 ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
   $scope.messages = {};
   
-  $scope.add_message = function (event, id, mtype, text, timeout) {
+  $scope.hide_right = function () {
+    $rootScope.$emit('hideRightMenu');
+  };
+  
+  $scope.add_message = function (event, id, mtype, text, timeout, skip_apply) {
     $scope.messages[id] = {mtype: mtype, text: text, id: md5(id)};
-    $scope.$apply();
+    if (!skip_apply) {
+      $scope.$apply();
+    }
     
     if (timeout) {
       setTimeout(function () {
@@ -41,10 +47,12 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
   };
   
   $scope.remove_message = function (event, id) {
-    $("#message-" + md5(id)).fadeOut("slow", function() {
-      delete $scope.messages[id];
-      $scope.$apply();
-    });
+    setTimeout(function () {
+      $("#message-" + md5(id)).fadeOut("slow", function() {
+        delete $scope.messages[id];
+        $scope.$apply();
+      });
+    }, 100);
   };
   
   $scope.pref_modal = function () {

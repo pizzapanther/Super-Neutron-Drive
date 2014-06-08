@@ -1,8 +1,9 @@
-ndrive.directive('draggable', function () {
+ndrive.directive('projectDrag', function () {
   return {
     restrict:'A',
     
     link: function (scope, element, attrs) {
+      element.attr('draggable');
       element.drag("start",function (ev, dd) {
         dd.projects = [];
         dd.project = null;

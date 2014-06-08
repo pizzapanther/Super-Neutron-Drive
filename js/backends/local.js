@@ -12,6 +12,13 @@ function LocalFS (name, info, scope, pid) {
   return this;
 }
 
+LocalFS.prototype.file_id = function (path) {
+  var id = 'LocalFS-' + self.pid + '-' + path;
+  id = md5(id);
+  
+  return id;
+};
+
 LocalFS.prototype.className = function () {
   return this.constructor.name;
 };
@@ -67,15 +74,14 @@ LocalFS.prototype.list_dir = function (parentEntry, entry) {
     
     for(var i = 0; i < entries.length; i++) {
       var entry = entries[i];
-      var id = 'LocalFS-' + self.pid + '-' + entry.fullPath;
-      id = md5(id);
+      var id = self.file_id(entry.fullPath);
       
       if (entry.isDirectory) {
         dirs.push({path: entry.fullPath, name: entry.name, dirs: [], files: [], state: 'closed', id: id});
       }
       
       else {
-        files.push({path: entry.fullPath, name: entry.name, dirs: [], files: [], state: 'closed', id: id});
+        files.push({path: entry.fullPath, name: entry.name, id: id});
       }
     }
     
@@ -113,6 +119,145 @@ LocalFS.prototype.open_file = function (file) {
       }, function () { self.scope.rootScope.error_message('Error Opening: ' + file.name); });
     }, function () { self.scope.rootScope.error_message('Error Opening: ' + file.name); });
   });
+};
+
+LocalFS.prototype.new_file = function ($modal, entry) {
+  var self = this;
+  
+  var pmodal = $modal.open({
+    templateUrl: 'modal-new-file.html',
+    controller: NewFileInstanceCtrl,
+    windowClass: 'newFileModal',
+    keyboard: true,
+    resolve: {
+      entry: function () { return entry; },
+      project: function () { return self; }
+    }
+  });
+  
+  pmodal.opened.then(function () {
+    self.scope.rootScope.$emit('hideRightMenu');
+    setTimeout(function () { $("#new-file-name").focus().select(); }, 100);
+  });
+};
+
+LocalFS.prototype.rename = function ($modal, entry) {
+  var self = this;
+  
+  var pmodal = $modal.open({
+    templateUrl: 'modal-rename-file.html',
+    controller: RenameFileInstanceCtrl,
+    windowClass: 'renameFileModal',
+    keyboard: true,
+    resolve: {
+      entry: function () { return entry; },
+      project: function () { return self; }
+    }
+  });
+  
+  pmodal.opened.then(function () {
+    self.scope.rootScope.$emit('hideRightMenu');
+    setTimeout(function () { $("#rename-file-name").focus().select(); }, 100);
+  });
+};
+
+LocalFS.prototype.do_rename = function (entry, name) {
+  var self = this;
+  var parent = os.dirname(entry.path);
+  var error_function = function () {
+    self.scope.rootScope.error_message('Error Renaming: ' + entry.name);
+  };
+  
+  self.info.entry.getDirectory(parent, {create: false}, function (parentEntry) {
+    if (entry.state) {
+      parentEntry.getDirectory(entry.name, {create: false}, function (dirEntry) {
+        dirEntry.moveTo(parentEntry, name);
+        entry.name = name;
+        entry.path = os.join_path(parent, name);
+        entry.id = self.file_id(entry.path);
+        self.scope.$apply();
+        
+      }, function (dirError) {
+        error_function();
+      });
+    }
+    
+    else {
+      parentEntry.getFile(entry.name, {create: false}, function (fileEntry) {
+        fileEntry.moveTo(parentEntry, name);
+        var old_id = entry.id;
+        entry.name = name;
+        entry.path = os.join_path(parent, name);
+        entry.id = self.file_id(entry.path);
+        
+        self.scope.rootScope.$emit('renameTab', self.pid, old_id, entry);
+        self.scope.$apply();
+      }, function (dirError) {
+        error_function();
+      });
+    }
+  }, function (parentError) {
+    error_function();
+  });
+};
+
+LocalFS.prototype.save_new_file = function (entry, name) {
+  var self = this;
+  var path = os.join_path(entry.path, name);
+  
+  self.info.entry.getFile(path, {create: false}, function (fileEntry) {
+    self.scope.rootScope.error_message(name + ' already exists!');
+  }, function () {
+    self.scope.rootScope.$emit('addMessage', 'new-file', 'info', 'Creating: ' + name, null, true);
+    var errorHandler = function () {
+      self.scope.rootScope.$emit('addMessage', 'new-file', 'error', 'Error Creating: ' + name, true);
+    };
+    
+    self.info.entry.getFile(path, {create: true}, function (fileEntry) {
+      fileEntry.createWriter(function(fileWriter) {
+        fileWriter.onwriteend = function (e) {
+          self.scope.rootScope.$emit('removeMessage', 'new-file');
+          entry.state = 'closed';
+          entry.dirs = [];
+          entry.files = [];
+          
+          self.scope.$apply();
+          self.list_dir(entry);
+          self.open_file({name: name, path: path});
+        };
+        
+        fileWriter.onerror = function (e) {
+          errorHandler();
+        };
+        
+        var blob = new Blob([''], {type: 'text/plain'});
+        fileWriter.write(blob);
+      }, errorHandler);
+    }, errorHandler);
+  });
+};
+
+LocalFS.prototype.right_menu = function (rtype, entry, event) {
+  var self = this;
+  var menu = [];
+  
+  if (rtype == 'dir') {
+    menu = [
+      ['New File', 'file-text', function ($modal) { self.new_file($modal, entry); }],
+      ['Rename', 'pencil-square-o', function ($modal) { self.rename($modal, entry); }],
+      //'-'
+    ];
+  }
+  
+  else {
+    menu = [
+      ['Rename', 'pencil-square-o', function ($modal) { self.rename($modal, entry); }],
+      //'-'
+    ];
+  }
+  
+  this.scope.rootScope.$emit('showRightMenu', event, menu);
+  return false;
 };
 
 LocalFS.prototype.retain = function () {
