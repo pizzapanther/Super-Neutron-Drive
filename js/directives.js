@@ -83,3 +83,90 @@ ndrive.directive('projectDrag', function () {
     }
   };
 });
+
+ndrive.directive('tabDrag', function () {
+  return {
+    restrict:'A',
+    
+    link: function (scope, element, attrs) {
+      element.attr('draggable');
+      element.drag("start",function (ev, dd) {
+        dd.tabs = [];
+        dd.tab = null;
+        
+        while (1) {
+          if (element.hasClass('tab')) {
+            dd.tab = element.data();
+            dd.tab.left = $(element).position().left;
+            dd.tab.right = dd.tab.top + $(element).outerWidth();
+            dd.tab.start = $(element).position().left + $(element).outerWidth() / 2;
+            break;
+          }
+          
+          element = element.parent();
+        }
+        
+        $(".tab-scroll div.tab").each(function () {
+          var p = $(this).data();
+          p.left = $(this).position().left;
+          p.right = p.left + $(this).outerWidth();
+          dd.tabs.push(p);
+        });
+      })
+      .drag(function (ev, dd) {
+        if (dd.tab) {
+          for (var i=0; i < dd.tabs.length; i++) {
+            var p = dd.tabs[i];
+            var offset = dd.tab.start + dd.deltaX;
+            
+            if (p.type == dd.tab.type && p.pid == dd.tab.pid) {
+              var tabs = null;
+              
+              if (dd.deltaX > 0) {
+                if (offset > p.right) {
+                  tabs = scope.tab.scope.tab_up(i, p.pid, p.type);
+                }
+              }
+              
+              else if (dd.deltaX < 0) {
+                if (offset < p.left) {
+                  tabs = scope.tab.scope.tab_down(i, p.pid, p.type);
+                }
+              }
+              
+              if (tabs) {
+                var pid = dd.tab.pid;
+                var type = dd.tab.type;
+                
+                dd.tabs = [];
+                var start = dd.tab.start;
+                dd.tab = null;
+                
+                setTimeout(function () {
+                  $(".tab-scroll div.tab").each(function () {
+                    var p = $(this).data();
+                    p.left = $(this).position().left;
+                    p.right = p.left + $(this).outerWidth();
+                    dd.tabs.push(p);
+                    
+                    if (p.pid == pid) {
+                      dd.tab = $(this).data();
+                      dd.tab.left = $(this).position().left;
+                      dd.tab.right = dd.tab.left + $(this).outerWidth();
+                      dd.tab.start = start;
+                    }
+                  });
+                  
+                  //todo: save tab order
+                }, 100);
+              }
+              
+              break;
+            }
+          }
+        }
+      });
+    }
+  };
+});
+

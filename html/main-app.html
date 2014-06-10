@@ -11,9 +11,9 @@
       </div>
     </div>
     <div class="tab-scroll">
-      <div ng-class="{selected: $index == current_tab, unsaved: tab.md5sum != tab.saved_md5sum}" class="tab clickme" ng-repeat="tab in tabs" style="left: {{ tab.position($index) }}px">
+      <div ng-class="{selected: $index == current_tab, unsaved: tab.md5sum != tab.saved_md5sum}" class="tab clickme" ng-repeat="tab in tabs" data-pid="{{ tab.id }}" data-type="{{ tab.pid() }}" style="left: {{ tab.position($index) }}px">
         <div>
-          <div title="{{ tab.path }}" ng-click="switch_tab($index, true)" class="name">{{ tab.name }}</div>
+          <div title="{{ tab.path }}" tab-drag ng-click="switch_tab($index, true)" class="name">{{ tab.name }}</div>
           <div ng-click="remove_tab($index)">&times;</div>
         </div>
       </div>

@@ -16,6 +16,10 @@ Tab.prototype.position = function (index) {
   return 125 * index;
 };
 
+Tab.prototype.pid = function () {
+  return this.project.pid;
+};
+
 Tab.prototype.save = function (force) {
   var changed = false;
   
@@ -196,6 +200,55 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
           $scope.switch_tab(index - 1);
         }
       }
+    }
+  };
+  
+  $scope.tab_up = function (index, id, pid) {
+    if (index !== $scope.tabs.length - 1) {
+      var current = false;
+      if ($scope.tabs[$scope.current_tab].id == id && $scope.tabs[$scope.current_tab].pid() == pid) {
+        current = true;
+      }
+      
+      var p = $scope.tabs.splice(index, 1)[0];
+      $scope.tabs.splice(index + 1, 0, p);
+      if (index + 1 == $scope.current_tab && !current) {
+        $scope.current_tab = index;
+      }
+      
+      else if (index == $scope.current_tab && current) {
+        $scope.current_tab = index + 1;
+      }
+      
+      $scope.$apply();
+      
+      return $scope.tabs;
+    }
+    
+    return null;
+  };
+  
+  $scope.tab_down = function (index, id, pid) {
+    if (index !== 0) {
+      var current = false;
+      if ($scope.tabs[$scope.current_tab].id == id && $scope.tabs[$scope.current_tab].pid() == pid) {
+        current = true;
+      }
+      
+      var p = $scope.tabs.splice(index, 1)[0];
+      $scope.tabs.splice(index - 1, 0, p);
+      
+      if (index - 1 == $scope.current_tab && !current) {
+        $scope.current_tab = index;
+      }
+      
+      else if (index == $scope.current_tab && current) {
+        $scope.current_tab = index - 1;
+      }
+      
+      $scope.$apply();
+      
+      return $scope.tabs;
     }
   };
   
