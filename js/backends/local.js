@@ -174,6 +174,14 @@ LocalFS.prototype.do_rename = function (entry, name) {
         entry.name = name;
         entry.path = os.join_path(parent, name);
         entry.id = self.file_id(entry.path);
+        
+        if (entry.state == 'open') {
+          entry.state = 'closed';
+          entry.dirs = [];
+          entry.files = [];
+          self.list_dir(entry);
+        }
+        
         self.scope.$apply();
         
       }, function (dirError) {
