@@ -54,4 +54,19 @@ ndrive.run(function ($rootScope, $modal) {
       setTimeout(function () { $("#error-ok").focus() }, 100);
     });
   };
+  
+  $rootScope.load_local_files = function (items) {
+    $rootScope.$emit('openFreeAgents', items);
+  };
 });
+
+function randomString (len, charSet) {
+  charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var rs = '';
+  for (var i = 0; i < len; i++) {
+  	var randomPoz = Math.floor(Math.random() * charSet.length);
+  	rs += charSet.substring(randomPoz,randomPoz+1);
+  }
+  
+  return rs;
+}

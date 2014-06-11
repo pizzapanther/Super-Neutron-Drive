@@ -703,6 +703,16 @@ for (var key in MODES) {
   }
 }
 
+function print_exts () {
+  var exts = [];
+  
+  for (var ext in EXTENSIONS) {
+    exts.push(ext);
+  }
+  
+  console.log(JSON.stringify(exts));
+}
+
 function name_sort (a, b) {
   a = a.name.toLowerCase();
   b = b.name.toLowerCase();

@@ -46,6 +46,7 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   $scope.projects = [];
   $scope.local_pids = [];
   $scope.rootScope = $rootScope;
+  $scope.freeAgent = new LocalFree('FreeAgent', {entries: {}}, $scope, 'free-agent');
   
   $scope.hide_right = function () {
     $rootScope.$emit('hideRightMenu');
@@ -166,6 +167,15 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
       }
     });
   };
+  
+  $scope.open_free_agents = function (event, items) {
+    for (var i in items) {
+      $scope.freeAgent.open_file(items[i].entry);
+    }
+  };
+  
+  $rootScope.$on('openFreeAgents', $scope.open_free_agents);
+  window.load_local_files = $rootScope.load_local_files;
   
   LocalFS.load_projects($scope, $q).then($scope.restore_project_order);
 });

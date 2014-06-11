@@ -1,7 +1,7 @@
-function Tab (name, path, id, project, text, session, scope) {
-  this.name = name;
-  this.path = path;
-  this.id = id;
+function Tab (file, project, text, session, scope) {
+  this.name = file.name;
+  this.path = file.path;
+  this.id = file.id;
   this.project = project;
   this.session = session;
   this.md5sum = md5(text);
@@ -144,7 +144,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     }
   };
   
-  $scope.add_tab = function (event, file, text, project) {
+  $scope.add_tab = function (event, file, text, project, callback) {
     var session = new EditSession(text);
     session.setUndoManager(new UndoManager());
     session.setMode("ace/mode/" + $scope.get_mode(file.name));
@@ -154,7 +154,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     
     Editor.setSession(session);
     
-    var t = new Tab(file.name, file.path, file.id, project, text, session, $scope);
+    var t = new Tab(file, project, text, session, $scope);
     $scope.tabs.push(t);
     $scope.current_tab = $scope.tabs.length - 1;
     $scope.$apply();
@@ -165,6 +165,10 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     if ($scope.set_hasher) {
       Editor.on("change", $scope.update_hash);
       $scope.set_hasher = false;
+    }
+    
+    if (callback) {
+      callback(t);
     }
   };
   

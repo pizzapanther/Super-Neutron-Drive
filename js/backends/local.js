@@ -8,12 +8,11 @@ function LocalFS (name, info, scope, pid) {
   this.cls = "fa fa-floppy-o";
   this.pid = pid;
   this.open = [];
-  
-  return this;
+  this.cid = 'LocalFS';
 }
 
 LocalFS.prototype.file_id = function (path) {
-  var id = 'LocalFS-' + self.pid + '-' + path;
+  var id = this.cid + '-' + this.pid + '-' + path;
   id = md5(id);
   
   return id;
@@ -281,6 +280,12 @@ LocalFS.prototype.save = function (tab) {
     tab.saving = false;
     tab.scope.$apply();
   };
+  
+  self.do_save(tab, name, path, text, md5sum, mid, errorHandler);
+};
+
+LocalFS.prototype.do_save = function (tab, name, path, text, md5sum, mid, errorHandler) {
+  var self = this;
   
   self.info.entry.getFile(path, {create: true}, function (fileEntry) {
     fileEntry.createWriter(function(fileWriter) {
