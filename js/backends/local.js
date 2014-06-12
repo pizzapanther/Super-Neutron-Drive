@@ -67,10 +67,15 @@ LocalFS.prototype.list_dir = function (parentEntry, entry) {
     dirReader = self.info.entry.createReader();
   }
   
+  var dirs = [];
+  var files = [];
   dirReader.readEntries(function (entries) {
-    var dirs = [];
-    var files = [];
-    
+    self.process_entries(self, dirReader, parentEntry, entries, dirs, files);
+  });
+};
+
+LocalFS.prototype.process_entries = function (self, dirReader, parentEntry, entries, dirs, files) {
+  if (entries.length > 0) {
     for(var i = 0; i < entries.length; i++) {
       var entry = entries[i];
       var id = self.file_id(entry.fullPath);
@@ -84,6 +89,12 @@ LocalFS.prototype.list_dir = function (parentEntry, entry) {
       }
     }
     
+    dirReader.readEntries(function (entries) {
+      self.process_entries(self, dirReader, parentEntry, entries, dirs, files);
+    });
+  }
+  
+  else {
     dirs.sort(name_sort);
     files.sort(name_sort);
     
@@ -100,7 +111,7 @@ LocalFS.prototype.list_dir = function (parentEntry, entry) {
     }
     
     self.scope.$apply();
-  });
+  }
 };
 
 LocalFS.prototype.open_file = function (file) {
