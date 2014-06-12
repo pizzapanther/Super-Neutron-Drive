@@ -6,11 +6,22 @@ function LocalFree (name, info, scope, pid) {
 
 LocalFree.prototype = Object.create(LocalFS.prototype);
 
+LocalFree.prototype.reopen_file = function (retainer) {
+  var self = this;
+  
+  chrome.fileSystem.restoreEntry(retainer, function (entry) {
+    if (entry) {
+      self.open_file(entry);
+    }
+  });
+};
+
 LocalFree.prototype.open_file = function (fileEntry) {
   var self = this;
   
   fileEntry.file(function (f) {
     fileEntry.path = "/" + randomString(20) + fileEntry.fullPath;
+    fileEntry.retainer = chrome.fileSystem.retainEntry(fileEntry);
     fileEntry.id = self.file_id(fileEntry.path);
     
     var reader = new FileReader();

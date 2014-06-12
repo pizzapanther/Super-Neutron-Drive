@@ -174,8 +174,31 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
     }
   };
   
+  $scope.open_remembered_tabs = function (event, saved_tabs) {
+    for (var i=0; i < saved_tabs.length; i++) {
+      var t = saved_tabs[i];
+      if (t.pid == "free-agent" && t.ptype == "LocalFree") {
+        $scope.freeAgent.reopen_file(t.retainer);
+      }
+      
+      else {
+        for (var j=0; j < $scope.projects.length; j++) {
+          var p = $scope.projects[j];
+          if (p.pid == t.pid && p.cid == t.ptype) {
+            p.reopen_file(t.retainer);
+            break;
+          }
+        }
+      }
+    }
+  };
+  
   $rootScope.$on('openFreeAgents', $scope.open_free_agents);
+  $rootScope.$on('loadTabs', $scope.open_remembered_tabs);
+  
   window.load_local_files = $rootScope.load_local_files;
   
-  LocalFS.load_projects($scope, $q).then($scope.restore_project_order);
+  LocalFS.load_projects($scope, $q)
+  .then($scope.restore_project_order)
+  .then(function () { $rootScope.$emit('reopenTabs') });
 });

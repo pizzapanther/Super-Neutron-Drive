@@ -1,6 +1,7 @@
 function Tab (file, project, text, session, scope) {
   this.name = file.name;
   this.path = file.path;
+  this.retainer = file.retainer;
   this.id = file.id;
   this.project = project;
   this.session = session;
@@ -172,6 +173,31 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     if (callback) {
       callback(t);
     }
+    
+    $scope.remember_tabs();
+  };
+  
+  $scope.remember_tabs = function () {
+    var save_tabs = [];
+    
+    for (var i=0; i < $scope.tabs.length; i++) {
+      var tab = $scope.tabs[i];
+      save_tabs.push({retainer: tab.retainer, ptype: tab.project.cid, pid: tab.project.pid});
+    }
+    
+    chrome.storage.local.set({'saved_tabs': JSON.stringify(save_tabs)}, function() {
+      console.log('Tabs saved');
+      console.log(save_tabs);
+    });
+  };
+  
+  $scope.open_remember_tabs = function (event) {
+    chrome.storage.local.get('saved_tabs', function (obj) {
+      if (obj && obj.saved_tabs) {
+        var saved_tabs = JSON.parse(obj.saved_tabs);
+        $rootScope.$emit('loadTabs', saved_tabs);
+      }
+    });
   };
   
   $scope.open_tab = function (event, path, pid, callback) {
@@ -207,6 +233,8 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
         }
       }
     }
+    
+    $scope.remember_tabs();
   };
   
   $scope.tab_up = function (index, id, pid) {
@@ -227,7 +255,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
       }
       
       $scope.$apply();
-      
+      $scope.remember_tabs();
       return $scope.tabs;
     }
     
@@ -253,7 +281,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
       }
       
       $scope.$apply();
-      
+      $scope.remember_tabs();
       return $scope.tabs;
     }
   };
@@ -333,6 +361,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   //from side ctrl
   $rootScope.$on('removeProjectTabs', $scope.remove_project_tabs);
   $rootScope.$on('renameTab', $scope.rename_tab);
+  $rootScope.$on('reopenTabs', $scope.open_remember_tabs);
   
   $rootScope.$on('keyboard-error-sim', $scope.error_simulation);
   $rootScope.$on('keyboard-save', $scope.save_current);
