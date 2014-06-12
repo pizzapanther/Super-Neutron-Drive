@@ -117,6 +117,8 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     Editor.renderer.setShowGutter(PREFS.gutter);
     Editor.renderer.setShowPrintMargin(PREFS.pmargin);
     Editor.renderer.setPrintMarginColumn(PREFS.print_margin);
+    
+    $('body').attr("class", PREFS.theme + "-theme");
   };
   
   $scope.set_prefs = function (event, prefs) {

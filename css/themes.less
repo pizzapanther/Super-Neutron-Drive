@@ -4,26 +4,309 @@
 @errorColor: #a94442;
 @infoColor: #3c763d;
 @highlight: #dcdcdc;
+@lineColor: darken(#e8e8e8, 15%);
 
 .theme(textmate) {
-  
+  //default theme
 }
 
 .theme(terminal) {
-  @bg: #000;
-  @fg: #fff;
+  @bg: #1a0005;
+  @fg: steelBlue;
+  @editorBg: black;
+  @infoColor: orangered;
+  @highlight: #2A112A;
+  @lineColor: lighten(#1a1a1a, 10%);
 }
 
+.theme(ambiance) {
+  @bg: #3d3d3d;
+  @fg: #E6E1DC;
+  @editorBg: #202020;
+  @infoColor: #8f9d6a;
+  @highlight: #3F3F3F;
+  @lineColor: darken(#262626, 20%);
+}
 
-@themes: 'textmate', 'terminal';
+.theme(chaos) {
+  @bg: #141414;
+  @fg: #E6E1DC;
+  @editorBg: #161616;
+  @infoColor: #58C554;
+  @highlight: #222;
+  @lineColor: lighten(#1D1D1D, 10%);
+}
+
+.theme(chrome) {
+  @bg: #ebebeb;
+  @fg: #333;
+  @editorBg: #FFFFFF;
+  @infoColor: #236e24;
+  @highlight: #dcdcdc;
+  @lineColor: darken(#e8e8e8, 15%);
+}
+
+.theme(clouds) {
+  @bg: #ebebeb;
+  @fg: #333;
+  @editorBg: #FFFFFF;
+  @infoColor: #5D90CD;
+  @highlight: #dcdcdc;
+  @lineColor: darken(#e8e8e8, 15%);
+}
+
+.theme(clouds_midnight) {
+  @bg: #232323;
+  @fg: #929292;
+  @editorBg: #191919;
+  @infoColor: #5D90CD;
+  @highlight: lighten(#262626, 5%);
+  @lineColor: lighten(#232323, 15%);
+}
+
+.theme(cobalt) {
+  @bg: #011e3a;
+  @fg: #fff;
+  @editorBg: #002240;
+  @infoColor: #0088FF;
+  @highlight: lighten(#000, 20%);
+  @lineColor: darken(#011e3a, 15%);
+}
+
+.theme(crimson_editor) {
+  @bg: #ebebeb;
+  @fg: #333;
+  @editorBg: #FFFFFF;
+  @infoColor: rgb(76, 136, 107);
+  @highlight: #dcdcdc;
+  @lineColor: darken(#e8e8e8, 15%);
+}
+
+.theme(dawn) {
+  @bg: #ebebeb;
+  @fg: #333;
+  @editorBg: #F9F9F9;
+  @infoColor: #0B6125;
+  @highlight: #dcdcdc;
+  @lineColor: darken(#e8e8e8, 15%);
+}
+
+.theme(dreamweaver) {
+  @bg: #ebebeb;
+  @fg: #333;
+  @editorBg: #FFFFFF;
+  @infoColor: rgb(76, 136, 107);
+  @highlight: #dcdcdc;
+  @lineColor: darken(#e8e8e8, 15%);
+}
+
+.theme(eclipse) {
+  @bg: #ebebeb;
+  @fg: #000;
+  @editorBg: #FFFFFF;
+  @infoColor: rgb(113, 150, 130);
+  @highlight: #DADADA;
+  @lineColor: darken(#ebebeb, 15%);
+}
+
+.theme(github) {
+  @bg: #e8e8e8;
+  @fg: #000;
+  @editorBg: #FFFFFF;
+  @infoColor: #099;
+  @highlight: lighten(#000, 75%);
+  @lineColor: darken(#e8e8e8, 15%);
+}
+
+.theme(idle_fingers) {
+  @bg: #3b3b3b;
+  @fg: #fff;
+  @editorBg: #323232;
+  @infoColor: #A5C261;
+  @highlight: #353637;
+  @lineColor: lighten(#3b3b3b, 15%);
+}
+
+.theme(katzenmilch) {
+  @bg: #e8e8e8;
+  @fg: #333;
+  @editorBg: #f3f2f3;
+  @infoColor: rgb(2, 95, 73);
+  @highlight: rgb(232, 242, 254);
+  @lineColor: darken(#e8e8e8, 15%);
+}
+
+.theme(merbivore) {
+  @bg: #202020;
+  @fg: #E6E1DC;
+  @editorBg: #161616;
+  @infoColor: #8DFF0A;
+  @highlight: #333435;
+  @lineColor: lighten(#555651, 15%);
+}
+
+.theme(merbivore_soft) {
+  @bg: #262424;
+  @fg: #E6E1DC;
+  @editorBg: #161616;
+  @infoColor: #8EC65F;
+  @highlight: #333435;
+  @lineColor: lighten(#262424, 15%);
+}
+
+.theme(mono_industrial) {
+  @bg: #1d2521;
+  @fg: #C5C9C9;
+  @editorBg: #222C28;
+  @infoColor: #588E60;
+  @highlight: lighten(rgb(12, 13, 12), 3%);
+  @lineColor: #555651;
+}
+
+.theme(monokai) {
+  @bg: #2F3129;
+  @fg: #8F908A;
+  @editorBg: #272822;
+  @infoColor: #A6E22E;
+  @highlight: #272727;
+  @lineColor: #555651;
+}
+
+.theme(pastel_on_dark) {
+  @bg: #353030;
+  @fg: #8F938F;
+  @editorBg: #2C2828;
+  @infoColor: #66A968;
+  @highlight: lighten(#2C2828, 10%);
+  @lineColor: lighten(#353030, 10%);
+}
+
+.theme(solarized_dark) {
+  @bg: #01313f;
+  @fg: #d0edf7;
+  @editorBg: #002B36;
+  @infoColor: #2AA198;
+  @highlight: lighten(#01313f, 5%);
+  @lineColor: #33555E;
+}
+
+.theme(solarized_light) {
+  @bg: #fbf1d3;
+  @fg: #333;
+  @editorBg: #FDF6E3;
+  @infoColor: #2AA198;
+  @highlight: darken(#EDE5C1, 3%);
+  @lineColor: darken(#e8e8e8, 15%);
+}
+
+.theme(tomorrow) {
+  @bg: #f6f6f6;
+  @fg: #4D4D4C;
+  @editorBg: #FFFFFF;
+  @infoColor: #718C00;
+  @highlight: #dcdcdc;
+  @lineColor: darken(#f6f6f6, 15%);
+}
+
+.theme(tomorrow_night_blue) {
+  @bg: #00204b;
+  @fg: #7388b5;
+  @editorBg: #002451;
+  @infoColor: #D1F1A9;
+  @highlight: #022040;
+  @lineColor: lighten(#00204b, 10%);
+}
+
+.theme(tomorrow_night_bright) {
+  @bg: #1a1a1a;
+  @fg: #DEDEDE;
+  @editorBg: #000000;
+  @infoColor: #B9CA4A;
+  @highlight: #2A2A2A;
+  @lineColor: lighten(#1a1a1a, 10%);
+}
+
+.theme(tomorrow_night_eighties) {
+  @bg: #272727;
+  @fg: #CCC;
+  @editorBg: #2D2D2D;
+  @infoColor: #99CC99;
+  @highlight: #393939;
+  @lineColor: lighten(#272727, 10%);
+}
+
+.theme(tomorrow_night) {
+  @bg: #25282c;
+  @fg: #C5C8C6;
+  @editorBg: #1D1F21;
+  @infoColor: #B5BD68;
+  @highlight: lighten(#282A2E, 5%);
+  @lineColor: lighten(#25282c, 10%);
+}
+
+.theme(twilight) {
+  @bg: #232323;
+  @fg: #E2E2E2;
+  @editorBg: #141414;
+  @infoColor: #8F9D6A;
+  @highlight: lighten(#141414, 10%);
+  @lineColor: lighten(#232323, 10%);
+}
+
+.theme(vibrant_ink) {
+  @bg: #1a1a1a;
+  @fg: #BEBEBE;
+  @editorBg: #0F0F0F;
+  @infoColor: #66FF00;
+  @highlight: #333333;
+  @lineColor: lighten(#1a1a1a, 10%);
+}
+
+.theme(xcode) {
+  @bg: #e8e8e8;
+  @fg: #333;
+  @editorBg: #FFFFFF;
+  @infoColor: #008E00;
+  @highlight: darken(#e8e8e8, 10%);
+  @lineColor: darken(#e8e8e8, 15%);
+}
+
+@themes: 'textmate',
+  'terminal',
+  'ambiance',
+  'chaos',
+  'chrome',
+  'clouds',
+  'clouds_midnight',
+  'cobalt',
+  'crimson_editor',
+  'dawn',
+  'dreamweaver',
+  'eclipse',
+  'github',
+  'idle_fingers',
+  'katzenmilch',
+  'merbivore',
+  'merbivore_soft',
+  'mono_industrial',
+  'monokai',
+  'pastel_on_dark',
+  'solarized_dark',
+  'solarized_light',
+  'tomorrow',
+  'tomorrow_night',
+  'tomorrow_night_blue',
+  'tomorrow_night_bright',
+  'tomorrow_night_eighties',
+  'twilight',
+  'vibrant_ink',
+  'xcode';
 
 body {
   .for(@themes); .-each(@color) {
     @name: e(@color);
     &.@{name}-theme {
       .theme(@name);
-      
-      @lineColor: darken(@bg, 20%);
       
       color: @fg;
       background-color: @bg;
@@ -160,6 +443,85 @@ body {
         
         hr {
           border-top: 1px solid @lineColor;
+        }
+      }
+      
+      select.form-control:after {
+        color: @fg;
+      }
+      
+      .close {
+        color: @fg;
+      }
+      
+      .preselect {
+        color: @fg;
+      }
+      
+      .form-control {
+        color: @fg;
+        background-color: @editorBg;
+        border: 1px solid @lineColor;
+      }
+      
+      input[type=checkbox] {
+        background-color: @bg;
+        color: @fg;
+        border: 1px solid @lineColor;
+      }
+      
+      input[type=checkbox] + label {
+        color: @fg;
+      }
+      
+      .modal-header {
+        border-bottom: 1px solid @lineColor;
+      }
+      
+      .modal-footer {
+        border-top: 1px solid @lineColor;
+      }
+      
+      .modal-content {
+        border: 1px solid @lineColor;
+      }
+      
+      .ace_search {
+        background-color: @bg;
+        border: 1px solid @lineColor;
+        color: @fg;
+      }
+      
+      .ace_button {
+        border: 1px solid @lineColor;
+        color: @fg;
+      }
+      
+      .ace_button:hover {
+        background-color: @highlight;
+      }
+      
+      .ace_search_field {
+        background-color: @editorBg;
+        color: @fg;
+        border-right: 1px solid @lineColor;
+      }
+      
+      .ace_search_form, .ace_replace_form {
+        border: 1px solid @lineColor;
+      }
+      
+      .ace_searchbtn, .ace_replacebtn {
+        background-color: @editorBg;
+        border-left: 1px solid @lineColor;
+      }
+      
+      .ace_searchbtn_close {
+        color: @fg;
+        
+        &:hover {
+          background-color: transparent;
+          color: @errorColor;
         }
       }
     }

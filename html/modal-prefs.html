@@ -9,13 +9,17 @@
         <td>
           <div class="form-group">
             <label for="prefs-theme">Theme:</label>
-            <select id="prefs-theme" class="form-control" ng-model="form.theme" ng-options="theme.key as theme.name for theme in themes"></select>
+            <div class="preselect">
+              <select id="prefs-theme" class="form-control" ng-model="form.theme" ng-options="theme.key as theme.name for theme in themes"></select>
+            </div>
           </div>
         </td>
         <td>
           <div class="form-group">
             <label for="prefs-keybind">Key Bindings:</label>
-            <select id="prefs-keybind" class="form-control" ng-model="form.keybind" ng-options="key.key as key.name for key in key_modes"></select>
+            <div class="preselect">
+              <select id="prefs-keybind" class="form-control" ng-model="form.keybind" ng-options="key.key as key.name for key in key_modes"></select>
+            </div>
           </div>
         </td>
       </tr>
@@ -23,13 +27,17 @@
         <td>
           <div class="form-group">
             <label for="prefs-soft_wrap">Soft Wrap:</label>
-            <select id="prefs-soft_wrap" class="form-control" ng-model="form.soft_wrap" ng-options="theme.key as theme.name for theme in wrap_modes"></select>
+            <div class="preselect">
+              <select id="prefs-soft_wrap" class="form-control" ng-model="form.soft_wrap" ng-options="theme.key as theme.name for theme in wrap_modes"></select>
+            </div>
           </div>
         </td>
         <td>
           <div class="form-group">
             <label for="prefs-fontsize">Font Size:</label>
-            <select id="prefs-fontsize" class="form-control" ng-model="form.fontsize" ng-options="key.key as key.name for key in font_modes"></select>
+            <div class="preselect">
+              <select id="prefs-fontsize" class="form-control" ng-model="form.fontsize" ng-options="key.key as key.name for key in font_modes"></select>
+            </div>
           </div>
         </td>
       </tr>
@@ -52,57 +60,57 @@
       <tr class="checks">
         <td>
           <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="form.hactive"> Highlight Active Line
-            </label>
+            <input type="checkbox" ng-model="form.hactive" id="pref-hactive">
+            <label for="pref-hactive"></label>
+            <label class="real" for="pref-hactive">Highlight Active Line</label>
           </div>
         </td>
         <td>
           <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="form.hword"> Highlight Selected Word
-            </label>
-          </div>
-        </td>
-      </tr>
-      <tr class="checks">
-        <td>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="form.invisibles"> Show Invisibles
-            </label>
-          </div>
-        </td>
-        <td>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="form.gutter"> Show Gutter
-            </label>
+            <input type="checkbox" ng-model="form.hword" id="pref-hword">
+            <label for="pref-hword"></label>
+            <label class="real" for="pref-hword">Highlight Selected Word</label>
           </div>
         </td>
       </tr>
       <tr class="checks">
         <td>
           <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="form.pmargin"> Show Margin
-            </label>
+            <input type="checkbox" ng-model="form.invisibles" id="pref-invisibles">
+            <label for="pref-invisibles"></label>
+            <label class="real" for="pref-invisibles">Show Invisibles</label>
           </div>
         </td>
         <td>
           <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="form.softab"> Use Soft Tab
-            </label>
+            <input type="checkbox" ng-model="form.gutter" id="pref-gutter">
+            <label for="pref-gutter"></label>
+            <label class="real" for="pref-gutter">Show Gutter</label>
           </div>
         </td>
       </tr>
       <tr class="checks">
         <td>
           <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="form.behave"> Code Behaviors
-            </label>
+            <input type="checkbox" ng-model="form.pmargin" id="pref-pmargin">
+            <label for="pref-pmargin"></label>
+            <label class="real" for="pref-pmargin">Show Margin</label>
+          </div>
+        </td>
+        <td>
+          <div class="checkbox">
+            <input type="checkbox" ng-model="form.softab" id="pref-softab">
+            <label for="pref-softab"></label>
+            <label class="real" for="pref-softab">Use Soft Tab</label>
+          </div>
+        </td>
+      </tr>
+      <tr class="checks">
+        <td>
+          <div class="checkbox">
+            <input type="checkbox" ng-model="form.behave" id="pref-behave">
+            <label for="pref-behave"></label>
+            <label class="real" for="pref-behave">Code Behaviors</label>
           </div>
         </td>
         <td>

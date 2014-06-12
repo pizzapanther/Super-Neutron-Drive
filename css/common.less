@@ -29,3 +29,91 @@ label.dir {
 .error-message {
   float: left;
 }
+
+.preselect {
+  position: relative;
+  
+  &:after {
+    position: absolute;
+    content: "\25BE";
+    top: 19%;
+    right: 12px;
+  }
+}
+select.form-control {
+  -webkit-appearance: none;
+}
+
+input[type=checkbox] {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 3px;
+}
+
+.checkbox {
+  position: relative;
+  
+  label.real {
+    display: inline-block;
+    padding-top: 2px;
+  }
+}
+
+input[type=checkbox] + label {
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 1px;
+  top: 0px;
+  font-weight: bold;
+  font-size: 130%;
+}
+
+input[type=checkbox]:checked + label {
+  &:after {
+    content: "\2713";
+  }
+}
+
+.ace_searchbtn.next {
+  background-image: none !important;
+  
+  &:after {
+    font-family: FontAwesome;
+    content: "\f078";
+    font-size: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -6px 0 0 -6px;
+  }
+}
+
+.ace_searchbtn.prev {
+  background-image: none !important;
+  
+  &:after {
+    font-family: FontAwesome;
+    content: "\f077";
+    font-size: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -6px 0 0 -6px;
+  }
+}
+
+.ace_searchbtn_close {
+  background-image: none !important;
+  position: relative;
+  
+  &:after {
+    font-family: FontAwesome;
+    content: "\f05c";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -6px;
+  }
+}
