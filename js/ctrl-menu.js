@@ -26,6 +26,12 @@ var PrefCtrl = function ($scope, $rootScope, $modalInstance) {
   };
 };
 
+var DonateCtrl = function ($scope, $rootScope, $modalInstance) {
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+
 var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
   $scope.version = version;
   
@@ -92,6 +98,15 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
     });
   };
   
+  $scope.donate_modal = function () {
+    $modal.open({
+      templateUrl: 'modal-donate.html',
+      controller: DonateCtrl,
+      windowClass: 'donateModal',
+      keyboard: true,
+      resolve: {}
+    });
+  };
   
   $scope.send_event = function (event) {
     $rootScope.$emit(event);
