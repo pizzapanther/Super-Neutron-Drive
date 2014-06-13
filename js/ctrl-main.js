@@ -26,8 +26,7 @@ Tab.prototype.save = function (force) {
   
   if (!this.saving) {
     if (!force) {
-      var md5sum = md5(this.session.getValue());
-      if (md5sum != this.md5sum) {
+      if (this.saved_md5sum != this.md5sum) {
         changed = true;
       }
     }
@@ -301,21 +300,32 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     $("#tabs .tab-scroll").animate({scrollLeft: l}, 500);
   };
   
-  $scope.save_current = function () {
+  $scope.save_current = function (event) {
     $scope.tabs[$scope.current_tab].save(true);
   };
   
-  $scope.close_tab = function () {
-    $scope.remove_tab($scope.current_tab);
-    $scope.$apply();
+  $scope.save_all = function (event) {
+    for (var i=0; i < $scope.tabs.length; i++) {
+      $scope.tabs[i].save();
+    }
   };
   
-  $scope.close_tab_all = function () {
+  $scope.close_tab = function (event) {
+    $scope.remove_tab($scope.current_tab);
+    
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
+  };
+  
+  $scope.close_tab_all = function (event) {
     while ($scope.tabs.length > 0) {
       $scope.remove_tab($scope.tabs.length - 1);
     }
     
-    $scope.$apply();
+    if (!$scope.$$phase) {
+      $scope.$apply();
+    }
   };
   
   chrome.storage.sync.get('prefs', function (obj) {
@@ -365,6 +375,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   
   $rootScope.$on('keyboard-error-sim', $scope.error_simulation);
   $rootScope.$on('keyboard-save', $scope.save_current);
+  $rootScope.$on('keyboard-save-all', $scope.save_all);
   $rootScope.$on('keyboard-close-tab', $scope.close_tab);
   $rootScope.$on('keyboard-close-tabs-all', $scope.close_tab_all);
 });

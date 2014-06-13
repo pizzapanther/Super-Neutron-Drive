@@ -2,7 +2,7 @@
   "name": "Super Neutron Drive",
   "short_name": "N-Drive",
   "description": "Code editor for local, cloud, and remote development",
-  "version": "14.6.3",
+  "version": "14.6.4",
   
   "app": {
     "background": {

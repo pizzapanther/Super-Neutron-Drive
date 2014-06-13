@@ -35,7 +35,7 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
   
   $scope.add_message = function (event, id, mtype, text, timeout, skip_apply) {
     $scope.messages[id] = {mtype: mtype, text: text, id: md5(id)};
-    if (!skip_apply) {
+    if (!skip_apply && !$scope.$$phase) {
       $scope.$apply();
     }
     
@@ -69,6 +69,11 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
         setTimeout(function () { $("#prefs-theme").focus(); }, 100);
       }
     );
+  };
+  
+  
+  $scope.send_event = function (event) {
+    $rootScope.$emit(event);
   };
   
   $rootScope.$on('addMessage', $scope.add_message);

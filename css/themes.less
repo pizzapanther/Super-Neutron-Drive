@@ -24,7 +24,7 @@
   @fg: #E6E1DC;
   @editorBg: #202020;
   @infoColor: #8f9d6a;
-  @highlight: #3F3F3F;
+  @highlight: darken(#3F3F3F, 5%);
   @lineColor: darken(#262626, 20%);
 }
 
@@ -434,6 +434,10 @@ body {
         }
       }
       
+      .open .dropdown-toggle.btn {
+        background-color: @highlight;
+      }
+      
       .dropdown-menu {
         background-color: @editorBg;
         color: @fg;
@@ -442,7 +446,7 @@ body {
           color: @fg;
           
           &:hover {
-            
+            background-color: @highlight;
           }
         }
       }

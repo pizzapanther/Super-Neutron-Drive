@@ -20,17 +20,17 @@ var SHORTCUTS = [
     event: 'save'
   },
   
-  {
-    name: 'Save and New Revision',
-    win: 'Shift-Ctrl-S',
-    mac: 'Shift-Command-S',
-    event: 'save-revision'
-  },
+  //{
+  //  name: 'Save and New Revision',
+  //  win: 'Shift-Ctrl-S',
+  //  mac: 'Shift-Command-S',
+  //  event: 'save-revision'
+  //},
   
   {
     name: 'Save All',
-    win: 'Ctrl-Alt-S',
-    mac: 'Ctrl-Alt-S',
+    win: 'Shift-Ctrl-S',
+    mac: 'Shift-Command-S',
     event: 'save-all'
   },
   
