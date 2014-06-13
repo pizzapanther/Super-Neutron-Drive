@@ -26,6 +26,14 @@ var PrefCtrl = function ($scope, $rootScope, $modalInstance) {
   };
 };
 
+var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
+  $scope.version = version;
+  
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+
 ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
   $scope.messages = {};
   
@@ -69,6 +77,19 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
         setTimeout(function () { $("#prefs-theme").focus(); }, 100);
       }
     );
+  };
+  
+  $scope.help_modal = function () {
+    var version = $rootScope.manifest.version;
+    
+    $modal.open({
+      templateUrl: 'modal-help.html',
+      controller: HelpCtrl,
+      windowClass: 'helpModal',
+      keyboard: true,
+      size: 'lg',
+      resolve: {version: function () { return version; }}
+    });
   };
   
   

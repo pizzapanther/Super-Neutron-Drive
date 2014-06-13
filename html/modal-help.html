@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+  <h4 class="modal-title">Help</h4>
+</div>
+<div class="modal-body">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#help-about" data-toggle="tab">About</a></li>
+    <li><a href="#help-keyboard" data-toggle="tab">Keyboard Shortcuts</a></li>
+  </ul>
+  
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane active" id="help-about">
+      <img src="/img/logo-256.png" alt="">
+      <h3>Super Neutron Drive</h3>
+      <div class="version">Version {{ version }}</div>
+      <p>
+        Written By: <a href="https://plus.google.com/u/0/+PaulPizzaPantherBailey/posts" target="_blank">Paul Bailey</a>
+      </p>
+      <p>
+        License: <a href="https://github.com/pizzapanther/Super-Neutron-Drive/blob/master/LICENSE" target="_blank">MIT License</a>
+      </p>
+      <p>
+        Support and help can be found on the
+        <a href="https://plus.google.com/u/0/communities/103400845906318724539" target="_blank">community support page</a>.
+      </p>
+      <p>
+        Additional info on Neutron Drive can be found at <a href="https://www.neutrondrive.com/" target="_blank">www.neutrondrive.com</a>
+      </p>
+      <div class="clearfix"></div>
+    </div>
+    <div class="tab-pane" id="help-keyboard" ng-include="'keyboard-shortcuts.html'"></div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-cancel" ng-click="cancel()" id="error-ok">OK</button>
+</div>

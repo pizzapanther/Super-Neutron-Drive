@@ -331,6 +331,10 @@ body {
       color: @fg;
       background-color: @bg;
       
+      a {
+        color: @infoColor;
+      }
+      
       .error-message, .error {
         color: @errorColor;
       }
@@ -480,6 +484,34 @@ body {
       
       .preselect {
         color: @fg;
+      }
+      
+      .table>thead>tr>th {
+        border-bottom: 2px solid @lineColor;
+      }
+      
+      .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
+        border-top: 1px solid @lineColor;
+      }
+      
+      .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+        color: @fg;
+        background-color: @editorBg;
+        border: 1px solid @lineColor;
+        border-bottom-color: transparent;
+      }
+      
+      .nav-tabs {
+        border-bottom: 1px solid @lineColor;
+      }
+      
+      .nav-tabs>li>a:hover {
+        border-color: @lineColor;
+      }
+      
+      .nav>li>a:hover, .nav>li>a:focus {
+        text-decoration: none;
+        background-color:@highlight;
       }
       
       .form-control {
