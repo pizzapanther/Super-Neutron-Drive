@@ -212,25 +212,38 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   };
   
   $scope.remove_tab = function (index) {
+    var id = $scope.tabs[$scope.current_tab].id;
+    var pid = $scope.tabs[$scope.current_tab].pid();
+    
     $scope.tabs[index].session.$stopWorker();
     
     //delete $scope.tabs[index].session;
     
     $scope.tabs.splice(index, 1);
-    if (index === $scope.current_tab) {
-      if ($scope.tabs.length === 0) {
-        $scope.current_tab = null;
+    
+    if ($scope.tabs.length > 0) {
+      var found = false;
+      for (var i=0; i < $scope.tabs.length; i++) {
+        var tab = $scope.tabs[i];
+        if (tab.id == id && tab.pid() == pid) {
+          $scope.current_tab = i;
+          found = true;
+          break;
+        }
       }
       
-      else {
-        if ($scope.tabs.length > index) {
-          $scope.switch_tab(index);
+      if (!found) {
+        $scope.current_tab = $scope.current_tab - 1;
+        if ($scope.current_tab < 0) {
+          $scope.current_tab = 0;
         }
         
-        else {
-          $scope.switch_tab(index - 1);
-        }
+        $scope.switch_tab($scope.current_tab);
       }
+    }
+    
+    else {
+      $scope.current_tab = null;
     }
     
     $scope.remember_tabs();
