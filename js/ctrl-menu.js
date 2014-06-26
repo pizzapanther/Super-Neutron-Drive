@@ -38,6 +38,11 @@ var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
+  
+  $scope.donate_modal = function () {
+    $modalInstance.dismiss('donate');
+    $rootScope.$emit('donateModal');
+  };
 };
 
 ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
@@ -114,6 +119,7 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
   
   $rootScope.$on('addMessage', $scope.add_message);
   $rootScope.$on('removeMessage', $scope.remove_message);
+  $rootScope.$on('donateModal', $scope.donate_modal);
 });
 
 ndrive.controller('SplitterCtrl', function($scope, $rootScope) {
