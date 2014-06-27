@@ -397,8 +397,12 @@
 }
 
 .helpModal {
+  .modal-footer {
+    margin-top: 0;
+  }
+  
   .modal-body {
-    padding: 20px 0;
+    padding: 20px 0 0 0;
     
     h3 {
       font-family: @neutronFont;
@@ -420,6 +424,12 @@
     #help-faq {
       ul li {
         margin: 10px 0;
+      }
+    }
+    
+    #help-credits {
+      ul li {
+        margin: 10px 0 20px 0;
       }
     }
   }
