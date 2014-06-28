@@ -13,7 +13,7 @@
         <li>
           <a class="clickme rm" ng-click="remove_project(project)">&times;</a>
           <a class="psort" project-drag><i class="fa fa-sort"></i></a>
-          <a class="prj" ng-click="project.list_dir()">
+          <a class="prj" ng-click="project.list_dir()" right-click="project.right_menu('dir', project, $event)">
             <i class="{{ project.cls }}"></i>&nbsp;{{ project.name }}
           </a>
           <ul>

@@ -182,6 +182,7 @@ LocalFS.prototype.rename = function ($modal, entry) {
 LocalFS.prototype.do_rename = function (entry, name) {
   var self = this;
   var parent = os.dirname(entry.path);
+  
   var error_function = function () {
     self.scope.rootScope.error_message('Error Renaming: ' + entry.name);
   };
@@ -229,7 +230,14 @@ LocalFS.prototype.do_rename = function (entry, name) {
 
 LocalFS.prototype.save_new_file = function (entry, name) {
   var self = this;
-  var path = os.join_path(entry.path, name);
+  var path = '';
+  if (entry.path) {
+    path = os.join_path(entry.path, name);
+  }
+  
+  else {
+    path = os.join_path(self.info.entry.fullPath, name);
+  }
   
   self.info.entry.getFile(path, {create: false}, function (fileEntry) {
     self.scope.rootScope.error_message(name + ' already exists!');
@@ -270,9 +278,13 @@ LocalFS.prototype.right_menu = function (rtype, entry, event) {
   if (rtype == 'dir') {
     menu = [
       ['New File', 'file-text', function ($modal) { self.new_file($modal, entry); }],
-      ['Rename', 'pencil-square-o', function ($modal) { self.rename($modal, entry); }],
+      
       //'-'
     ];
+    
+    if (!entry.info) {
+      menu.push(['Rename', 'pencil-square-o', function ($modal) { self.rename($modal, entry); }]);
+    }
   }
   
   else {
