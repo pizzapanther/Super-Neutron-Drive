@@ -47,6 +47,7 @@ var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
 
 ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
   $scope.messages = {};
+  $scope.recent_files = [];
   
   $scope.hide_right = function () {
     $rootScope.$emit('hideRightMenu');
@@ -117,9 +118,47 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
     $rootScope.$emit(event);
   };
   
+  $scope.add_recent = function (event, file) {
+    for (var i=0; i < $scope.recent_files.length; i++) {
+      var r = $scope.recent_files[i];
+      if (r.retainer == file.retainer && r.ptype == file.ptype && r.pid == file.pid) {
+        $scope.recent_files.splice(i, 1);
+        break;
+      }
+    }
+    
+    $scope.recent_files.push(file);
+    
+    chrome.storage.local.set({'recent_files': JSON.stringify($scope.recent_files)}, function() {
+      console.log('Recent files saved');
+    });
+  };
+  
+  $scope.restore_recent = function () {
+    chrome.storage.local.get('recent_files', function (obj) {
+      if (obj && obj.recent_files) {
+        $scope.recent_files = JSON.parse(obj.recent_files);
+        $scope.$apply();
+      }
+    });
+  };
+  
+  $scope.open_recent = function (index) {
+    for (var i=0; i < $scope.recent_files.length; i++) {
+      var r = $scope.recent_files[i];
+      if (i == index) {
+        $rootScope.$emit('loadTabs', [r]);
+        break;
+      }
+    }
+  };
+  
   $rootScope.$on('addMessage', $scope.add_message);
   $rootScope.$on('removeMessage', $scope.remove_message);
   $rootScope.$on('donateModal', $scope.donate_modal);
+  $rootScope.$on('addRecent', $scope.add_recent);
+  
+  $scope.restore_recent();
 });
 
 ndrive.controller('SplitterCtrl', function($scope, $rootScope) {

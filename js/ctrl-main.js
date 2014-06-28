@@ -215,6 +215,9 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     var id = $scope.tabs[$scope.current_tab].id;
     var pid = $scope.tabs[$scope.current_tab].pid();
     
+    var tab = $scope.tabs[index];
+    $rootScope.$emit('addRecent', {retainer: tab.retainer, ptype: tab.project.cid, pid: tab.project.pid, name: tab.name});
+    
     $scope.tabs[index].session.$stopWorker();
     
     //delete $scope.tabs[index].session;

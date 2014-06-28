@@ -18,6 +18,13 @@
         <li class="divider"></li>
         <li><a class="clickme" ng-click="send_event('keyboard-close-tab')"><i class="fa fa-times"></i> Close</a></li>
         <li><a class="clickme" ng-click="send_event('keyboard-close-tabs-all')"><i class="fa fa-bomb"></i> Close All</a></li>
+        <li class="divider"></li>
+        <li class="dropdown-submenu">
+          <a>Recent Files</a>
+          <ul class="dropdown-menu">
+            <li ng-repeat="file in recent_files"><a class="clickme" ng-click="open_recent($index)">{{ file.name }}</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
     <button type="button" class="btn" ng-click="pref_modal()"><i class="fa fa-cog"></i></button>

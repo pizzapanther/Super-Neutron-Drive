@@ -257,7 +257,7 @@ LocalFS.prototype.save_new_file = function (entry, name) {
           
           self.scope.$apply();
           self.list_dir(entry);
-          self.open_file({name: name, path: path});
+          self.open_file({name: name, path: path, retainer: path});
         };
         
         fileWriter.onerror = function (e) {
