@@ -46,6 +46,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   $scope.tabs = [];
   $scope.current_tab = null;
   $scope.set_hasher = true;
+  $scope.recent_files = [];
   
   $scope.hide_right = function () {
     $rootScope.$emit('hideRightMenu');
@@ -380,9 +381,29 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     }
   };
   
+  $scope.set_recent = function (event, recent_files) {
+    $scope.recent_files = recent_files;
+    apply_updates($scope);
+  };
+  
+  $scope.open_recent = function (index) {
+    for (var i=0; i < $scope.recent_files.length; i++) {
+      var r = $scope.recent_files[i];
+      if (i == index) {
+        $rootScope.$emit('loadTabs', [r]);
+        break;
+      }
+    }
+  };
+  
+  $rootScope.$emit('restoreRecent');
+  
   $rootScope.$on('addTab', $scope.add_tab);
   $rootScope.$on('openTab', $scope.open_tab);
   $rootScope.$on('setPrefs', $scope.set_prefs);
+  
+  //from menu
+  $rootScope.$on('recentFiles', $scope.set_recent);
   
   //from side ctrl
   $rootScope.$on('removeProjectTabs', $scope.remove_project_tabs);

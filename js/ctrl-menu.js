@@ -128,6 +128,11 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
     }
     
     $scope.recent_files.push(file);
+    if ($scope.recent_files.length > 12) {
+      $scope.recent_files.splice(0, 1);
+    }
+    
+    $rootScope.$emit('recentFiles', $scope.recent_files);
     
     chrome.storage.local.set({'recent_files': JSON.stringify($scope.recent_files)}, function() {
       console.log('Recent files saved');
@@ -139,6 +144,8 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
       if (obj && obj.recent_files) {
         $scope.recent_files = JSON.parse(obj.recent_files);
         $scope.$apply();
+        
+        $rootScope.$emit('recentFiles', $scope.recent_files);
       }
     });
   };
@@ -157,8 +164,7 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
   $rootScope.$on('removeMessage', $scope.remove_message);
   $rootScope.$on('donateModal', $scope.donate_modal);
   $rootScope.$on('addRecent', $scope.add_recent);
-  
-  $scope.restore_recent();
+  $rootScope.$on('restoreRecent', $scope.restore_recent);
 });
 
 ndrive.controller('SplitterCtrl', function($scope, $rootScope) {

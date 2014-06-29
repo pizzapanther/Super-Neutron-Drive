@@ -22,7 +22,7 @@
         <li class="dropdown-submenu">
           <a>Recent Files</a>
           <ul class="dropdown-menu">
-            <li ng-repeat="file in recent_files"><a class="clickme" ng-click="open_recent($index)">{{ file.name }}</a></li>
+            <li ng-repeat="file in recent_files track by $index"><a class="clickme" ng-click="open_recent($index)">{{ file.name }}</a></li>
           </ul>
         </li>
       </ul>

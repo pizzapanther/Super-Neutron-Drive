@@ -23,5 +23,15 @@
   <div id="no-editor" ng-show="tabs.length == 0">
     <h3 class="nfont">Welcome to Super Neutron Drive</h3>
     <img src="/img/logo-256.png" alt="">
+    <div id="recentFiles" ng-show="recent_files.length">
+      <h4>Recent Files</h4>
+      <ul>
+        <li ng-repeat="file in recent_files track by $index">
+          <a class="clickme btn" ng-click="open_recent($index)">
+            <i class="fa fa-file-o"></i>{{ file.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

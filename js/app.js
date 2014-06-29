@@ -70,3 +70,9 @@ function randomString (len, charSet) {
   
   return rs;
 }
+
+function apply_updates ($scope) {
+  if(!$scope.$$phase) {
+    $scope.$apply();
+  }
+}
