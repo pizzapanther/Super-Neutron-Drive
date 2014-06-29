@@ -47,6 +47,7 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   $scope.local_pids = [];
   $scope.rootScope = $rootScope;
   $scope.freeAgent = new LocalFree('FreeAgent', {entries: {}}, $scope, 'free-agent');
+  $scope.current_tool = 'projects';
   
   $scope.hide_right = function () {
     $rootScope.$emit('hideRightMenu');

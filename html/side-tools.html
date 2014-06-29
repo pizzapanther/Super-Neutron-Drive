@@ -4,10 +4,17 @@
       <button class="btn" ng-click="project_modal()"><i class="fa fa-plus"></i></button>
     </div>
     <div class="tools">
-      Projects
+      <ul>
+        <li ng-class="{active: current_tool == 'projects'}" ng-click="current_tool = 'projects'">
+          <span>Projects</span>
+        </li>
+        <li ng-class="{active: current_tool == 'search'}" ng-click="current_tool = 'search'">
+          <span>Search</span>
+        </li>
+      </ul>
     </div>
   </div>
-  <div id="projects">
+  <div id="projects" class="side-tool" ng-show="current_tool == 'projects'">
     <div>
       <ul ng-repeat="project in projects" class="project {{ project.state }}" data-pid="{{ project.pid }}" data-type="{{ project.className() }}">
         <li>
@@ -25,5 +32,8 @@
         </li>
       </ul>
     </div>
+  </div>
+  <div id="search-tools" class="side-tool" ng-show="current_tool == 'search'">
+    narf
   </div>
 </div>

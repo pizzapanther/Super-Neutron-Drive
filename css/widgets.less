@@ -148,7 +148,7 @@
   }
   
   .menu {
-    padding: 0 5px;
+    padding: 0 5px 0 0;
     height: 29px;
     
     .btn {
@@ -162,15 +162,37 @@
     }
     
     .tools {
-      padding: 4px 0 0 0;
+      padding: 0;
+      
+      ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+        
+        li {
+          margin: 0;
+          padding: 0;
+          display: block;
+          cursor: pointer;
+          height: 28px;
+          float: left;
+          
+          span {
+            display: block;
+            padding: 4px 5px 0 5px;
+          }
+        }
+      }
     }
   }
   
-  #projects {
+  .side-tool {
     height: ~'calc(100% - 28px)';
     width: 100%;
     overflow: auto;
-    
+  }
+  
+  #projects {
     > div {
       position: relative;
     }

@@ -386,9 +386,21 @@ body {
           border-bottom: 1px solid @lineColor;
         }
         
-        #projects {
+        .tools {
+          ul li {
+            border-right: 1px solid @lineColor;
+            
+            &.active {
+              background-color: @highlight;
+            }
+          }
+        }
+        
+        .side-tool {
           background-color: @editorBg;
-          
+        }
+        
+        #projects {
           ul.project {
             border-bottom: 1px dotted @lineColor;
             
