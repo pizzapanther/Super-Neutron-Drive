@@ -2,7 +2,6 @@
 
 import os
 import json
-import zipfile
 import subprocess
 
 exclude_files = ('build_zip.py', '.gitignore', 'super-neutron.zip')
@@ -10,7 +9,9 @@ exclude_dirs = ('.git',)
 
 if __name__ == "__main__":
   mypath = os.path.dirname(__file__)
-  
+  if not mypath:
+    mypath = './'
+    
   print("Generating extension in super-neutron.zip\n")
   
   ziplist = ''
