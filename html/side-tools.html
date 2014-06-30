@@ -1,14 +1,14 @@
 <div ng-controller="SideCtrl" ng-click="hide_right();">
   <div class="menu">
     <div class="buttons">
-      <button class="btn" ng-click="project_modal()"><i class="fa fa-plus"></i></button>
+      <button ng-show="current_tool == 'projects'" class="btn" ng-click="project_modal()"><i class="fa fa-plus"></i></button>
     </div>
     <div class="tools">
       <ul>
         <li ng-class="{active: current_tool == 'projects'}" ng-click="current_tool = 'projects'">
           <span>Projects</span>
         </li>
-        <li ng-class="{active: current_tool == 'search'}" ng-click="current_tool = 'search'">
+        <li id="searchToolTab" ng-class="{active: current_tool == 'search'}" ng-click="current_tool = 'search'">
           <span>Search</span>
         </li>
       </ul>
@@ -34,6 +34,8 @@
     </div>
   </div>
   <div id="search-tools" class="side-tool" ng-show="current_tool == 'search'">
-    narf
+    <div ng-controller="SearchCtrl">
+      <ng-include src="'side-search.html'"></ng-include>
+    </div>
   </div>
 </div>

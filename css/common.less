@@ -51,7 +51,14 @@ input[type=checkbox] {
   border-radius: 3px;
 }
 
-.checkbox {
+input[type=radio] {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 16px;
+}
+
+.checkbox, .radio {
   position: relative;
   
   label.real {
@@ -70,9 +77,25 @@ input[type=checkbox] + label {
   font-size: 130%;
 }
 
+input[type=radio] + label {
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 2.5px;
+  top: -2.5px;
+  font-weight: bold;
+  font-size: 130%;
+}
+
 input[type=checkbox]:checked + label {
   &:after {
     content: "\2713";
+  }
+}
+
+input[type=radio]:checked + label {
+  &:after {
+    content: "\25CF";
   }
 }
 

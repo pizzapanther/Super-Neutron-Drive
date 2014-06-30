@@ -1,4 +1,5 @@
 function Tab (file, project, text, session, scope) {
+  this.file = file;
   this.name = file.name;
   this.path = file.path;
   this.retainer = file.retainer;
@@ -52,10 +53,10 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     $rootScope.$emit('hideRightMenu');
   };
   
-  $scope.update_hash = function () {
+  $scope.update_hash = function (index) {
     if ($scope.current_tab !== null) {
       $scope.tabs[$scope.current_tab].update_hash();
-      $scope.$apply();
+      apply_updates($scope);
     }
   };
   
@@ -200,11 +201,15 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     });
   };
   
-  $scope.open_tab = function (event, path, pid, callback) {
+  $scope.open_tab = function (event, path, pid, range, callback) {
     for (var i=0; i < $scope.tabs.length; i++) {
       var tab = $scope.tabs[i];
       if (tab.path == path && tab.project.pid == pid) {
         $scope.switch_tab(i);
+        
+        if (range) {
+          $scope.tabs[$scope.current_tab].session.getSelection().setSelectionRange(range, false);
+        }
         return null;
       }
     }
@@ -396,6 +401,21 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     }
   };
   
+  $scope.get_sessions = function (event, context, backwards, callback) {
+    var tabs = $scope.tabs;
+    if (context == 'current') {
+      if ($scope.current_tab === null) {
+        tabs = [];
+      }
+      
+      else {
+        tabs = [$scope.tabs[$scope.current_tab]];
+      }
+    }
+    
+    callback(backwards, tabs);
+  };
+  
   $rootScope.$emit('restoreRecent');
   
   $rootScope.$on('addTab', $scope.add_tab);
@@ -409,6 +429,9 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   $rootScope.$on('removeProjectTabs', $scope.remove_project_tabs);
   $rootScope.$on('renameTab', $scope.rename_tab);
   $rootScope.$on('reopenTabs', $scope.open_remember_tabs);
+  
+  //from side search
+  $rootScope.$on('getSessions', $scope.get_sessions);
   
   $rootScope.$on('keyboard-error-sim', $scope.error_simulation);
   $rootScope.$on('keyboard-save', $scope.save_current);

@@ -1,0 +1,78 @@
+<form role="form" ng-submit="search_next()">
+  <div class="form-group">
+    <label for="search-search">Search</label>
+    <input type="text" class="form-control" id="search-search" ng-model="form.search">
+  </div>
+  <div class="form-group">
+    <label for="search-replace">Replace</label>
+    <input type="text" class="form-control" id="search-replace" ng-model="form.replace">
+  </div>
+  <div class="form-group pre-radio">
+    <label>Search In</label>
+  </div>
+  <div class="radio">
+    <input type="radio" id="search-current" checked="checked" value="current" ng-model="form.context">
+    <label for="search-current"></label>
+    <label for="search-current" class="real">Current&nbsp;Tab</label>
+  </div>
+  <div class="radio">
+    <input type="radio" id="search-tabs" value="tabs" ng-model="form.context">
+    <label for="search-tabs"></label>
+    <label for="search-tabs" class="real">All&nbsp;Tabs</label>
+  </div>
+  <div class="form-group pre-radio">
+    <label>Options</label>
+  </div>
+  <div class="checkbox">
+    <input type="checkbox" id="search-case-sensitive" ng-model="form.case_sensitive">
+    <label for="search-case-sensitive"></label>
+    <label for="search-case-sensitive" class="real">Case Sensitive</label>
+  </div>
+  <div class="checkbox">
+    <input type="checkbox" id="search-whole-word" ng-model="form.whole_word">
+    <label for="search-whole-word"></label>
+    <label for="search-whole-word" class="real">Whole Word</label>
+  </div>
+  <div class="checkbox">
+    <input type="checkbox" id="search-regex" ng-model="form.regex">
+    <label for="search-regex"></label>
+    <label for="search-regex" class="real">Regex</label>
+  </div>
+  <hr>
+  <div class="form-group">
+    <div ng-show="form.context == 'current'">
+      <button type="button" ng-click="search_prev()" class="btn btn-default">&laquo; Find Prev</button>
+      <button type="submit" class="btn btn-default">Find Next &raquo;</button>
+    </div>
+    <div ng-show="form.context == 'tabs'">
+      <button type="submit" class="btn btn-default">Find All</button>
+    </div>
+  </div>
+  <div class="form-group">
+    <div ng-show="form.context == 'current'">
+      <button type="button" ng-click="replace_next()" class="btn btn-default">Replace &amp; Next &raquo;</button>
+      <button type="button" ng-click="replace_all()" class="btn btn-default">Replace All</button>
+    </div>
+    <div ng-show="form.context == 'tabs'">
+      <button type="button" ng-click="replace_all()" class="btn btn-default">Replace All</button>
+    </div>
+  </div>
+</form>
+<hr>
+<div ng-show="searchObj">
+  <h4>
+    Search Results: {{ form.search }}
+  </h4>
+  <ul>
+    <li ng-repeat="file in ranges" ng-init="ranges = file.ranges; tab = file.tab;">
+      <div>{{ tab.name }} ({{ ranges.length }})</div>
+      <table>
+        <tr ng-repeat="range in file.ranges" ng-init="start = range.start">
+          <td>
+            <a class="clickme" ng-click="goto(tab, range)">Line: {{ start.row + 1 }}, Column: {{ start.column + 1 }}</a>
+          </td>
+        </tr>
+      </table>
+    </li>
+  </ul>
+</div>

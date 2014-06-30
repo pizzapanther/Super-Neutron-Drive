@@ -122,10 +122,10 @@ LocalFS.prototype.process_entries = function (self, dirReader, parentEntry, entr
   }
 };
 
-LocalFS.prototype.open_file = function (file) {
+LocalFS.prototype.open_file = function (file, range) {
   var self = this;
   
-  self.scope.rootScope.$emit('openTab', file.path, self.pid, function () {
+  self.scope.rootScope.$emit('openTab', file.path, self.pid, range, function () {
     self.info.entry.getFile(file.path, {}, function(fileEntry) {
       fileEntry.file(function (f) {
         var reader = new FileReader();

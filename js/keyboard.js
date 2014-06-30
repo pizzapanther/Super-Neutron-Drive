@@ -8,8 +8,8 @@ var SHORTCUTS = [
   
   {
     name: 'Quick Search',
-    win: 'Alt-Q',
-    mac: 'Alt-Q',
+    win: 'Ctrl-G',
+    mac: 'Command-G',
     event: 'quick-search'
   },
   

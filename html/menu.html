@@ -7,6 +7,9 @@
   <div ng-repeat="(id, m) in messages" id="message-{{ m.id }}" class="{{ m.mtype }}">{{ m.text }}</div>
 </div>
 <div class="pull-right" id="buttons">
+  <div id="quick-search">
+    <input type="text" placeholder="Quick Search" class="form-control" ng-model="form.qsearch" ui-keydown="{13: 'quick_search($event)', 9: 'focus_editor($event)'}">
+  </div>
   <div class="btn-group">
     <div class="btn-group">
       <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">

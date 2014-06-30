@@ -536,13 +536,13 @@ body {
         border: 1px solid @lineColor;
       }
       
-      input[type=checkbox] {
+      input[type=checkbox], input[type=radio] {
         background-color: @bg;
         color: @fg;
         border: 1px solid @lineColor;
       }
       
-      input[type=checkbox] + label {
+      input[type=checkbox] + label, input[type=radio] + label {
         color: @fg;
       }
       
@@ -594,6 +594,18 @@ body {
         &:hover {
           background-color: transparent;
           color: @errorColor;
+        }
+      }
+      
+      #search-tools {
+        h4 {
+          background-color: @highlight;
+        }
+        
+        ul {
+          li {
+            border-bottom: 1px solid @lineColor;
+          }
         }
       }
     }

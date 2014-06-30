@@ -48,6 +48,7 @@ var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
 ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
   $scope.messages = {};
   $scope.recent_files = [];
+  $scope.form = {qsearch: ''};
   
   $scope.hide_right = function () {
     $rootScope.$emit('hideRightMenu');
@@ -160,11 +161,42 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
     }
   };
   
+  $scope.go_to_search = function () {
+    $("#quick-search input").focus().select();
+  };
+  
+  $scope.quick_search = function ($event) {
+    var opts = {
+      needle: $scope.form.qsearch,
+      backwards: false,
+      wrap: true,
+      caseSensitive: false,
+      wholeWord: false,
+      scope: AceSearch.ALL,
+      regExp: false
+    };
+    
+    var search = new AceSearch().set(opts);
+    var range = search.find(Editor.session);
+    if (range) {
+      Editor.session.getSelection().setSelectionRange(range, false);
+    }
+  };
+  
+  $scope.focus_editor = function ($event) {
+    Editor.focus();
+    
+    $event.preventDefault();
+    return false;
+  };
+  
   $rootScope.$on('addMessage', $scope.add_message);
   $rootScope.$on('removeMessage', $scope.remove_message);
   $rootScope.$on('donateModal', $scope.donate_modal);
   $rootScope.$on('addRecent', $scope.add_recent);
   $rootScope.$on('restoreRecent', $scope.restore_recent);
+  
+  $rootScope.$on('keyboard-quick-search', $scope.go_to_search);
 });
 
 ndrive.controller('SplitterCtrl', function($scope, $rootScope) {
