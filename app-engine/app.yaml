@@ -1,0 +1,25 @@
+application: super-neutron-drive
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /static
+  static_dir: static
+  
+- url: .*
+  script: ndrive.wsgi.application
+  
+env_variables:
+  DJANGO_SETTINGS_MODULE: 'ndrive.settings'
+  
+libraries:
+- name: ssl
+  version: "latest"
+  
+- name: django
+  version: "latest"
+  
+builtins:
+- remote_api: on
