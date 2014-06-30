@@ -21,9 +21,7 @@
   "permissions": [
     "fullscreen",
     "storage",
-    {"fileSystem": ["write", "retainEntries", "directory"]},
-    
-    "https://jslogger.com/*"
+    {"fileSystem": ["write", "retainEntries", "directory"]}
   ],
   
   "file_handlers": {
