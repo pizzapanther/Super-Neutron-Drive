@@ -300,9 +300,6 @@ LocalFS.prototype.right_menu = function (rtype, entry, event) {
 
 LocalFS.prototype.retain = function () {
   this.pid = chrome.fileSystem.retainEntry(this.info.entry);
-  
-  this.scope.local_pids.push({name: this.name, pid: this.pid});
-  LocalFS.store_projects(this.scope);
 };
 
 LocalFS.prototype.save = function (tab) {
@@ -354,6 +351,15 @@ LocalFS.prototype.do_save = function (tab, name, path, text, md5sum, mid, errorH
 };
 
 LocalFS.store_projects = function (scope) {
+  var local_pids = [];
+  for (var i=0; i < scope.projects.length; i++) {
+    var p = scope.projects[i];
+    if (p.constructor.name == 'LocalFS') {
+      local_pids.push({name: p.name, pid: p.pid});
+    }
+  }
+  
+  scope.local_pids = local_pids;
   chrome.storage.local.set({'local_pids': JSON.stringify(scope.local_pids)}, function() {
     console.log('Local projects saved');
     console.log(scope.local_pids);
@@ -396,6 +402,7 @@ LocalFS.restore_local = function (i, scope, promise) {
     catch (e) {
       console.error(e);
       i = i + 1;
+      scope.bad_project(scope.local_pids[i].pid);
       LocalFS.restore_local(i, scope, promise);
     }
   }
@@ -424,6 +431,7 @@ LocalFS.init = function (entry, scope, i, promise) {
   
   else {
     i = i + 1;
-    LocalFS.restore_local(i, scope. promise);
+    scope.bad_project(scope.local_pids[i].pid);
+    LocalFS.restore_local(i, scope, promise);
   }
 };

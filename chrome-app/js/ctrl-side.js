@@ -69,12 +69,25 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
     });
   };
   
+  $scope.bad_project = function (pid) {
+    for (var j=0; j < $scope.projects.length; j++) {
+      if ($scope.projects[j].pid == pid) {
+        $scope.projects.splice(j, 1);
+        break;
+      }
+    }
+    
+    apply_updates($scope);
+    $scope.save_projects();
+  };
+  
   $scope.add_project = function (name, ptype, pinfo) {
     var p = new LocalFS(name, pinfo, $scope);
     p.retain();
-    
     $scope.projects.push(p);
     $scope.save_projects();
+    
+    LocalFS.store_projects($scope);
   };
   
   $scope.remove_project = function (project) {
@@ -91,9 +104,6 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
     
     if (i >= 0) {
       $rootScope.$emit('removeProjectTabs', project.constructor.name, project.pid, function () {
-        $scope.local_pids.splice(i, 1);
-        LocalFS.store_projects($scope);
-        
         for (var j=0; j < $scope.projects.length; j++) {
           var p = $scope.projects[j];
           if (project.constructor.name == p.constructor.name && project.pid == p.pid) {
@@ -104,6 +114,7 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
         }
         
         $scope.save_projects();
+        LocalFS.store_projects($scope);
       });
     }
   };
