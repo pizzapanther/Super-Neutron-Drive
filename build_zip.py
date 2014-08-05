@@ -4,18 +4,16 @@ import os
 import json
 import subprocess
 
-exclude_files = ('build_zip.py', '.gitignore', 'super-neutron.zip')
-exclude_dirs = ('.git',)
+exclude_files = ()
+exclude_dirs = ()
 
 if __name__ == "__main__":
-  mypath = os.path.dirname(__file__)
-  if not mypath:
-    mypath = './'
-    
+  os.chdir('chrome-app')
+  
   print("Generating extension in super-neutron.zip\n")
   
   ziplist = ''
-  for root, dirs, files in os.walk(mypath):
+  for root, dirs, files in os.walk('./'):
     for file in files:
       skip = False
       path = os.path.join(root, file)
@@ -32,8 +30,8 @@ if __name__ == "__main__":
         
       ziplist += ' ' + path
       
-  subprocess.call("rm super-neutron.zip", shell=True)
-  subprocess.call("zip -r super-neutron.zip" + ziplist, shell=True)
+  subprocess.call("rm ../super-neutron.zip", shell=True)
+  subprocess.call("zip -r ../super-neutron.zip" + ziplist, shell=True)
   
   print("\nSo long and thanks for all the fish!")
   
