@@ -1,7 +1,16 @@
 var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScope) {
+  $scope.project_types = [
+    {name: 'Local', cls: 'LocalFS'},
+    {name: 'Google Drive', cls: 'GDriveFS'}
+  ];
+  $scope.google_accounts = [
+    {name: 'Add An Account', value: 'add-google'}
+  ];
   $scope.form = {
     name: '',
-    error: ''
+    error: '',
+    type: $scope.project_types[0],
+    google_account: ''
   };
   $scope.local_dir = null;
   $scope.sideScope = sideScope;
@@ -21,6 +30,42 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
       $scope.local_dir.path = path;
       $scope.$apply();
     });
+  };
+  
+  $scope.localUi = function () {
+    return $scope.form.type.cls === 'LocalFS';
+  };
+  
+  $scope.gdriveUi = function () {
+    return $scope.form.type.cls === 'GDriveFS';
+  };
+  
+  $scope.google_select_fail = function () {
+    
+  };
+  
+  $scope.google_account_choosen = function () {
+    console.log($scope.form.google_account);
+    if ($scope.form.google_account && $scope.form.google_account.value === 'add-google') {
+      $scope.form.google_account = '';
+      
+      try {
+        chrome.identity.getAuthToken({interactive: true}, function (token) {
+          if (token) {
+            console.log(token);
+          }
+          
+          else {
+            $scope.google_select_fail();
+          }
+        });
+      }
+      
+      catch(e) {
+        console.log(e);
+        $scope.google_select_fail();
+      }
+    }
   };
   
   $scope.add_project = function () {

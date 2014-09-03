@@ -5,14 +5,24 @@
 <div class="modal-body">
   <form role="form">
     <div class="form-group">
+      <label for="project-type">Project Type:</label>
+      <select class="form-control" ng-model="form.type" id="project-type" ng-options="pjt.name for pjt in project_types"></select>
+    </div>
+    <div class="form-group">
       <label for="project-name">Name:</label>
       <input type="text" class="form-control" id="project-name" ng-model="form.name">
     </div>
-    <div class="form-group">
+    <div class="form-group" ng-show="localUi()">
       <label for="project-dir">Directory:</label><br>
       <button class="btn" ng-click="choose_dir()">Choose Directory</button>
       <br>
       <label class="dir"><span ng-show="!local_dir.path"><em>No Directory Selected</em></span><span class="normal" ng-show="local_dir.path">{{ local_dir.path }}</span></label>
+    </div>
+    <div class="form-group" ng-show="gdriveUi()">
+      <label for="project-account">Google Account:</label><br>
+      <select class="form-control" id="project-account" ng-options="ga.name for ga in google_accounts" ng-model="form.google_account" ng-change="google_account_choosen()">
+        <option value="">-- Choose A Google Account --</option>
+      </select>
     </div>
   </form>
 </div>

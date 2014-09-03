@@ -2,7 +2,7 @@
   "name": "Super Neutron Drive",
   "short_name": "N-Drive",
   "description": "Code editor for local, cloud, and remote development",
-  "version": "14.8.1",
+  "version": "14.9.1",
   
   "app": {
     "background": {
@@ -19,9 +19,12 @@
   "offline_enabled": true,
   
   "permissions": [
-    "fullscreen",
     "storage",
-    {"fileSystem": ["write", "retainEntries", "directory"]}
+    "webview",
+    {"fileSystem": ["write", "retainEntries", "directory"]},
+    
+    "http://pixiebob.neutrondrive.com:8080/*",
+    "https://super.neutrondrive.com/*"
   ],
   
   "file_handlers": {
