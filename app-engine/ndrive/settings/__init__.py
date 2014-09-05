@@ -127,6 +127,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 INSTALLED_APPS = (
   'django.contrib.staticfiles',
+  'ndrive',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -157,6 +158,8 @@ LOGGING = {
     },
   }
 }
+
+from ndrive.settings.local import *
 
 if os.environ.has_key('SERVER_SOFTWARE') and os.environ['SERVER_SOFTWARE'].startswith('Dev'):
   from ndrive.settings.dev import *

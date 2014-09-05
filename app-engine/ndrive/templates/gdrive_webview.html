@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Super Neutron Drive</title>
+    <meta charset="utf-8">
+    <link href='//fonts.googleapis.com/css?family=VT323|Open+Sans' rel='stylesheet' type='text/css'>
+    <style>
+      body {
+        font-family: 'Open Sans', sans-serif;
+        text-align: center;
+        margin: 20px;
+        padding: 0;
+      }
+      
+      h1 {
+        font-family: 'VT323';
+        font-size: 60px;
+        font-weight: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="/static/img/logo.png" alt="">
+    <h1>Super Neutron Drive</h1>
+    <h2>Google Service</h2>
+    <a href="javascript: void(0);" onclick="Neutron.cancel_webview()">Cancel</a>
+    <script>
+      var GOOGLE_KEY = '{{ google_key }}';
+      var GOOGLE_CLIENT_ID = '{{ google_client_id }}';
+    </script>
+    
+    <script src="/static/js/neutron.js"></script>
+    
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://apis.google.com/js/client.js"></script>
+    <script>
+      gapi.load('auth:client,drive-realtime,drive-share,picker', function () { Neutron.auth_init(true); });
+    </script>
+  </body>
+</html>
