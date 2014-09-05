@@ -14,6 +14,12 @@ var ndrive = angular.module('ndrive', ['ui.utils', 'ui.bootstrap']);
 ndrive.run(function ($rootScope, $modal) {
   $rootScope.manifest = chrome.runtime.getManifest();
   
+  $rootScope.server_url = 'https://super.neutrondrive.com';
+  if ($rootScope.manifest.server_url) {
+    $rootScope.server_url = $rootScope.manifest.server_url;
+  }
+  $rootScope.google_accounts = [];
+  
   $rootScope.load_editor = function () {
     Editor = ace.edit("editor");
     Editor.setTheme("ace/theme/textmate");
@@ -57,6 +63,16 @@ ndrive.run(function ($rootScope, $modal) {
   
   $rootScope.load_local_files = function (items) {
     $rootScope.$emit('openFreeAgents', items);
+  };
+  
+  $rootScope.get_account = function (id) {
+    for (var i=0; i < $rootScope.google_accounts.length; i++) {
+      if ($rootScope.google_accounts[i].id == id) {
+        return $rootScope.google_accounts[i];
+      }
+    }
+    
+    return null;
   };
 });
 

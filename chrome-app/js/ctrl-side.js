@@ -6,6 +6,11 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
   $scope.google_accounts = [
     {name: 'Add An Account', value: 'add-google'}
   ];
+  
+  for (var i=0; i < $rootScope.google_accounts.length; i++) {
+    google_accounts.push({name: $rootScope.google_accounts[i].name, value: $rootScope.google_accounts[i].id});
+  }
+  
   $scope.form = {
     name: '',
     error: '',
@@ -40,32 +45,18 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
     return $scope.form.type.cls === 'GDriveFS';
   };
   
-  $scope.google_select_fail = function () {
-    
-  };
-  
   $scope.google_account_choosen = function () {
-    console.log($scope.form.google_account);
     if ($scope.form.google_account && $scope.form.google_account.value === 'add-google') {
       $scope.form.google_account = '';
-      
-      try {
-        chrome.identity.getAuthToken({interactive: true}, function (token) {
-          if (token) {
-            console.log(token);
-          }
-          
-          else {
-            $scope.google_select_fail();
-          }
-        });
-      }
-      
-      catch(e) {
-        console.log(e);
-        $scope.google_select_fail();
-      }
+      $rootScope.$emit('add-google-account');
     }
+  };
+  
+  $scope.google_added = function (event, id) {
+    var account = $rootScope.get_account(id);
+    $scope.google_accounts.push({name: account.name, value: account.id});
+    $scope.form.google_account = $scope.google_accounts[$scope.google_accounts.length - 1];
+    apply_updates($scope);
   };
   
   $scope.add_project = function () {
@@ -85,6 +76,8 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
       $scope.form.error = 'Please enter a name.';
     }
   };
+  
+  $rootScope.$on('google-added', $scope.google_added);
 };
 
 ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
