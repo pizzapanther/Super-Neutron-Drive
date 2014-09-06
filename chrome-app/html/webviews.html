@@ -1,3 +1,6 @@
+<div class="cancel" ng-style="cancel_style">
+  <button class="btn" ng-click="cancel()"><i class="fa fa-times-circle-o"></i> Cancel</button>
+</div>
 <div ng-repeat="webview in google_accounts track by $index">
   <webview id="webview{{ webview.id }}" ng-style="webview.style"></webview>
 </div>

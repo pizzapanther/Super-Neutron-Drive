@@ -22,7 +22,9 @@ Neutron.auth_init = function (setkey) {
   if (!Neutron.gdrive_api_loaded) {
     gapi.client.load('drive', 'v2', function () {
       Neutron.gdrive_api_loaded = true;
+      Neutron.auth_init();
     });
+    return 0;
   }
   
   if (Neutron.authorizer) {
@@ -66,13 +68,11 @@ Neutron.auth_callback = function (OAuth) {
     
     oauth = {
       access_token: OAuth.access_token,
-      client_id: OAuth.client_id,
       expires_at: OAuth.expires_at
     };
     
     var request = gapi.client.drive.about.get();
     request.execute(function (response) {
-      console.log(response);
       Neutron.parent.postMessage({
         task: 'token',
         oauth: oauth,
@@ -83,8 +83,26 @@ Neutron.auth_callback = function (OAuth) {
   }
 };
 
-Neutron.cancel_webview = function () {
-  Neutron.parent.postMessage({'task': 'cancel', id: Neutron.id}, Neutron.origin);
+Neutron.pick_folder = function () {
+  var docsView = new google.picker.DocsView().
+    setIncludeFolders(true).
+    setMimeTypes('application/vnd.google-apps.folder').
+    setSelectFolderEnabled(true);
+  var picker = new google.picker.PickerBuilder().
+    addView(docsView).
+    setOAuthToken(Neutron.OAuth.access_token).
+    setDeveloperKey(GOOGLE_KEY).
+    setCallback(Neutron.pick_folder_callback).
+    build();
+  picker.setVisible(true);
+};
+
+Neutron.pick_folder_callback = function (data) {
+  if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+    var doc = data[google.picker.Response.DOCUMENTS][0];
+    var id = doc[google.picker.Document.ID];
+    Neutron.parent.postMessage({'task': 'folder-picked', id: Neutron.id, folderId: id}, Neutron.origin);
+  }
 };
 
 Neutron.receive_message = function (event) {
@@ -95,6 +113,10 @@ Neutron.receive_message = function (event) {
       Neutron.parent = event.source;
       Neutron.origin = event.origin;
       Neutron.id = event.data.id;
+    }
+    
+    else if (event.data.task === 'pick-folder') {
+      Neutron.pick_folder();
     }
   }
 };

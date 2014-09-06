@@ -8,14 +8,15 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
   ];
   
   for (var i=0; i < $rootScope.google_accounts.length; i++) {
-    google_accounts.push({name: $rootScope.google_accounts[i].name, value: $rootScope.google_accounts[i].id});
+    $scope.google_accounts.push({name: $rootScope.google_accounts[i].name, value: $rootScope.google_accounts[i].id});
   }
   
   $scope.form = {
     name: '',
     error: '',
     type: $scope.project_types[0],
-    google_account: ''
+    google_account: '',
+    folderId: ''
   };
   $scope.local_dir = null;
   $scope.sideScope = sideScope;
@@ -45,6 +46,10 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
     return $scope.form.type.cls === 'GDriveFS';
   };
   
+  $scope.gdriveUiPicker = function () {
+    return $scope.gdriveUi() && $scope.form.google_account !== '';
+  };
+  
   $scope.google_account_choosen = function () {
     if ($scope.form.google_account && $scope.form.google_account.value === 'add-google') {
       $scope.form.google_account = '';
@@ -59,16 +64,39 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
     apply_updates($scope);
   };
   
+  $scope.choose_google_dir = function () {
+    $rootScope.$emit('google-picker-folder', $scope.form.google_account.value);
+  };
+  
+  $scope.folder_picked = function (event, folderId) {
+    $scope.form.folderId = folderId;
+  };
+  
   $scope.add_project = function () {
     if ($scope.form.name) {
-      if ($scope.local_dir) {
-        $scope.form.error = '';
-        $scope.sideScope.add_project($scope.form.name, 'local-dir', $scope.local_dir);
-        $modalInstance.close();
+      if ($scope.localUi()) {
+        if ($scope.local_dir) {
+          $scope.form.error = '';
+          $scope.sideScope.add_project($scope.form.name, 'local-dir', $scope.local_dir);
+          $modalInstance.close();
+        }
+        
+        else {
+          $scope.form.error = 'Please choose a directory.';
+        }
       }
       
-      else {
-        $scope.form.error = 'Please choose a directory.';
+      else if ($scope.gdriveUi()) {
+        if ($scope.form.google_account === '') {
+          $scope.form.error = 'Please choose a Google account.';
+        }
+        
+        else {
+          $scope.form.error = '';
+          var drive = {folderId: $scope.form.folderId, account: $scope.form.google_account.value};
+          $scope.sideScope.add_project($scope.form.name, 'gdrive', drive);
+          $modalInstance.close();
+        }
       }
     }
     
@@ -77,7 +105,15 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
     }
   };
   
-  $rootScope.$on('google-added', $scope.google_added);
+  $scope.listeners = [];
+  $scope.listeners.push($rootScope.$on('google-added', $scope.google_added));
+  $scope.listeners.push($rootScope.$on('folder-picked', $scope.folder_picked));
+  
+  $scope.$on('$destroy', function() {
+    for (var i=0; i < $scope.listeners.length; i++) {
+      $scope.listeners[i]();
+    }
+  });
 };
 
 ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
@@ -120,12 +156,21 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   };
   
   $scope.add_project = function (name, ptype, pinfo) {
-    var p = new LocalFS(name, pinfo, $scope);
-    p.retain();
-    $scope.projects.push(p);
-    $scope.save_projects();
+    var p;
     
-    LocalFS.store_projects($scope);
+    if (ptype === 'local-dir') {
+      p = new LocalFS(name, pinfo, $scope);
+      p.retain();
+      $scope.projects.push(p);
+      $scope.save_projects();
+      
+      LocalFS.store_projects($scope);
+    }
+    
+    else if (ptype === 'gdrive') {
+      p = new GDriveFS(name, pinfo.folderId, $rootScope, $scope, pinfo.account);
+      $scope.projects.push(p);
+    }
   };
   
   $scope.remove_project = function (project) {

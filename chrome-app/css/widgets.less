@@ -213,7 +213,7 @@
       width: ~'calc(100% - 20px)';
       
       &.project {
-        margin: 0 0 5px 0;
+        margin: 8px 0 5px 0;
         padding: 0 0 5px 5px;
         width: 100%;
         
@@ -565,5 +565,17 @@
     width: ~'calc(100% - 55px)';
     top: 20px;
     left: 20px;
+  }
+  
+  .cancel {
+    position: absolute;
+    z-index: 2010;
+    top: 0;
+    right: 0;
+    display: none;
+    
+    .btn {
+      font-size: 150%;
+    }
   }
 }

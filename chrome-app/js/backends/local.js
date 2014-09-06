@@ -46,6 +46,11 @@ LocalFS.prototype.list_dir = function (parentEntry, entry) {
     return null;
   }
   
+  return self.list_fs(parentEntry, entry);
+};
+
+LocalFS.prototype.list_fs = function (parentEntry, entry) {
+  var self = this;
   var dirReader = null;
   if (parentEntry) {
     if (entry) {
