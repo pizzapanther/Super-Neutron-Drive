@@ -106,8 +106,6 @@ Neutron.pick_folder_callback = function (data) {
 };
 
 Neutron.receive_message = function (event) {
-  console.log(event);
-  
   if (event.data && event.data.task) {
     if (event.data.task === 'handshake') {
       Neutron.parent = event.source;
@@ -117,6 +115,12 @@ Neutron.receive_message = function (event) {
     
     else if (event.data.task === 'pick-folder') {
       Neutron.pick_folder();
+    }
+    
+    else if (Drive[event.data.task]) {
+      Drive[event.data.task](event.data, function (result) {
+        Neutron.parent.postMessage({'task': event.data.task, id: Neutron.id, result: result}, Neutron.origin);
+      });
     }
   }
 };

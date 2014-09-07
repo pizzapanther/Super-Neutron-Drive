@@ -22,10 +22,10 @@
           <a class="psort" project-drag><i class="fa fa-sort"></i></a>
           <a class="prj" ng-click="project.list_dir()" right-click="project.right_menu('dir', project, $event)">
             <span class="fa-stack" ng-if="project.outline">
-              <i class="fa fa-square-o fa-stack-2x"></i>
-              <i class="fa {{ project.cls }} fa-stack-1x"></i>
+              <i class="fa fa-square-o fa-stack-2x" ng-class="{'fa-spin': project.working}"></i>
+              <i class="fa {{ project.cls }} fa-stack-1x" ng-class="{'fa-spin': project.working}"></i>
             </span>
-            <i class="{{ project.cls }}" ng-if="!project.outline"></i>&nbsp;{{ project.name }}
+            <i class="{{ project.cls }}" ng-if="!project.outline" ng-class="{'fa-spin': project.working}"></i>&nbsp;{{ project.name }}
           </a>
           <ul>
             <li class="dir" ng-repeat="entry in project.dirs" ng-include="'side-dirlisting.html'"></li>

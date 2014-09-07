@@ -1,5 +1,5 @@
 <a ng-click="project.list_dir(entry)" right-click="project.right_menu('dir', entry, $event)">
-  <i class="fa" ng-class="{'fa-folder': entry.state == 'closed', 'fa-folder-open': entry.state == 'open'}"></i> {{ entry.name }}
+  <i class="fa" ng-class="{'fa-spin': entry.working, 'fa-folder': entry.state == 'closed', 'fa-folder-open': entry.state == 'open'}"></i> {{ entry.name }}
 </a>
 <ul>
   <li class="dir" ng-repeat="entry in entry.dirs" ng-include="'side-dirlisting.html'"></li>

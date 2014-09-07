@@ -53,7 +53,14 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
     
     if (event.origin === $rootScope.server_url) {
       if (event.data && event.data.task) {
-        if (['token', 'folder-picked'].indexOf(event.data.task) > -1) {
+        var account_tasks = ['token', 'folder-picked'];
+        var tasks_callbacks = {
+          'list_dir': 'list_fs_callback',
+          'open': 'open_file_callback',
+          'save': 'do_save_callback'
+        };
+        
+        if (account_tasks.indexOf(event.data.task) > -1 || tasks_callbacks[event.data.task]) {
           account = $scope.get_account(event.data.id);
         }
         
@@ -84,8 +91,8 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
           apply_updates($rootScope);
         }
         
-        else if (event.data.task === 'list-dir') {
-          account.list_dir(event.data.listing);
+        else if (tasks_callbacks[event.data.task]) {
+          account.fs[tasks_callbacks[event.data.task]](event.data.result);
         }
       }
     }
