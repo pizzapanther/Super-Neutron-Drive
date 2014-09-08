@@ -390,6 +390,10 @@ LocalFS.load_projects_callback = function (obj, scope, promise) {
       promise.resolve();
     }
   }
+  
+  else {
+    promise.resolve();
+  }
 };
 
 LocalFS.restore_local = function (i, scope, promise) {

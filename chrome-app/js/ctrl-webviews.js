@@ -35,19 +35,22 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
     }, 50);
   };
   
-  $scope.init_account = function (event, gfs, postData) {
-    var id = gfs.account.id;
+  $scope.init_account = function (event, account, postData) {
+    var id = account.id;
     var webview = document.querySelector("#webview" + id);
-    $scope.show_webview(gfs.account);
+    $scope.show_webview(account);
     
+    if (postData) {
+      account.postData = postData;
+    }
     webview.src = $rootScope.server_url + "/view-" + id;
     webview.addEventListener('newwindow', $scope.handle_popup);
     webview.addEventListener("loadstop", function (event) {
       webview.contentWindow.postMessage({
         task: 'handshake',
         id: id,
-        oauth: gfs.account.oauth,
-        email: gfs.account.email
+        oauth: account.oauth,
+        email: account.email
       }, '*');
     });
   };
@@ -69,7 +72,7 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
     
     if (event.origin === $rootScope.server_url) {
       if (event.data && event.data.task) {
-        var account_tasks = ['token', 'folder-picked'];
+        var account_tasks = ['token', 'folder-picked', 'hide-webview'];
         var tasks_callbacks = {
           'list_dir': 'list_fs_callback',
           'open': 'open_file_callback',
@@ -87,6 +90,11 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
           }
         }
         
+        else if (event.data.task === 'hide-webview') {
+          $scope.hide_webview(account);
+          apply_updates($scope);
+        }
+        
         else if (event.data.task === 'token') {
           account.oauth = event.data.oauth;
           account.email = event.data.email;
@@ -98,6 +106,12 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
           
           console.log(account);
           $rootScope.$emit('google-added', account.id);
+          
+          if (account.postData) {
+            account.webview.contentWindow.postMessage(account.postData, '*');
+            account.postData = null;
+            $rootScope.$emit('save-projects');
+          }
         }
         
         else if (event.data.task === 'folder-picked') {
@@ -109,7 +123,8 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
         }
         
         else if (tasks_callbacks[event.data.task]) {
-          account.fs[tasks_callbacks[event.data.task]](event.data.result);
+          var pid = event.data.pid;
+          account.fs[pid][tasks_callbacks[event.data.task]](event.data.result);
         }
       }
     }

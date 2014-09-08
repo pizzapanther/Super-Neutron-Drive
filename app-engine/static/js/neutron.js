@@ -6,10 +6,11 @@ var Neutron = {
   UserId: null,
   parent: null,
   origin: null,
-  id: null
+  id: null,
+  init_token: null
 };
 
-Neutron.auth_init = function (setkey) {
+Neutron.auth_init = function (setkey, force_slow) {
   if (setkey) {
     gapi.client.setApiKey(GOOGLE_KEY);
   }
@@ -34,6 +35,7 @@ Neutron.auth_init = function (setkey) {
   
   var options = {
     client_id: GOOGLE_CLIENT_ID,
+    immediate: true,
     scope: [
       'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.scripts'
@@ -42,7 +44,10 @@ Neutron.auth_init = function (setkey) {
   
   if (Neutron.UserId) {
     options.user_id = Neutron.UserId;
-    options.immediate = true;
+  }
+  
+  if (force_slow) {
+    options.immediate = false;
   }
   
   gapi.auth.authorize(options, Neutron.auth_callback);
@@ -52,7 +57,11 @@ Neutron.auth_callback = function (OAuth) {
   Neutron.parent.postMessage({'task': 'close-popup', id: Neutron.id}, Neutron.origin);
   console.log(OAuth);
   
-  //todo: auth failed when OAuth.error
+  if (OAuth && OAuth.error) {
+    Neutron.auth_init(false, true);
+    return null;
+  }
+  
   if (OAuth && OAuth.expires_in) {
     try {
       gapi.drive.realtime.setServerAddress('https://docs.google.com/otservice/');
@@ -75,9 +84,11 @@ Neutron.auth_callback = function (OAuth) {
     gapi.client.load('oauth2', 'v2', function() {
       gapi.client.oauth2.userinfo.get().execute(function (resp) {
         oauth.user_id = resp.id;
+        Neutron.UserId = resp.id;
         
         var request = gapi.client.drive.about.get();
         request.execute(function (response) {
+          document.querySelector("#email").innerHTML = 'Account: ' + response.user.emailAddress;
           Neutron.parent.postMessage({
             task: 'token',
             oauth: oauth,
@@ -110,17 +121,39 @@ Neutron.pick_folder_callback = function (data) {
     var id = doc[google.picker.Document.ID];
     Neutron.parent.postMessage({'task': 'folder-picked', id: Neutron.id, folderId: id}, Neutron.origin);
   }
+  
+  else if (data[google.picker.Response.ACTION] == google.picker.Action.CANCEL) {
+    Neutron.parent.postMessage({'task': 'hide-webview', id: Neutron.id}, Neutron.origin);
+  }
 };
 
 Neutron.receive_message = function (event) {
   if (event.data && event.data.task) {
     if (event.data.task === 'handshake') {
-      Neutron.parent = event.source;
-      Neutron.origin = event.origin;
-      Neutron.id = event.data.id;
-      
-      if ()
-      gapi.load('auth:client,drive-realtime,drive-share,picker', function () { Neutron.auth_init(true); });
+      if (!Neutron.parent) {
+        Neutron.parent = event.source;
+        Neutron.origin = event.origin;
+        Neutron.id = event.data.id;
+        
+        if (event.data.oauth) {
+          console.log(event.data.oauth);
+          document.querySelector("#email").innerHTML = 'Initializing Account: ' + event.data.email;
+          gapi.load('auth:client,drive-realtime,drive-share,picker', function () {
+            gapi.auth.setToken({
+              access_token: event.data.oauth.access_token
+            });
+            
+            Neutron.UserId = event.data.oauth.user_id;
+            Neutron.auth_init(true);
+          });
+        }
+        
+        else {
+          gapi.load('auth:client,drive-realtime,drive-share,picker', function () {
+            Neutron.auth_init(true);
+          });
+        }
+      }
     }
     
     else if (event.data.task === 'pick-folder') {
@@ -129,7 +162,9 @@ Neutron.receive_message = function (event) {
     
     else if (Drive[event.data.task]) {
       Drive[event.data.task](event.data, function (result) {
-        Neutron.parent.postMessage({'task': event.data.task, id: Neutron.id, result: result}, Neutron.origin);
+        Neutron.parent.postMessage({
+          'task': event.data.task, id: Neutron.id, result: result, pid: event.data.pid
+        }, Neutron.origin);
       });
     }
   }

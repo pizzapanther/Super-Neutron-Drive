@@ -55,6 +55,13 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
       $scope.form.google_account = '';
       $rootScope.$emit('add-google-account');
     }
+    
+    else if ($scope.form.google_account) {
+      var account = $rootScope.get_account($scope.form.google_account.value);
+      if (!account.webview) {
+        $rootScope.$emit('google-account-init', account);
+      }
+    }
   };
   
   $scope.google_added = function (event, id) {
@@ -65,7 +72,14 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
   };
   
   $scope.choose_google_dir = function () {
-    $rootScope.$emit('google-picker-folder', $scope.form.google_account.value);
+    var account = $rootScope.get_account($scope.form.google_account.value);
+    if (account.webview) {
+      $rootScope.$emit('google-picker-folder', $scope.form.google_account.value);
+    }
+    
+    else {
+      $rootScope.error_message('Google account has not been authenicated.');
+    }
   };
   
   $scope.folder_picked = function (event, folderId) {
@@ -92,10 +106,17 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
         }
         
         else {
-          $scope.form.error = '';
-          var drive = {folderId: $scope.form.folderId, account: $scope.form.google_account.value};
-          $scope.sideScope.add_project($scope.form.name, 'gdrive', drive);
-          $modalInstance.close();
+          var account = $rootScope.get_account($scope.form.google_account.value);
+          if (account.webview) {
+            $scope.form.error = '';
+            var drive = {folderId: $scope.form.folderId, account: $scope.form.google_account.value};
+            $scope.sideScope.add_project($scope.form.name, 'gdrive', drive);
+            $modalInstance.close();
+          }
+          
+          else {
+            $scope.form.error = 'Google account has not been authenicated.';
+          }
         }
       }
     }
@@ -176,30 +197,43 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   
   $scope.remove_project = function (project) {
     var i = -1;
+    var j;
     
     if (project.cid == 'LocalFS') {
-      for (var j=0; j < $scope.local_pids.length; j++) {
+      for (j=0; j < $scope.local_pids.length; j++) {
         if ($scope.local_pids[j].pid == project.pid) {
           i = j;
           break;
         }
       }
+      
+      if (i >= 0) {
+        $rootScope.$emit('removeProjectTabs', project.cid, project.pid, function () {
+          for (j=0; j < $scope.projects.length; j++) {
+            var p = $scope.projects[j];
+            if (project.cid == p.cid && project.pid == p.pid) {
+              $scope.projects.splice(j, 1);
+              break;
+            }
+          }
+          
+          $scope.save_projects();
+          LocalFS.store_projects($scope);
+        });
+      }
     }
     
-    if (i >= 0) {
-      $rootScope.$emit('removeProjectTabs', project.cid, project.pid, function () {
-        for (var j=0; j < $scope.projects.length; j++) {
-          var p = $scope.projects[j];
-          if (project.cid == p.cid && project.pid == p.pid) {
-            $scope.projects.splice(j, 1);
-            
-            break;
-          }
+    if (project.cid == 'GDriveFS') {
+      for (j=0; j < $scope.projects.length; j++) {
+        var p = $scope.projects[j];
+        if (project.cid == p.cid && project.pid == p.pid) {
+          $scope.projects.splice(j, 1);
+          break;
         }
-        
-        $scope.save_projects();
-        LocalFS.store_projects($scope);
-      });
+      }
+      
+      $scope.save_projects();
+      GDriveFS.store_projects($scope);
     }
   };
   
@@ -300,6 +334,7 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   
   $rootScope.$on('openFreeAgents', $scope.open_free_agents);
   $rootScope.$on('loadTabs', $scope.open_remembered_tabs);
+  $rootScope.$on('save-projects', $scope.save_projects);
   
   window.load_local_files = $rootScope.load_local_files;
   

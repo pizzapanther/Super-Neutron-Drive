@@ -7,9 +7,14 @@ function GDriveFS (name, info, root, scope, pid) {
   this.root = root;
   this.account = this.root.get_account(pid);
   this.working = false;
-  this.account.fs = this;
   this.transactions = {};
   this.pid = 'gdrive-' + pid + '-' + this.info;
+  
+  if (!this.account.fs) {
+    this.account.fs = {};
+  }
+  
+  this.account.fs[this.pid] = this;
 }
 
 GDriveFS.prototype = Object.create(LocalFS.prototype);
@@ -17,12 +22,13 @@ GDriveFS.prototype = Object.create(LocalFS.prototype);
 GDriveFS.prototype.postMessage = function (data) {
   var self = this;
   
+  data.pid = self.pid;
   if (self.account.webview) {
     self.account.webview.contentWindow.postMessage(data, '*');
   }
   
   else {
-    self.root.$emit('google-account-init', self, data);
+    self.root.$emit('google-account-init', self.account, data);
   }
 };
 
@@ -135,7 +141,7 @@ GDriveFS.prototype.open_file_callback = function (file) {
   delete self.transactions[file.fileId];
   
   if (file.error) {
-    root.error_message(file.error);
+    self.root.error_message(file.error);
   }
   
   else {
@@ -222,7 +228,7 @@ GDriveFS.load_projects_callback = function (obj, scope, promise) {
     
     scope.rootScope.$apply();
     for (var j in projects) {
-      var pp = projects[i];
+      var pp = projects[j];
       GDriveFS.init(pp, scope);
     }
     scope.$apply();
