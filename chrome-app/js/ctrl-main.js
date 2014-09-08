@@ -365,7 +365,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   $scope.remove_project_tabs = function (event, className, pid, callback) {
     for (var j=0; j < $scope.tabs.length; j++) {
       var t = $scope.tabs[j];
-      if (t.project.constructor.name == className && t.project.pid == pid) {
+      if (t.project.cid == className && t.project.pid == pid) {
         $scope.remove_tab(j);
       }
     }

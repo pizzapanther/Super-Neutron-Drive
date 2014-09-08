@@ -52,6 +52,7 @@ Neutron.auth_callback = function (OAuth) {
   Neutron.parent.postMessage({'task': 'close-popup', id: Neutron.id}, Neutron.origin);
   console.log(OAuth);
   
+  //todo: auth failed when OAuth.error
   if (OAuth && OAuth.expires_in) {
     try {
       gapi.drive.realtime.setServerAddress('https://docs.google.com/otservice/');
@@ -71,14 +72,20 @@ Neutron.auth_callback = function (OAuth) {
       expires_at: OAuth.expires_at
     };
     
-    var request = gapi.client.drive.about.get();
-    request.execute(function (response) {
-      Neutron.parent.postMessage({
-        task: 'token',
-        oauth: oauth,
-        email: response.user.emailAddress,
-        id: Neutron.id
-      }, Neutron.origin);
+    gapi.client.load('oauth2', 'v2', function() {
+      gapi.client.oauth2.userinfo.get().execute(function (resp) {
+        oauth.user_id = resp.id;
+        
+        var request = gapi.client.drive.about.get();
+        request.execute(function (response) {
+          Neutron.parent.postMessage({
+            task: 'token',
+            oauth: oauth,
+            email: response.user.emailAddress,
+            id: Neutron.id
+          }, Neutron.origin);
+        });
+      });
     });
   }
 };
@@ -111,6 +118,9 @@ Neutron.receive_message = function (event) {
       Neutron.parent = event.source;
       Neutron.origin = event.origin;
       Neutron.id = event.data.id;
+      
+      if ()
+      gapi.load('auth:client,drive-realtime,drive-share,picker', function () { Neutron.auth_init(true); });
     }
     
     else if (event.data.task === 'pick-folder') {

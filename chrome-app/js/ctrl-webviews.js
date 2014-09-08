@@ -1,5 +1,4 @@
 ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
-  $scope.google_accounts = $rootScope.google_accounts;
   $scope.get_account = $rootScope.get_account;
   $scope.cancel_style = {};
   
@@ -34,6 +33,23 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
         webview.contentWindow.postMessage({task: 'handshake', id: id}, '*');
       });
     }, 50);
+  };
+  
+  $scope.init_account = function (event, gfs, postData) {
+    var id = gfs.account.id;
+    var webview = document.querySelector("#webview" + id);
+    $scope.show_webview(gfs.account);
+    
+    webview.src = $rootScope.server_url + "/view-" + id;
+    webview.addEventListener('newwindow', $scope.handle_popup);
+    webview.addEventListener("loadstop", function (event) {
+      webview.contentWindow.postMessage({
+        task: 'handshake',
+        id: id,
+        oauth: gfs.account.oauth,
+        email: gfs.account.email
+      }, '*');
+    });
   };
   
   $scope.handle_popup = function (event) {
@@ -80,6 +96,7 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
           apply_updates($scope);
           apply_updates($rootScope);
           
+          console.log(account);
           $rootScope.$emit('google-added', account.id);
         }
         
@@ -96,6 +113,11 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
         }
       }
     }
+  };
+  
+  $scope.webview_init = function (event, id) {
+    var account = $scope.get_account(id);
+    $scope.hide_webview(account);
   };
   
   $scope.hide_webview = function (account) {
@@ -121,6 +143,8 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
   };
   
   $rootScope.$on('add-google-account', $scope.add_account);
+  $rootScope.$on('google-account-init', $scope.init_account);
   $rootScope.$on('google-picker-folder', $scope.picker_folder);
+  $rootScope.$on('webview-init', $scope.webview_init);
   window.addEventListener("message", $scope.receive_message, false);
 });

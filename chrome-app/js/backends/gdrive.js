@@ -9,14 +9,27 @@ function GDriveFS (name, info, root, scope, pid) {
   this.working = false;
   this.account.fs = this;
   this.transactions = {};
-  this.pid = 'gdrive-' + pid;
+  this.pid = 'gdrive-' + pid + '-' + this.info;
 }
 
 GDriveFS.prototype = Object.create(LocalFS.prototype);
 
+GDriveFS.prototype.postMessage = function (data) {
+  var self = this;
+  
+  if (self.account.webview) {
+    self.account.webview.contentWindow.postMessage(data, '*');
+  }
+  
+  else {
+    self.root.$emit('google-account-init', self, data);
+  }
+};
+
 GDriveFS.prototype.list_fs = function (parentEntry, entry) {
   var self = this;
   
+  //info is root folder id
   var folderId = self.info;
   if (parentEntry) {
     folderId = parentEntry.id;
@@ -25,7 +38,7 @@ GDriveFS.prototype.list_fs = function (parentEntry, entry) {
   }
   
   self.working = true;
-  self.account.webview.contentWindow.postMessage({task: 'list_dir', folderId: folderId}, '*');
+  self.postMessage({task: 'list_dir', folderId: folderId});
 };
 
 GDriveFS.prototype.list_fs_callback = function (listing) {
@@ -104,7 +117,7 @@ GDriveFS.prototype.open_file = function (file, range) {
   
   self.scope.rootScope.$emit('openTab', file.id, self.pid, range, function () {
     self.transactions[file.id] = {range: range, entry: file};
-    self.account.webview.contentWindow.postMessage({task: 'open', title: file.name, fileId: file.id}, '*');
+    self.postMessage({task: 'open', title: file.name, fileId: file.id});
   });
 };
 
@@ -133,9 +146,9 @@ GDriveFS.prototype.open_file_callback = function (file) {
 GDriveFS.prototype.do_save = function (tab, name, path, text, md5sum, mid, errorHandler) {
   var self = this;
   self.transactions[tab.file.id] = {tab: tab, errorHandler: errorHandler, mid: mid, md5sum: md5sum};
-  self.account.webview.contentWindow.postMessage({
+  self.postMessage({
     task: 'save', text: text, title: name, fileId: tab.file.id, mimeType: tab.file.mimeType
-  }, '*');
+  });
 };
 
 GDriveFS.prototype.do_save_callback = function (save) {
@@ -153,4 +166,72 @@ GDriveFS.prototype.do_save_callback = function (save) {
     self.scope.rootScope.$emit('removeMessage', t.mid);
     t.tab.scope.$apply();
   }
+};
+
+GDriveFS.store_projects = function (scope) {
+  var drive_projects = [];
+  for (var i=0; i < scope.projects.length; i++) {
+    var p = scope.projects[i];
+    if (p.cid == 'GDriveFS') {
+      drive_projects.push({
+        name: p.name,
+        info: p.info,
+        pid: p.pid,
+        account: {
+          name: p.account.name,
+          id: p.account.id,
+          oauth: p.account.oauth,
+          email: p.account.email
+        }
+      });
+    }
+  }
+  
+  chrome.storage.sync.set({'drive_projects': JSON.stringify(drive_projects)}, function() {
+    console.log('GDrive projects saved');
+    console.log(drive_projects);
+  });
+};
+
+GDriveFS.load_projects = function (scope, q) {
+  var deferred = q.defer();
+  
+  chrome.storage.sync.get('drive_projects', function (obj) {
+    GDriveFS.load_projects_callback(obj, scope, deferred);
+  });
+  
+  return deferred.promise;
+};
+
+GDriveFS.load_projects_callback = function (obj, scope, promise) {
+  if (obj && obj.drive_projects) {
+    var projects = JSON.parse(obj.drive_projects);
+    scope.rootScope.google_accounts = [];
+    
+    for (var i in projects) {
+      var p = projects[i];
+      var account = scope.rootScope.get_account(p.account.id);
+      if (!account) {
+        scope.rootScope.google_accounts.push(p.account);
+      }
+      
+      p.account.style = {};
+      p.account.root = '';
+      scope.rootScope.$emit('webview-init', p.account.id);
+    }
+    
+    scope.rootScope.$apply();
+    for (var j in projects) {
+      var pp = projects[i];
+      GDriveFS.init(pp, scope);
+    }
+    scope.$apply();
+  }
+  
+  promise.resolve();
+};
+
+GDriveFS.init = function (p, scope) {
+  var project = new GDriveFS(p.name, p.info, scope.rootScope, scope, p.account.id);
+  scope.projects.push(project);
 };

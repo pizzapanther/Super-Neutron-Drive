@@ -18,10 +18,6 @@ LocalFS.prototype.file_id = function (path) {
   return id;
 };
 
-LocalFS.prototype.className = function () {
-  return this.constructor.name;
-};
-
 LocalFS.prototype.list_dir = function (parentEntry, entry) {
   var self = this;
   
@@ -359,7 +355,7 @@ LocalFS.store_projects = function (scope) {
   var local_pids = [];
   for (var i=0; i < scope.projects.length; i++) {
     var p = scope.projects[i];
-    if (p.constructor.name == 'LocalFS') {
+    if (p.cid == 'LocalFS') {
       local_pids.push({name: p.name, pid: p.pid});
     }
   }

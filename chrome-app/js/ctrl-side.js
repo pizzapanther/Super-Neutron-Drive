@@ -163,20 +163,21 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
       p.retain();
       $scope.projects.push(p);
       $scope.save_projects();
-      
       LocalFS.store_projects($scope);
     }
     
     else if (ptype === 'gdrive') {
       p = new GDriveFS(name, pinfo.folderId, $rootScope, $scope, pinfo.account);
       $scope.projects.push(p);
+      $scope.save_projects();
+      GDriveFS.store_projects($scope);
     }
   };
   
   $scope.remove_project = function (project) {
     var i = -1;
     
-    if (project.constructor.name == 'LocalFS') {
+    if (project.cid == 'LocalFS') {
       for (var j=0; j < $scope.local_pids.length; j++) {
         if ($scope.local_pids[j].pid == project.pid) {
           i = j;
@@ -186,10 +187,10 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
     }
     
     if (i >= 0) {
-      $rootScope.$emit('removeProjectTabs', project.constructor.name, project.pid, function () {
+      $rootScope.$emit('removeProjectTabs', project.cid, project.pid, function () {
         for (var j=0; j < $scope.projects.length; j++) {
           var p = $scope.projects[j];
-          if (project.constructor.name == p.constructor.name && project.pid == p.pid) {
+          if (project.cid == p.cid && project.pid == p.pid) {
             $scope.projects.splice(j, 1);
             
             break;
@@ -230,11 +231,12 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
     var projs = [];
     for (var i=0; i < $scope.projects.length; i++) {
       var p = $scope.projects[i];
-      projs.push({name: p.name, pid: p.pid, type: p.className()});
+      projs.push({name: p.name, pid: p.pid, type: p.cid});
     }
     
     chrome.storage.local.set({'projects': JSON.stringify(projs)}, function() {
       console.log('Projects saved');
+      console.log(projs);
     });
   };
   
@@ -242,23 +244,31 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
     chrome.storage.local.get('projects', function (obj) {
       if (obj.projects) {
         var projs = JSON.parse(obj.projects);
-        if (projs.length == $scope.projects.length) {
-          var new_projects = [];
+        var new_projects = [];
+        var found = [];
+        
+        for (var j=0; j < projs.length; j++) {
+          var n = projs[j];
           
-          for (var j=0; j < projs.length; j++) {
-            var n = projs[j];
-            for (var i=0; i < $scope.projects.length; i++) {
-              var p = $scope.projects[i];
-              if (p.className() == n.type && p.pid == n.pid) {
-                new_projects.push(p);
-                break;
-              }
+          for (var i=0; i < $scope.projects.length; i++) {
+            var p = $scope.projects[i];
+            if (p.cid == n.type && p.pid == n.pid) {
+              new_projects.push(p);
+              found.push(p.cid + '-' + p.pid)
+              break;
             }
           }
-          
-          $scope.projects = new_projects;
-          $scope.$apply();
         }
+        
+        for (var k=0; k < $scope.projects.length; k++) {
+          var pp = $scope.projects[k];
+          if (found.indexOf(pp.cid + '-' + pp.pid) < 0) {
+            new_projects.push(pp);
+          }
+        }
+        
+        $scope.projects = new_projects;
+        $scope.$apply();
       }
     });
   };
@@ -294,6 +304,9 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   window.load_local_files = $rootScope.load_local_files;
   
   LocalFS.load_projects($scope, $q)
-  .then($scope.restore_project_order)
-  .then(function () { $rootScope.$emit('reopenTabs') });
+  .then(function () {
+    GDriveFS.load_projects($scope, $q)
+    .then($scope.restore_project_order)
+    .then(function () { $rootScope.$emit('reopenTabs') });
+  });
 });
