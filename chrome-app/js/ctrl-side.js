@@ -324,7 +324,7 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
         for (var j=0; j < $scope.projects.length; j++) {
           var p = $scope.projects[j];
           if (p.pid == t.pid && p.cid == t.ptype) {
-            p.reopen_file(t.retainer);
+            p.reopen_file(t.retainer, t.name);
             break;
           }
         }

@@ -1,6 +1,5 @@
 ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
   $scope.get_account = $rootScope.get_account;
-  $scope.cancel_style = {};
   
   $scope.add_account = function (event) {
     var id = null;
@@ -22,12 +21,17 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
       }
     }
     
-    $rootScope.google_accounts.push({name: 'Retrieving ...', id: id, style: {}, root: ''});
-    $scope.cancel_style = {display: 'block'};
+    $rootScope.google_accounts.push({
+      name: 'Retrieving ...',
+      id: id,
+      style: {},
+      root: '',
+      cancel_style: {display: 'block'}
+    });
     
     setTimeout(function () {
       var webview = document.querySelector("#webview" + id);
-      webview.src = $rootScope.server_url + "/view-" + id;
+      webview.src = $scope.server_url(id);
       webview.addEventListener('newwindow', $scope.handle_popup);
       webview.addEventListener("loadstop", function (event) {
         webview.contentWindow.postMessage({task: 'handshake', id: id}, '*');
@@ -35,15 +39,25 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
     }, 50);
   };
   
+  $scope.server_url = function (id) {
+    var url = $rootScope.server_url + "/view-" + id;
+    return url;
+  };
+  
   $scope.init_account = function (event, account, postData) {
     var id = account.id;
     var webview = document.querySelector("#webview" + id);
     $scope.show_webview(account);
     
-    if (postData) {
-      account.postData = postData;
+    if (!account.postData) {
+      account.postData = [];
     }
-    webview.src = $rootScope.server_url + "/view-" + id;
+    
+    if (postData) {
+      account.postData.push(postData);
+    }
+    apply_updates($scope);
+    webview.src = $scope.server_url(id);
     webview.addEventListener('newwindow', $scope.handle_popup);
     webview.addEventListener("loadstop", function (event) {
       webview.contentWindow.postMessage({
@@ -70,13 +84,15 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
   $scope.receive_message = function (event) {
     var account;
     
-    if (event.origin === $rootScope.server_url) {
+    if (event.origin.indexOf('neutrondrive.com') >= 0) {
       if (event.data && event.data.task) {
         var account_tasks = ['token', 'folder-picked', 'hide-webview'];
         var tasks_callbacks = {
-          'list_dir': 'list_fs_callback',
-          'open': 'open_file_callback',
-          'save': 'do_save_callback'
+          list_dir: 'list_fs_callback',
+          open: 'open_file_callback',
+          save: 'do_save_callback',
+          rename: 'rename_callback',
+          newfile: 'save_new_file_callback'
         };
         
         if (account_tasks.indexOf(event.data.task) > -1 || tasks_callbacks[event.data.task]) {
@@ -104,12 +120,14 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
           apply_updates($scope);
           apply_updates($rootScope);
           
-          console.log(account);
           $rootScope.$emit('google-added', account.id);
           
           if (account.postData) {
-            account.webview.contentWindow.postMessage(account.postData, '*');
-            account.postData = null;
+            for (var i=0; i < account.postData.length; i++) {
+              account.webview.contentWindow.postMessage(account.postData[i], '*');
+            }
+            
+            account.postData = [];
             $rootScope.$emit('save-projects');
           }
         }
@@ -137,12 +155,12 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
   
   $scope.hide_webview = function (account) {
     account.style = {'z-index': '-2000', 'visibility': 'hidden'};
-    $scope.cancel_style = {display: 'none'};
+    account.cancel_style = {display: 'none'};
   };
   
   $scope.show_webview = function (account) {
     account.style = {};
-    $scope.cancel_style = {display: 'block'};
+    account.cancel_style = {display: 'block'};
   };
   
   $scope.cancel = function () {

@@ -9,11 +9,17 @@ Drive.list_dir = function (data, callback) {
   
   var retrievePageOfFiles = function(request, params, result) {
     request.execute(function(resp) {
-      result = result.concat(resp.items);
-      if (resp.nextPageToken) {
-        params.pageToken = resp.nextPageToken;
-        request = gapi.client.drive.files.list(params);
-        retrievePageOfFiles(request, params, result);
+      if (resp) {
+        result = result.concat(resp.items);
+        if (resp.nextPageToken) {
+          params.pageToken = resp.nextPageToken;
+          request = gapi.client.drive.files.list(params);
+          retrievePageOfFiles(request, params, result);
+        }
+        
+        else {
+          callback({folderId: folderId, result: result});
+        }
       }
       
       else {
@@ -27,7 +33,13 @@ Drive.list_dir = function (data, callback) {
     fields: 'items(id,mimeType,labels,fileExtension,title,webViewLink,properties(key,value),alternateLink,webContentLink)'
   };
   if (folderId) {
-    params.q = "'" + folderId + "' in parents";
+    if (folderId === 'sharedWithMe') {
+      params.q = "sharedWithMe";
+    }
+    
+    else {
+      params.q = "'" + folderId + "' in parents";
+    }
   }
   
   var initialRequest = gapi.client.drive.files.list(params);
@@ -98,3 +110,57 @@ Drive.save = function (data, callback) {
   });
 };
 
+Drive.rename = function (data, callback) {
+  var body = {'title': data.new_name};
+  var request = gapi.client.drive.files.patch({
+    'fileId': data.fileId,
+    'resource': body
+  });
+  
+  request.execute(function (resp) {
+    resp.fileId = data.fileId;
+    callback(resp);
+  });
+};
+
+Drive.newfile = function (data, callback) {
+  var metadata = {title: data.name};
+  if (data.parentId) {
+    metadata.parents = [{'id': data.parentId}];
+  }
+  
+  var base64Data = '';
+  var multipartRequestBody =
+    delimiter +
+    'Content-Type: application/json\r\n\r\n' +
+    JSON.stringify(metadata) +
+    delimiter +
+    'Content-Type: application/octet-stream\r\n' +
+    'Content-Transfer-Encoding: base64\r\n' +
+    '\r\n' +
+    base64Data +
+    close_delim;
+    
+  var request = gapi.client.request({
+    'path': '/upload/drive/v2/files',
+    'method': 'POST',
+    'params': {
+      'uploadType': 'multipart',
+      'useContentAsIndexableText': 'true'
+    },
+    'headers': {
+      'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+    },
+    'body': multipartRequestBody});
+    
+  request.execute(function (file) {
+    if (file.error) {
+      callback({error: 'Error Creating ' + data.name, parentId: data.parentId});
+    }
+    
+    else {
+      file.parentId = data.parentId;
+      callback(file);
+    }
+  });
+};

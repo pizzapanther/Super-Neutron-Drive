@@ -183,7 +183,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     
     for (var i=0; i < $scope.tabs.length; i++) {
       var tab = $scope.tabs[i];
-      save_tabs.push({retainer: tab.retainer, ptype: tab.project.cid, pid: tab.project.pid});
+      save_tabs.push({retainer: tab.retainer, ptype: tab.project.cid, pid: tab.project.pid, name: tab.name});
     }
     
     chrome.storage.local.set({'saved_tabs': JSON.stringify(save_tabs)}, function() {

@@ -134,6 +134,7 @@ Neutron.receive_message = function (event) {
         Neutron.parent = event.source;
         Neutron.origin = event.origin;
         Neutron.id = event.data.id;
+        console.log(event.data);
         
         if (event.data.oauth) {
           console.log(event.data.oauth);
