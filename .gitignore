@@ -54,3 +54,4 @@ docs/_build/
 
 chrome-app.zip
 super-neutron.zip
+app-engine/ndrive/settings/local.py

@@ -12,7 +12,7 @@
       <label for="project-name">Name:</label>
       <input type="text" class="form-control" id="project-name" ng-model="form.name">
     </div>
-    <div class="form-group" ng-show="localUi()">
+    <div class="form-group" ng-if="localUi()">
       <label for="project-dir">Directory:</label><br>
       <button class="btn" ng-click="choose_dir()">Choose Directory</button>
       <br>
@@ -23,6 +23,13 @@
       <select class="form-control" id="project-account" ng-options="ga.name for ga in google_accounts" ng-model="form.google_account" ng-change="google_account_choosen()">
         <option value="">-- Choose A Google Account --</option>
       </select>
+    </div>
+    <div class="form-group button-assist" ng-show="gdriveUiPicker()">
+      <label for="project-folderid">Folder ID:</label><br>
+      <input type="text" class="form-control" id="project-folderid" ng-model="form.folderId">
+      <button class="btn" ng-click="choose_google_dir()"><i class="fa fa-search"></i></button>
+      <br>
+      <em>Leave blank for your root folder.</em>
     </div>
   </form>
 </div>

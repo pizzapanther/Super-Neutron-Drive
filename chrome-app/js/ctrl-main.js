@@ -183,7 +183,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
     
     for (var i=0; i < $scope.tabs.length; i++) {
       var tab = $scope.tabs[i];
-      save_tabs.push({retainer: tab.retainer, ptype: tab.project.cid, pid: tab.project.pid});
+      save_tabs.push({retainer: tab.retainer, ptype: tab.project.cid, pid: tab.project.pid, name: tab.name});
     }
     
     chrome.storage.local.set({'saved_tabs': JSON.stringify(save_tabs)}, function() {
@@ -365,7 +365,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   $scope.remove_project_tabs = function (event, className, pid, callback) {
     for (var j=0; j < $scope.tabs.length; j++) {
       var t = $scope.tabs[j];
-      if (t.project.constructor.name == className && t.project.pid == pid) {
+      if (t.project.cid == className && t.project.pid == pid) {
         $scope.remove_tab(j);
       }
     }

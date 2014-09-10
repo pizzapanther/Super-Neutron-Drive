@@ -21,7 +21,10 @@
           <a class="clickme rm" ng-click="remove_project(project)">&times;</a>
           <a class="psort" project-drag><i class="fa fa-sort"></i></a>
           <a class="prj" ng-click="project.list_dir()" right-click="project.right_menu('dir', project, $event)">
-            <i class="{{ project.cls }}"></i>&nbsp;{{ project.name }}
+            <span class="fa-stack">
+              <i ng-if="project.outline" class="fa fa-square-o fa-stack-2x" ng-class="{'fa-spin': project.working}"></i>
+              <i class="fa {{ project.cls }} fa-stack-1x" ng-class="{'fa-spin': project.working}"></i>
+            </span>&nbsp;{{ project.name }}
           </a>
           <ul>
             <li class="dir" ng-repeat="entry in project.dirs" ng-include="'side-dirlisting.html'"></li>
