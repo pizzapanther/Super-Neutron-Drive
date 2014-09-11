@@ -5,6 +5,9 @@ from django.template.response import TemplateResponse
 def hello (request):
   return http.HttpResponse("Hello", content_type="text/plain")
   
+def favicon (request):
+  return http.HttpResponseRedirect('/static/favicon.png')
+  
 def gdrive_webview (request, index):
   return TemplateResponse(
     request,

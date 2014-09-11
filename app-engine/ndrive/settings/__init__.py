@@ -28,6 +28,7 @@ DATABASES = {
 ALLOWED_HOSTS = [
   'super-neutron-drive.appspot.com',
   '.super-neutron-drive.appspot.com',
+  'super.neutrondrive.com',
 ]
 
 # Local time zone for this installation. Choices can be found here:
