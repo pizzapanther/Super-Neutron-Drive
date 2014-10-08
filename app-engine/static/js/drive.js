@@ -123,6 +123,17 @@ Drive.rename = function (data, callback) {
   });
 };
 
+Drive.trash = function (data, callback) {
+  var request = gapi.client.drive.files.trash({
+    'fileId': data.fileId
+  });
+  
+  request.execute(function(resp) {
+    resp.fileId = data.fileId;
+    callback(resp);
+  });
+};
+
 Drive.newfile = function (data, callback) {
   var metadata = {title: data.name};
   if (data.parentId) {
