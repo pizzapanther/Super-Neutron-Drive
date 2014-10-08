@@ -84,7 +84,8 @@ GDriveFS.prototype.process_entries = function (self, parentEntry, entries, dirs,
           files: [],
           state: 'closed',
           id: entry.id,
-          working: false
+          working: false,
+          parent: parentEntry
         });
       }
       
@@ -95,7 +96,8 @@ GDriveFS.prototype.process_entries = function (self, parentEntry, entries, dirs,
           id: entry.id,
           retainer: entry.id,
           working: false,
-          mimeType: entry.mimeType
+          mimeType: entry.mimeType,
+          parent: parentEntry
         });
       }
     }
@@ -197,12 +199,61 @@ GDriveFS.prototype.do_rename = function (entry, name) {
   self.postMessage({task: 'rename', new_name: name, fileId: entry.id});
 };
 
+GDriveFS.prototype.do_rm = function (entry) {
+  var self = this;
+  self.transactions[entry.id] = entry;
+  self.postMessage({task: 'trash', fileId: entry.id});
+  
+  /*
+  var parent = os.dirname(entry.path);
+  var self = this;
+  
+  var error_function = function () {
+    self.scope.rootScope.error_message('Error Removing: ' + entry.path);
+  };
+  
+  if (entry.state) {
+    self.info.entry.getDirectory(entry.path, {create: false}, function (dirEntry) {
+      dirEntry.removeRecursively(function () {
+        self.collapse_listing(entry.parent);
+        self.list_dir(entry.parent);
+        apply_updates(self.scope);
+      }, error_function);
+    }, function (dirError) {
+      error_function();
+    });
+  }
+  
+  else {
+    self.info.entry.getFile(entry.path, {create: false}, function (fileEntry) {
+      fileEntry.remove(function () {
+        self.collapse_listing(entry.parent);
+        self.list_dir(entry.parent);
+        apply_updates(self.scope);
+      }, error_function);
+    }, function (dirError) {
+      error_function();
+    });
+  }
+  */
+};
+
 GDriveFS.prototype.rename_callback = function (data) {
   var self = this;
   var entry = self.transactions[data.fileId];
   
   entry.name = data.title;
   self.scope.rootScope.$emit('renameTab', self.pid, data.fileId, entry);
+  apply_updates(self.scope);
+  delete self.transactions[data.fileId];
+};
+
+GDriveFS.prototype.trash_callback = function (data) {
+  var self = this;
+  var entry = self.transactions[data.fileId];
+  
+  self.collapse_listing(entry.parent);
+  self.list_dir(entry.parent);
   apply_updates(self.scope);
   delete self.transactions[data.fileId];
 };

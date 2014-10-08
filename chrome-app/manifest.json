@@ -2,7 +2,7 @@
   "name": "Super Neutron Drive",
   "short_name": "N-Drive",
   "description": "Code editor for local, cloud, and remote development",
-  "version": "14.9.1",
+  "version": "14.10.1",
   
   "app": {
     "background": {
@@ -35,5 +35,5 @@
     }
   },
   
-  "server_url": "http://pixiebob.neutrondrive.com:8080"
+  "server_url": "http://manx.neutrondrive.com:8080"
 }

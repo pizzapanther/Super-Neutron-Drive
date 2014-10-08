@@ -50,6 +50,25 @@ var RenameFileInstanceCtrl = function ($scope, $rootScope, $modalInstance, entry
   };
 };
 
+var RemoveConfirmCtrl = function ($scope, $rootScope, $modalInstance, entry, project) {
+  $scope.form = {
+    name: entry.name,
+    error: ''
+  };
+  
+  $scope.entry = entry;
+  $scope.project = project;
+  
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  
+  $scope.confirmed = function () {
+    $scope.project.do_rm($scope.entry);
+    $modalInstance.dismiss('cancel');
+  };
+};
+
 ndrive.controller('RightClickCtrl', function($scope, $rootScope, $modal) {
   $scope.display = 'none';
   $scope.position = 'top: 0px; left: 0px';

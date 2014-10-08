@@ -90,11 +90,25 @@ LocalFS.prototype.process_entries = function (self, dirReader, parentEntry, entr
       var id = self.file_id(entry.fullPath);
       
       if (entry.isDirectory) {
-        dirs.push({path: entry.fullPath, name: entry.name, dirs: [], files: [], state: 'closed', id: id});
+        dirs.push({
+          path: entry.fullPath,
+          name: entry.name,
+          dirs: [],
+          files: [],
+          state: 'closed',
+          id: id,
+          parent: parentEntry
+        });
       }
       
       else {
-        files.push({path: entry.fullPath, name: entry.name, id: id, retainer: entry.fullPath});
+        files.push({
+          path: entry.fullPath,
+          name: entry.name,
+          id: id,
+          retainer: entry.fullPath,
+          parent: parentEntry
+        });
       }
     }
     
@@ -180,6 +194,35 @@ LocalFS.prototype.rename = function ($modal, entry) {
   });
 };
 
+LocalFS.prototype.rm = function ($modal, entry) {
+  var self = this;
+  
+  var pmodal = $modal.open({
+    templateUrl: 'modals/remove-confirm.html',
+    controller: RemoveConfirmCtrl,
+    windowClass: 'removeConfirmModal',
+    keyboard: true,
+    resolve: {
+      entry: function () { return entry; },
+      project: function () { return self; }
+    }
+  });
+  
+  pmodal.opened.then(function () {
+    self.scope.rootScope.$emit('hideRightMenu');
+  });
+};
+
+LocalFS.prototype.collapse_listing = function (entry) {
+  if (!entry) {
+    entry = this;
+  }
+  
+  entry.state = 'closed';
+  entry.dirs = [];
+  entry.files = [];
+};
+
 LocalFS.prototype.do_rename = function (entry, name) {
   var self = this;
   var parent = os.dirname(entry.path);
@@ -227,6 +270,39 @@ LocalFS.prototype.do_rename = function (entry, name) {
   }, function (parentError) {
     error_function();
   });
+};
+
+LocalFS.prototype.do_rm = function (entry) {
+  var parent = os.dirname(entry.path);
+  var self = this;
+  
+  var error_function = function () {
+    self.scope.rootScope.error_message('Error Removing: ' + entry.path);
+  };
+  
+  if (entry.state) {
+    self.info.entry.getDirectory(entry.path, {create: false}, function (dirEntry) {
+      dirEntry.removeRecursively(function () {
+        self.collapse_listing(entry.parent);
+        self.list_dir(entry.parent);
+        apply_updates(self.scope);
+      }, error_function);
+    }, function (dirError) {
+      error_function();
+    });
+  }
+  
+  else {
+    self.info.entry.getFile(entry.path, {create: false}, function (fileEntry) {
+      fileEntry.remove(function () {
+        self.collapse_listing(entry.parent);
+        self.list_dir(entry.parent);
+        apply_updates(self.scope);
+      }, error_function);
+    }, function (dirError) {
+      error_function();
+    });
+  }
 };
 
 LocalFS.prototype.save_new_file = function (entry, name) {
@@ -293,6 +369,13 @@ LocalFS.prototype.right_menu = function (rtype, entry, event) {
       ['Rename', 'pencil-square-o', function ($modal) { self.rename($modal, entry); }],
       //'-'
     ];
+  }
+  
+  if (!entry.cid) {
+    menu.push(
+      '-',
+      ['Delete', 'trash-o', function ($modal) { self.rm($modal, entry); }]
+    );
   }
   
   this.scope.rootScope.$emit('showRightMenu', event, menu);
