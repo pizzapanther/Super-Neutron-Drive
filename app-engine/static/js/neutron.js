@@ -35,7 +35,7 @@ Neutron.auth_init = function (setkey, force_slow) {
   
   var options = {
     client_id: GOOGLE_CLIENT_ID,
-    immediate: true,
+    immediate: false,
     scope: [
       'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.scripts'
