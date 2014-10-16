@@ -3,6 +3,8 @@ from django.conf.urls import patterns, include, url
 
 
 urlpatterns = patterns('ndrive.views',
+  url(r'^editor/', include('editor.urls')),
+  
   url(r'^$', 'hello'),
   url(r'^favicon.ico$', 'favicon'),
   url(r'^favicon.png$', 'favicon'),
