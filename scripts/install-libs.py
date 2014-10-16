@@ -8,9 +8,12 @@ def run ():
   basedir = os.path.join(mydir, '..')
   os.chdir(basedir)
   
+  if not os.path.exists('app-engine/lib'):
+    os.makedirs('app-engine/lib')
+    
   subprocess.call('rm -rf app-engine/lib/*', shell=True)
   subprocess.call('pip install -r app-engine/requirements.txt -t app-engine/lib', shell=True)
-  os.chdir('pytz-appengine')
+  os.chdir('pytz')
   subprocess.call('rm -rf pytz', shell=True)
   subprocess.call('./build.py all', shell=True)
   subprocess.call('mv pytz ../app-engine/lib/', shell=True)

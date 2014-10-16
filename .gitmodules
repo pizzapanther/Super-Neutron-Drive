@@ -1,0 +1,3 @@
+[submodule "pytz"]
+	path = pytz
+	url = git@github.com:pizzapanther/pytz-appengine.git

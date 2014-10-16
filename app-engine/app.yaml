@@ -18,8 +18,5 @@ libraries:
 - name: ssl
   version: "latest"
   
-- name: django
-  version: "latest"
-  
 builtins:
 - remote_api: on

@@ -5,7 +5,8 @@ import socket
 import subprocess
 
 def run_gae ():
-  basedir = os.path.dirname(__file__)
+  mydir = os.path.dirname(__file__)
+  basedir = os.path.join(mydir, '..')
   os.chdir(basedir)
   
   kwargs = {
