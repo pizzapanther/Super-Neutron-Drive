@@ -2,6 +2,9 @@
 
 import os
 
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.normpath(os.path.dirname(BASE_DIR))
+
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
@@ -63,14 +66,7 @@ MEDIA_ROOT = ''
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = ''
 
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
-
-# URL prefix for static files.
-# Example: "http://example.com/static/", "http://static.example.com/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 # Additional locations of static files
@@ -100,10 +96,13 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
   'google.appengine.ext.ndb.django_middleware.NdbDjangoMiddleware',
+  'django.contrib.sessions.middleware.SessionMiddleware',
   'django.middleware.common.CommonMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
-  # Uncomment the next line for simple clickjacking protection:
-  # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+  'django.contrib.auth.middleware.AuthenticationMiddleware',
+  'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+  'django.contrib.messages.middleware.MessageMiddleware',
+  'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 ROOT_URLCONF = 'ndrive.urls'
@@ -118,16 +117,32 @@ TEMPLATE_DIRS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+  "django.contrib.auth.context_processors.auth",
   "django.core.context_processors.debug",
   #"django.core.context_processors.i18n",
-  #"django.core.context_processors.media",
+  "django.core.context_processors.media",
   "django.core.context_processors.static",
-  #"django.core.context_processors.tz",
+  "django.core.context_processors.tz",
+  "django.contrib.messages.context_processors.messages",
   "django.core.context_processors.request",
 )
 
+CACHES = {
+  'default': {
+    'BACKEND': 'ndrive.cache.MemcachedCache',
+  }
+}
+
 INSTALLED_APPS = (
+  'grappelli',
+  
+  'django.contrib.admin',
+  'django.contrib.auth',
+  'django.contrib.contenttypes',
+  'django.contrib.sessions',
+  'django.contrib.messages',
   'django.contrib.staticfiles',
+  
   'ndrive',
 )
 
@@ -160,8 +175,31 @@ LOGGING = {
   }
 }
 
-from ndrive.settings.local import *
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+SITE_NAME = 'Neutron Drive'
+
+GRAPPELLI_ADMIN_HEADLINE = 'Neutron Drive'
+GRAPPELLI_ADMIN_TITLE = 'Neutron Drive Admin'
+
+SESSION_COOKIE_NAME = 'snd-sessionid'
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = False
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+from ndrive.settings.private.settings import *
+
+DEV = False
 
 if os.environ.has_key('SERVER_SOFTWARE') and os.environ['SERVER_SOFTWARE'].startswith('Dev'):
-  from ndrive.settings.dev import *
+  DEV = True
+  from ndrive.settings.private.dev import *
   
+elif os.environ.has_key('DBENV'):
+  if os.environ['DBENV'] == 'Dev':
+    DEV = True
+    from ndrive.settings.private.dev import *
+    
+  elif os.environ['DBENV'] == 'Prod':
+    from ndrive.settings.private.prodlocal import *
+    

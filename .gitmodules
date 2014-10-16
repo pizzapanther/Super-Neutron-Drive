@@ -1,3 +1,6 @@
 [submodule "pytz"]
 	path = pytz
 	url = git@github.com:pizzapanther/pytz-appengine.git
+[submodule "app-engine/ndrive/settings/private"]
+	path = app-engine/ndrive/settings/private
+	url = git@github.com:pizzapanther/Private-Settings.git
