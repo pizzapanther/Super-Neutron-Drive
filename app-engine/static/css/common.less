@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: @font-main;
+  background-color: @color-body-bg;
+  color: @color-text;
+}
+
+a {
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+md-toolbar {
+  background-color: @color-tool;
+  
+  .site-name {
+    font-family: @font-fun;
+    font-size: 2.3rem;
+    
+    &:nth-child(2) {
+      padding-bottom: 5px;
+    }
+    
+    img {
+      width: 48px;
+      display: block;
+    }
+  }
+}
+
+md-card {
+  background-color: @color-bg;
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+  
+  > h2 {
+    margin: 0 0 20px 0;
+  }
+  
+  form {
+    .inputs {
+      font-size: 130%;
+    }
+    
+    .form-error {
+      margin: 10px 0;
+      color: @color-error;
+      text-align: center;
+    }
+    
+    .error {
+      font-size: 65%;
+      font-style: italic;
+      color: @color-error;
+      display: block;
+      margin-top: -5px;
+    }
+    
+    .submit {
+      margin-top: 30px;
+      
+      md-button {
+        margin-left: 10px;
+        
+        &:first-child {
+          margin-left: 0;
+        }
+        
+        &.extra {
+          margin-left: 20px;
+        }
+      }
+    }
+    
+    input {
+      width: 80%;
+    }
+  }
+}
+
+md-input-group.md-input-focused input, md-input-group.md-input-focused textarea, .md-input-group.md-input-focused input, .md-input-group.md-input-focused textarea {
+  border-color: @color-focused;
+}
+
+md-input-group.md-input-focused label, .md-input-group.md-input-focused label {
+  color: @color-focused;
+}
