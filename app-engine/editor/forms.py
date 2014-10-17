@@ -3,7 +3,11 @@ from django.contrib.auth import authenticate
 
 from account.models import User
 
-class LoginForm (forms.ModelForm):
+class LoginForm (forms.Form):
+  app_id = forms.CharField(widget=forms.HiddenInput)
+  username = forms.CharField()
+  password = forms.CharField(widget=forms.PasswordInput)
+  
   def clean (self):
     cleaned_data = super(LoginForm, self).clean()
     
@@ -24,8 +28,4 @@ class LoginForm (forms.ModelForm):
     cleaned_data['user'] = user
     
     return cleaned_data
-    
-  class Meta:
-    model = User
-    fields = ('username', 'password')
     

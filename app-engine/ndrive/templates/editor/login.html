@@ -1,1 +1,63 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load ndrive %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div layout="horizontal" layout-align="center">
+  <md-card ng-controller="LoginController">
+    <h2>Neutron Drive Login</h2>
+    <form action="{{ request.path }}" method="post">
+      {% csrf_token %}
+      {{ form.app_id }}
+      {% if form.non_field_errors %}
+      <div class="form-error">
+        {{ form.non_field_errors.0 }}
+      </div>
+      {% endif %}
+      <div class="row inputs">
+        <md-input-group>
+          <label for="id_username">Username</label>
+          <md-input name="username" id="id_username" ng-model="user.username">
+        </md-input-group>
+        {% if form.username.errors %}
+        <span class="error">{{ form.username.errors.0 }}</span>
+        {% endif %}
+      </div>
+      <div class="row inputs">
+        <md-input-group>
+          <label for="id_password">Password</label>
+          <md-input name="password" id="id_password" type="password" ng-model="user.password">
+        </md-input-group>
+        {% if form.password.errors %}
+        <span class="error">{{ form.password.errors.0 }}</span>
+        {% endif %}
+      </div>
+      <div class="row submit">
+        <div class="pull-left">
+          <md-button class="md-button-raised md-button-colored" type="submit">
+            <i class="fa fa-chevron-circle-right"></i> Login
+          </md-button>
+          <md-button class="extra md-button-raised" href="{{ request.path }}?skip=1&app_id={{ form.app_id.value|urlencode }}">
+            <i class="fa fa-angle-double-right"></i> Skip
+          </md-button>
+          <md-button class="md-button-raised" href="{{ request.path }}?skip=forever&app_id={{ form.app_id.value|urlencode }}">
+            <i class="fa fa-power-off"></i> Skip Forever
+          </md-button>
+        </div>
+        <div class="pull-right">
+          <md-button {% target %} href="/narf" class="md-button-raised">
+            <i class="fa fa-pencil-square-o"></i> Sign Up
+          </md-button>
+        </div>
+      </div>
+    </form>
+  </md-card>
+</div>
+{% endblock %}
+{% block js %}
+{{ block.super }}
+
+<script>
+  ndrive.controller("LoginController", function ($scope) {
+    $scope.user = {username: {% if form.username.value %}"{{ form.username.value|escapejs }}"{% else %}null{% endif %}, password: null};
+  });
+</script>
+{% endblock js %}

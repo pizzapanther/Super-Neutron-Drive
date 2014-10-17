@@ -17,6 +17,12 @@ env_variables:
 libraries:
 - name: ssl
   version: "latest"
+- name: PIL
+  version: "latest"
+- name: MySQLdb
+  version: "latest"
+- name: pycrypto
+  version: "latest"
   
 builtins:
 - remote_api: on

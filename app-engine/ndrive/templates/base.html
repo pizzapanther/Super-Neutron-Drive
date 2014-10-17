@@ -1,14 +1,41 @@
-<!DOCTYPE html>{% load static %}
-<html ng-app="ndrive">
+<!DOCTYPE html>{% load static ndrive %}
+<html>
   <head>
-    <title>{% block title %}{% endblock %}{{ site_name }}</title>
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <link rel="stylesheet"  href="{% static "components/font-awesome/css/font-awesome.min.css" %}">
-    <link rel="stylesheet"  href="{% static "components/angular-material/angular-material.min.css" %}">
-    <link rel="stylesheet"  href="{% static "css/main.css" %}">
+    <title>{% block title %}Code anywhere the way you want{% endblock %} | {{ site_name }}</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{% static "bower_components/angular-material/angular-material.min.css" %}">
+    <link rel="stylesheet" href="{% static "bower_components/font-awesome/css/font-awesome.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/main.css" %}">
+    
+    <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
     <base href="/">
   </head>
-  <body>
-    narf
+  <body ng-app="ndrive">
+    <div layout="vertical" layout-fill>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <span class="site-name">
+          <a href="/"{% target %}><img src="{% static "img/logo.png" %}"></a>
+        </span>
+        <span class="site-name">
+          <a href="/" {% target %}>{{ site_name }}</a>
+        </span>
+        <span flex></span>
+      </div>
+    </md-toolbar>
+    <md-content>
+      {% block content %}
+      {% endblock content %}
+    </md-content>
+  </div>
+    {% block js %}
+    <script src="{% static "bower_components/angular/angular.min.js" %}"></script>
+    <script src="{% static "bower_components/angular-aria/angular-aria.min.js" %}"></script>
+    <script src="{% static "bower_components/angular-animate/angular-animate.min.js" %}"></script>
+    <script src="{% static "bower_components/hammerjs/hammer.min.js" %}"></script>
+    <script src="{% static "bower_components/angular-material/angular-material.min.js" %}"></script>
+    
+    <script src="{% static "js/ng/app.js" %}"></script>
+    {% endblock js %}
   </body>
 </html>

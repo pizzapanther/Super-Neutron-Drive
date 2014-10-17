@@ -1,16 +1,46 @@
+from django import http
+from django.conf import settings
 from django.template.response import TemplateResponse
+from django.views.decorators.csrf import requires_csrf_token
+from django.contrib.auth import login, logout
 
 from .forms import LoginForm
 
+@requires_csrf_token
 def login_view (request):
-  form = LoginForm(request.POST or None)
+  initial = {'app_id': settings.CHROME_ID}
+  
+  if settings.DEBUG:
+    initial = {'app_id': request.GET.get('app_id', 'NARF')}
+    
+  skip = request.GET.get('skip', '')
+  if skip in ('1', 'forever'):
+    return http.HttpResponseRedirect(
+      'https://{}.chromiumapp.org/skip/{}'.format(initial['app_id'], skip)
+    )
+    
+  if request.user.is_authenticated() and request.user.is_active:
+    token = request.user.chrome_token(request.session)
+    return http.HttpResponseRedirect(
+      'https://{}.chromiumapp.org/token/{}'.format(initial['app_id'], token)
+    )
+    
+  form = LoginForm(request.POST or None, initial=initial)
   if request.POST:
     if form.is_valid():
-      pass
-      #create token and redirect
+      login(request, form.cleaned_data['user'])
+      token = request.user.chrome_token(request.session)
+      return http.HttpResponseRedirect(
+        'https://{}.chromiumapp.org/token/{}'.format(initial['app_id'], token)
+      )
       
   context = {
-    'form': form
+    'form': form,
+    'target': '_blank',
   }
   return TemplateResponse(request, 'editor/login.html', context)
+  
+def logout_view (request):
+  logout(request)
+  return http.JsonResponse({'result': 'OK'})
   

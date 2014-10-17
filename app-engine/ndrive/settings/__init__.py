@@ -84,9 +84,6 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'c94coq2ly9*y*j@-l!a)eeubf)17i0yy)=lrkm-h#da@!v96ot'
-
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
   'django.template.loaders.filesystem.Loader',
@@ -120,6 +117,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
   "django.core.context_processors.tz",
   "django.contrib.messages.context_processors.messages",
   "django.core.context_processors.request",
+  "ndrive.context.site_context",
 )
 
 CACHES = {
