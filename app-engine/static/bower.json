@@ -1,0 +1,14 @@
+{
+  "name": "super-neutron-drive",
+  "version": "0.0.0",
+  "homepage": "https://github.com/pizzapanther/Super-Neutron-Drive",
+  "authors": [
+    "Paul Bailey <paul.m.bailey@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular-material": "~0.4.2",
+    "font-awesome": "~4.2.0"
+  }
+}

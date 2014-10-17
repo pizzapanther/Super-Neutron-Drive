@@ -107,14 +107,9 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'ndrive.urls'
 
-# Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'ndrive.wsgi.application'
 
-TEMPLATE_DIRS = (
-  # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-  # Always use forward slashes, even on Windows.
-  # Don't forget to use absolute paths, not relative paths.
-)
+TEMPLATE_DIRS = ()
 
 TEMPLATE_CONTEXT_PROCESSORS = (
   "django.contrib.auth.context_processors.auth",
@@ -144,6 +139,7 @@ INSTALLED_APPS = (
   'django.contrib.staticfiles',
   
   'ndrive',
+  'account',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -176,6 +172,8 @@ LOGGING = {
 }
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+AUTH_USER_MODEL = 'account.User'
 
 SITE_NAME = 'Neutron Drive'
 
