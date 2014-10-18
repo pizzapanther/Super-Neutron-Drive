@@ -52,17 +52,14 @@ md-card form .error {
 md-card form .submit {
   margin-top: 30px;
 }
-md-card form .submit md-button {
-  margin-left: 10px;
-}
-md-card form .submit md-button:first-child {
-  margin-left: 0;
-}
-md-card form .submit md-button.extra {
-  margin-left: 20px;
+md-card form label sup {
+  padding-left: 5px;
 }
 md-card form input {
   width: 80%;
+}
+md-card form input.hidden {
+  display: none;
 }
 md-input-group.md-input-focused input,
 md-input-group.md-input-focused textarea,
@@ -73,4 +70,16 @@ md-input-group.md-input-focused textarea,
 md-input-group.md-input-focused label,
 .md-input-group.md-input-focused label {
   color: #4285f4;
+}
+md-button.highlight {
+  color: #4285f4;
+}
+.buttons md-button {
+  margin-left: 10px;
+}
+.buttons md-button:first-child {
+  margin-left: 0;
+}
+.buttons md-button.extra {
+  margin-left: 20px;
 }

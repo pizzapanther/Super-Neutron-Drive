@@ -1,0 +1,38 @@
+<form action="{{ request.path }}" method="post">{% load ndrive %}
+  {% csrf_token %}
+  {% for hidden in form.hidden_fields %}
+  {{ hidden }}
+  {% endfor %}
+  {% if form.non_field_errors %}
+  <div class="form-error">
+    {{ form.non_field_errors.0 }}
+  </div>
+  {% endif %}
+  {% for field in form.visible_fields %}
+  {% if field|isCheckbox %}
+  <div class="row">
+    <md-checkbox ng-model="form.{{ field.name }}" aria-label="{{ field.label }}">
+      {{ field.label }}
+    </md-checkbox>
+    <input type="checkbox" name="{{ field.name }}" ng-model="form.{{ field.name }}" class="hidden">
+  </div>
+  {% else %}
+  <div class="row inputs">
+    <md-input-group>
+      <label for="id_{{ field.name }}">{{ field.label }}{% if field.field.required %}<sup>(required)</sup>{% endif %}</label>
+      <md-input name="{{ field.name }}" id="id_{{ field.name }}" ng-model="form.{{ field.name }}" type="{{ field.field.widget.input_type }}">
+    </md-input-group>
+    {% if field.errors %}
+    <span class="error">{{ field.errors.0 }}</span>
+    {% endif %}
+  </div>
+  {% endif %}
+  {% endfor %}
+  <div class="row submit">
+    <div>
+      <md-button class="md-button-raised md-button-colored" type="submit">
+        <i class="fa fa-{{ icon }}"></i> {{ action }}
+      </md-button>
+    </div>
+  </div>
+</form>

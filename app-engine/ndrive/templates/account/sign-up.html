@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+<div layout="horizontal" layout-align="center">
+  <md-card ng-controller="FormController">
+    <h2>Sign Up</h2>
+    {% include "form.html" %}
+  </md-card>
+</div>
+{% endblock content %}
+{% block js %}
+{{ block.super }}
+
+<script>
+  {% include "form-controller.js" %}
+</script>
+{% endblock js %}

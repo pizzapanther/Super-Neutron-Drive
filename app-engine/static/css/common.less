@@ -63,22 +63,20 @@ md-card {
     
     .submit {
       margin-top: 30px;
-      
-      md-button {
-        margin-left: 10px;
-        
-        &:first-child {
-          margin-left: 0;
-        }
-        
-        &.extra {
-          margin-left: 20px;
-        }
+    }
+    
+    label {
+      sup {
+        padding-left: 5px;
       }
     }
     
     input {
       width: 80%;
+      
+      &.hidden {
+        display: none;
+      }
     }
   }
 }
@@ -89,4 +87,22 @@ md-input-group.md-input-focused input, md-input-group.md-input-focused textarea,
 
 md-input-group.md-input-focused label, .md-input-group.md-input-focused label {
   color: @color-focused;
+}
+
+md-button.highlight {
+  color: @color-focused;
+}
+
+.buttons {
+  md-button {
+    margin-left: 10px;
+    
+    &:first-child {
+      margin-left: 0;
+    }
+    
+    &.extra {
+      margin-left: 20px;
+    }
+  }
 }
