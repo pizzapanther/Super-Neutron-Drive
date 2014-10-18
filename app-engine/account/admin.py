@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from .models import User
+from .models import User, EmailVerify
 
 class UserForm (forms.ModelForm):
   set_password = forms.CharField(
@@ -51,4 +51,14 @@ class UserAdmin (admin.ModelAdmin):
       
     obj.save()
     
+class VerifyAdmin (admin.ModelAdmin):
+  list_display = ('email', 'used', 'created')
+  list_filter = ('used',)
+  search_fields = ('email',)
+  date_hierarchy = 'created'
+  raw_id_fields = ('user',)
+  
+  autocomplete_lookup_fields = {'fk': ['user']}
+  
 admin.site.register(User, UserAdmin)
+admin.site.register(EmailVerify, VerifyAdmin)

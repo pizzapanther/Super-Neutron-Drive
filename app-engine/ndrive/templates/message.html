@@ -1,12 +1,12 @@
 {% extends "base.html" %}{% load static %}
-{% block title %}Sign Up Successful{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block content %}
 <div layout="horizontal" layout-align="center">
-  <md-card ng-controller="FormController">
-    <h2>You have successfully signed up!</h2>
-    <h3>
-      Don't forget to check your e-mail to verify your address.
-    </h3>
+  <md-card>
+    <h2>{{ message|safe }}</h2>
+    {% if submessage %}
+    <h3>{{ submessage }}</h3>
+    {% endif %}
     <img src="{% static "img/logo.png" %}" alt="" style="display: block; margin: 0 auto;">
   </md-card>
 </div>

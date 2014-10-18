@@ -1,0 +1,6 @@
+{% extends "email.base.txt" %}
+{% block content %}
+Please verify your address by going to the link below:
+{{ abs_base_url }}{% url "account:email-verify" %}{{ verify.qs }}
+
+{% endblock %}

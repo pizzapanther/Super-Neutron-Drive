@@ -1,0 +1,7 @@
+{% extends "email.base.html" %}
+{% block content %}
+<p>
+  Please verify your address by going to the link below:<br><br>
+  <a href="{{ abs_base_url }}{% url "account:email-verify" %}{{ verify.qs }}">{{ abs_base_url }}{% url "account:email-verify" %}{{ verify.qs }}</a>
+</p>
+{% endblock %}
