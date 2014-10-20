@@ -9,11 +9,8 @@ from account.models import User
 
 @requires_csrf_token
 def login_view (request):
-  initial = {'app_id': settings.CHROME_ID}
+  initial = {'app_id': request.REQUEST.get('app_id', settings.CHROME_ID)}
   
-  if settings.DEBUG:
-    initial = {'app_id': request.REQUEST.get('app_id', 'NARF')}
-    
   skip = request.GET.get('skip', '')
   if skip in ('1', 'forever'):
     return http.HttpResponseRedirect(
