@@ -11,6 +11,14 @@ a {
 a:hover {
   text-decoration: underline;
 }
+.clearfix {
+  clear: both;
+}
+hr {
+  border: 0;
+  border-bottom: 1px solid #999999;
+  margin: 30px 0;
+}
 md-toolbar {
   background-color: #e6e6e6;
 }
@@ -27,11 +35,13 @@ md-toolbar .site-name img {
 }
 md-card {
   background-color: #ffffff;
+  min-width: 300px;
   max-width: 600px;
   width: 100%;
   padding: 20px;
 }
-md-card > h2 {
+md-card > h2,
+md-card h3 {
   margin: 0 0 20px 0;
 }
 md-card form .inputs {
@@ -61,6 +71,16 @@ md-card form input {
 md-card form input.hidden {
   display: none;
 }
+md-card.full {
+  max-width: 1170px;
+}
+md-card.page {
+  max-width: 840px;
+}
+md-card.side {
+  width: 320px;
+  max-width: 320px;
+}
 md-input-group.md-input-focused input,
 md-input-group.md-input-focused textarea,
 .md-input-group.md-input-focused input,
@@ -82,4 +102,34 @@ md-button.highlight {
 }
 .buttons md-button.extra {
   margin-left: 20px;
+}
+#HomePage md-card.full img.main {
+  display: block;
+  float: right;
+  width: 600px;
+  margin: 0 0 20px 20px;
+  border: 1px solid #999999;
+}
+#HomePage md-card.full a.chrome {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+#HomePage md-card.full a.chrome img {
+  width: 300px;
+}
+#HomePage md-card.full h2 {
+  font-size: 1.8rem;
+}
+#HomePage md-card.full h3 {
+  font-weight: normal;
+}
+#HelpPage > div {
+  max-width: 100%;
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+}
+#HelpPage .side ul {
+  margin: 0;
+  padding: 0 0 0 30px;
 }

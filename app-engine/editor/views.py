@@ -5,13 +5,14 @@ from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import login, logout
 
 from .forms import LoginForm
+from account.models import User
 
 @requires_csrf_token
 def login_view (request):
   initial = {'app_id': settings.CHROME_ID}
   
   if settings.DEBUG:
-    initial = {'app_id': request.GET.get('app_id', 'NARF')}
+    initial = {'app_id': request.REQUEST.get('app_id', 'NARF')}
     
   skip = request.GET.get('skip', '')
   if skip in ('1', 'forever'):
@@ -40,7 +41,15 @@ def login_view (request):
   }
   return TemplateResponse(request, 'editor/login.html', context)
   
-def logout_view (request):
-  logout(request)
+def logout_view (request, token):
+  try:
+    session = User.get_session(token)
+    
+  except:
+    raise http.Http404
+    
+  else:
+    session.flush()
+    
   return http.JsonResponse({'result': 'OK'})
   

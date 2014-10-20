@@ -9,8 +9,11 @@ urlpatterns = patterns('ndrive.views',
   url(r'^editor/', include('editor.urls', namespace='editor', app_name='editor')),
   url(r'^account/', include('account.urls', namespace='account', app_name='account')),
   
-  url(r'^$', 'hello'),
+  url(r'^$', 'home'),
   url(r'^favicon.ico$', 'favicon'),
   url(r'^favicon.png$', 'favicon'),
+  
+  url(r'^help/$', 'page_view', name="help", kwargs={'template': 'pages/help.html'}),
+  
   url(r'^view-(\d+)$', 'gdrive_webview'),
 )

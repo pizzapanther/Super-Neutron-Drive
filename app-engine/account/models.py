@@ -1,5 +1,6 @@
 import urllib
 import datetime
+from importlib import import_module
 
 from django.db import models
 from django.conf import settings
@@ -11,6 +12,8 @@ from ndrive.utils.lib import cached_method
 from ndrive.utils.email import send_mail
 
 import jwt
+
+SESSION_ENGINE = import_module(settings.SESSION_ENGINE)
 
 class User (AbstractBaseUser, PermissionsMixin):
   verified_email = models.EmailField('verified email address', null=True, blank=True)
@@ -50,6 +53,11 @@ class User (AbstractBaseUser, PermissionsMixin):
     
   def chrome_token (self, session):
     return jwt.encode({'session': session.session_key}, settings.SECRET_KEY)
+    
+  @staticmethod
+  def get_session (token):
+    payload = jwt.decode(token, settings.SECRET_KEY)
+    return SESSION_ENGINE.SessionStore(payload['session'])
     
   def send_verify (self, request):
     if self.email != self.verified_email:

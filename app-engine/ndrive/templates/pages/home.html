@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load static %}
+{% block content %}
+<div id="HomePage">
+  <div layout="horizontal" layout-align="center">
+    <md-card class="full">
+      <img class="main" src="{% static "img/super-neutron-1.png" %}" alt="">
+      <h2>
+        The cross platform code editor built for the cloud.
+      </h2>
+      <h3>
+        With Neutron Drive your development environment follows you on any 
+        computer or any where you go. 
+      </h3>
+      <p>
+        <a href="https://chrome.google.com/webstore/detail/super-neutron-drive/hjmodhnpiombojkgckmmhjhihfhphajp" class="chrome">
+          <img src="{% static "img/chrome-store.png" %}" alt="Available in the Chrome Web Store">
+          <br>
+          <strong>Install Now &raquo;</strong>
+        </a>
+      </p>
+    </md-card>
+  </div>
+</div>
+{% endblock content %}
