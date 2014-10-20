@@ -11,7 +11,8 @@ var DEFAULT_PREFS = {
   gutter: true,
   pmargin: true,
   softab: true,
-  behave: true
+  behave: true,
+  show_login: true
 };
 
 var PREFS = {};

@@ -45,7 +45,7 @@ var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
   };
 };
 
-ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
+ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal, AuthService) {
   $scope.messages = {};
   $scope.recent_files = [];
   $scope.form = {qsearch: ''};
@@ -54,11 +54,9 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
     $rootScope.$emit('hideRightMenu');
   };
   
-  $scope.add_message = function (event, id, mtype, text, timeout, skip_apply) {
+  $scope.add_message = function (event, id, mtype, text, timeout) {
     $scope.messages[id] = {mtype: mtype, text: text, id: md5(id)};
-    if (!skip_apply && !$scope.$$phase) {
-      $scope.$apply();
-    }
+    apply_updates($scope);
     
     if (timeout) {
       setTimeout(function () {
@@ -163,6 +161,14 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal) {
   
   $scope.go_to_search = function () {
     $("#quick-search input").focus().select();
+  };
+  
+  $scope.logout = function () {
+    AuthService.logout();
+  };
+  
+  $scope.login = function () {
+    AuthService.login();
   };
   
   $scope.quick_search = function ($event) {

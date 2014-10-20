@@ -43,7 +43,7 @@ Tab.prototype.update_hash = function () {
   this.md5sum = md5(this.session.getValue());
 };
 
-ndrive.controller('MainCtrl', function($scope, $rootScope) {
+ndrive.controller('MainCtrl', function($scope, $rootScope, AuthService) {
   $scope.tabs = [];
   $scope.current_tab = null;
   $scope.set_hasher = true;
@@ -125,7 +125,9 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   
   $scope.set_prefs = function (event, prefs) {
     for (var key in PREFS) {
-      PREFS[key] = prefs[key];
+      if (prefs[key] !== undefined) {
+        PREFS[key] = prefs[key];
+      }
     }
     
     for (var i=0; i < $scope.tabs.length; i++) {
@@ -353,8 +355,10 @@ ndrive.controller('MainCtrl', function($scope, $rootScope) {
   chrome.storage.sync.get('prefs', function (obj) {
     if (obj.prefs) {
       $scope.set_prefs(null, JSON.parse(obj.prefs));
-      $scope.$apply();
     }
+    
+    apply_updates($scope);
+    AuthService.login();
   });
   
   $scope.error_simulation = function  () {

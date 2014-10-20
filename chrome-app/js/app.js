@@ -19,6 +19,7 @@ ndrive.run(function ($rootScope, $modal) {
     $rootScope.server_url = $rootScope.manifest.server_url;
   }
   $rootScope.google_accounts = [];
+  $rootScope.neutron_account = {token: null};
   
   $rootScope.load_editor = function () {
     Editor = ace.edit("editor");

@@ -28,6 +28,13 @@
             <li ng-repeat="file in recent_files track by $index"><a class="clickme" ng-click="open_recent($index)">{{ file.name }}</a></li>
           </ul>
         </li>
+        <li class="divider"></li>
+        <li ng-if="!neutron_account.token">
+          <a class="clickme" ng-click="login()"><i class="fa fa-caret-square-o-right"></i> Login</a>
+        </li>
+        <li ng-if="neutron_account.token">
+          <a class="clickme" ng-click="logout()"><i class="fa fa-caret-square-o-left"></i> Logout</a>
+        </li>
       </ul>
     </div>
     <button type="button" class="btn" ng-click="pref_modal()"><i class="fa fa-cog"></i></button>
