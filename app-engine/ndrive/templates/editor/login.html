@@ -12,7 +12,7 @@
       </md-button>
     </div>
     <h2>Login</h2>
-    <form action="{{ request.path }}" method="post">
+    <form action="{{ request.path }}" method="post" ng-submit="change_button()">
       {% csrf_token %}
       {{ form.app_id }}
       {% if form.non_field_errors %}
@@ -40,7 +40,7 @@
       </div>
       <div class="row submit">
         <div class="pull-left">
-          <md-button class="md-button-raised md-button-colored" type="submit">
+          <md-button class="md-button-raised md-button-colored" type="submit" ng-disabled="sending">
             <i class="fa fa-caret-square-o-right"></i> Login
           </md-button>
         </div>
@@ -67,7 +67,12 @@
 
 <script>
   ndrive.controller("LoginController", function ($scope) {
+    $scope.sending = false;
     $scope.user = {username: {% if form.username.value %}"{{ form.username.value|escapejs }}"{% else %}null{% endif %}, password: null};
+    
+    $scope.change_button = function () {
+      $scope.sending = true;
+    };
   });
 </script>
 {% endblock js %}
