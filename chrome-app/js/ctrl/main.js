@@ -163,7 +163,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope, AuthService) {
     var t = new Tab(file, project, text, session, $scope);
     $scope.tabs.push(t);
     $scope.current_tab = $scope.tabs.length - 1;
-    $scope.$apply();
+    apply_updates($scope);
     
     Editor.focus();
     $scope.scroll_to($scope.tabs.length - 1);

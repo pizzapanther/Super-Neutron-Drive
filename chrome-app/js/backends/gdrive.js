@@ -203,39 +203,6 @@ GDriveFS.prototype.do_rm = function (entry) {
   var self = this;
   self.transactions[entry.id] = entry;
   self.postMessage({task: 'trash', fileId: entry.id});
-  
-  /*
-  var parent = os.dirname(entry.path);
-  var self = this;
-  
-  var error_function = function () {
-    self.scope.rootScope.error_message('Error Removing: ' + entry.path);
-  };
-  
-  if (entry.state) {
-    self.info.entry.getDirectory(entry.path, {create: false}, function (dirEntry) {
-      dirEntry.removeRecursively(function () {
-        self.collapse_listing(entry.parent);
-        self.list_dir(entry.parent);
-        apply_updates(self.scope);
-      }, error_function);
-    }, function (dirError) {
-      error_function();
-    });
-  }
-  
-  else {
-    self.info.entry.getFile(entry.path, {create: false}, function (fileEntry) {
-      fileEntry.remove(function () {
-        self.collapse_listing(entry.parent);
-        self.list_dir(entry.parent);
-        apply_updates(self.scope);
-      }, error_function);
-    }, function (dirError) {
-      error_function();
-    });
-  }
-  */
 };
 
 GDriveFS.prototype.rename_callback = function (data) {

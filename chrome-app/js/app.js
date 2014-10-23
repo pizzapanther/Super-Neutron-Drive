@@ -11,14 +11,17 @@ var EditSession = require('ace/edit_session').EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 
 var ndrive = angular.module('ndrive', ['ui.utils', 'ui.bootstrap']);
-ndrive.run(function ($rootScope, $modal) {
+
+ndrive.run(function ($rootScope, $modal, $q) {
   $rootScope.manifest = chrome.runtime.getManifest();
   
   $rootScope.server_url = 'https://super.neutrondrive.com';
   if ($rootScope.manifest.server_url) {
     $rootScope.server_url = $rootScope.manifest.server_url;
   }
+  
   $rootScope.google_accounts = [];
+  $rootScope.neutron_beams = [];
   $rootScope.neutron_account = {token: null};
   
   $rootScope.load_editor = function () {
@@ -74,6 +77,38 @@ ndrive.run(function ($rootScope, $modal) {
     }
     
     return null;
+  };
+  
+  $rootScope.get_beam = function (id) {
+    for (var i=0; i < $rootScope.neutron_beams.length; i++) {
+      if ($rootScope.neutron_beams[i].id == id) {
+        return $rootScope.neutron_beams[i];
+      }
+    }
+    
+    return null;
+  };
+  
+  $rootScope.store_beams = function () {
+    chrome.storage.sync.set({'neutron_beams': JSON.stringify($rootScope.neutron_beams)}, function() {
+      console.log('Beams saved');
+      console.log($rootScope.neutron_beams);
+    });
+  };
+  
+  $rootScope.get_beams = function () {
+    var deferred = $q.defer();
+    
+    chrome.storage.sync.get('neutron_beams', function (obj) {
+      if (obj && obj.neutron_beams) {
+        $rootScope.neutron_beams = JSON.parse(obj.neutron_beams);
+        apply_updates($rootScope);
+      }
+      
+      deferred.resolve();
+    });
+    
+    return deferred.promise;
   };
 });
 

@@ -1,14 +1,25 @@
 var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScope) {
+  $scope.view = 'main';
   $scope.project_types = [
     {name: 'Local', cls: 'LocalFS'},
-    {name: 'Google Drive', cls: 'GDriveFS'}
+    {name: 'Google Drive', cls: 'GDriveFS'},
+    {name: 'Neutron Beam', cls: 'NBeamFS'},
   ];
   $scope.google_accounts = [
     {name: 'Add An Account', value: 'add-google'}
   ];
   
+  $scope.beams = [
+    {name: 'Add A Beam', value: 'add-beam'}
+  ];
+  
   for (var i=0; i < $rootScope.google_accounts.length; i++) {
     $scope.google_accounts.push({name: $rootScope.google_accounts[i].name, value: $rootScope.google_accounts[i].id});
+  }
+  
+  for (i=0; i < $rootScope.neutron_beams.length; i++) {
+    var name = $rootScope.neutron_beams[i].address + ':' + $rootScope.neutron_beams[i].port;
+    $scope.beams.push({name: name, value: $rootScope.neutron_beams[i].id});
   }
   
   $scope.form = {
@@ -16,8 +27,17 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
     error: '',
     type: $scope.project_types[0],
     google_account: '',
+    beam: '',
     folderId: ''
   };
+  
+  $scope.bform = {
+    address: '',
+    port: 32828,
+    secure: false
+  };
+  $scope.bform_error = '';
+  
   $scope.local_dir = null;
   $scope.sideScope = sideScope;
   
@@ -46,6 +66,10 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
     return $scope.form.type.cls === 'GDriveFS';
   };
   
+  $scope.beamUi = function () {
+    return $scope.form.type.cls === 'NBeamFS';
+  };
+  
   $scope.gdriveUiPicker = function () {
     return $scope.gdriveUi() && $scope.form.google_account !== '';
   };
@@ -62,6 +86,57 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
         $rootScope.$emit('google-account-init', account);
       }
     }
+  };
+  
+  $scope.beam_choosen = function () {
+    if ($scope.form.beam && $scope.form.beam.value === 'add-beam') {
+      $scope.form.beam = '';
+      $scope.view = 'add-beam';
+    }
+    
+    else if ($scope.form.beam) {
+      //var account = $rootScope.get_account($scope.form.google_account.value);
+      //if (!account.webview) {
+      //  $rootScope.$emit('google-account-init', account);
+      //}
+    }
+  };
+  
+  $scope.add_beam = function () {
+    if ($scope.bform.address === '') {
+      $scope.bform_error = 'Enter a beam address.'; 
+    }
+    
+    else if (!$scope.bform.port || $scope.bform.port < 1) {
+      $scope.bform_error = 'Enter a beam port.'; 
+    }
+    
+    else {
+      var name = $scope.bform.address + ':' + $scope.bform.port;
+      var id = $scope.bform.address + '-' + $scope.bform.port + '-' + Date.now();
+      
+      $scope.beams.push({name: name, value: id});
+      var b = angular.copy($scope.bform);
+      b.id = id;
+      
+      $rootScope.neutron_beams.push(b);
+      $rootScope.store_beams();
+      $scope.form.beam = $scope.beams[$scope.beams.length - 1];
+      
+      $scope.view = 'main';
+    }
+  };
+  
+  $scope.cancel_beam = function () {
+    $scope.view = 'main';
+  };
+  
+  $scope.mainView = function () {
+    return $scope.view === 'main';
+  };
+  
+  $scope.beamView = function () {
+    return $scope.view === 'add-beam';
   };
   
   $scope.google_added = function (event, id) {
@@ -119,6 +194,18 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
           }
         }
       }
+      
+      else if ($scope.beamUi()) {
+        if ($scope.form.beam === '') {
+          $scope.form.error = 'Please choose a Neutron Beam.';
+        }
+        
+        else {
+          var beam = $rootScope.get_beam($scope.form.beam.value);
+          $scope.sideScope.add_project($scope.form.name, 'beam', beam);
+          $modalInstance.close();
+        }
+      }
     }
     
     else {
@@ -137,7 +224,8 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
   });
 };
 
-ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
+ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q, BeamFactory) {
+  $scope.BeamFactory = BeamFactory;
   $scope.projects = [];
   $scope.local_pids = [];
   $scope.rootScope = $rootScope;
@@ -150,7 +238,7 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   
   $scope.project_modal = function () {
     var pmodal = $modal.open({
-      templateUrl: 'modal-project.html',
+      templateUrl: 'modals/project.html',
       controller: ProjectInstanceCtrl,
       windowClass: 'projectModal',
       keyboard: true,
@@ -192,6 +280,13 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
       $scope.projects.push(p);
       $scope.save_projects();
       GDriveFS.store_projects($scope);
+    }
+    
+    else if (ptype === 'beam') {
+      p = new NBeamFS(name, pinfo, $rootScope, $scope, pinfo.id);
+      $scope.projects.push(p);
+      $scope.save_projects();
+      NBeamFS.store_projects($scope);
     }
   };
   
@@ -337,11 +432,13 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q) {
   $rootScope.$on('save-projects', $scope.save_projects);
   
   window.load_local_files = $rootScope.load_local_files;
-  
-  LocalFS.load_projects($scope, $q)
-  .then(function () {
-    GDriveFS.load_projects($scope, $q)
-    .then($scope.restore_project_order)
-    .then(function () { $rootScope.$emit('reopenTabs') });
+  $rootScope.get_beams().then(function () {
+    LocalFS.load_projects($scope, $q).then(function () {
+      GDriveFS.load_projects($scope, $q).then(function () {
+        NBeamFS.load_projects($scope, $q).then($scope.restore_project_order).then(function () {
+          $rootScope.$emit('reopenTabs');
+        });
+      });
+    });
   });
 });

@@ -5,6 +5,8 @@ import hashlib
 from tornado.web import RequestHandler, StaticFileHandler, HTTPError
 from tornado.escape import json_encode, json_decode
 
+import nbeam.version
+
 class NeutronHandler (RequestHandler):
   def __init__ (self, *args, **kwargs):
     self.config = args[0].config
@@ -12,10 +14,11 @@ class NeutronHandler (RequestHandler):
     
   def options (self):
     self.set_header('Access-Control-Allow-Origin', '*')
-    self.set_header('Access-Control-Allow-Headers', 'X-CSRFToken')
+    self.set_header('Access-Control-Allow-Headers', 'Content-Type')
+    
     methods = ['OPTIONS']
     for m in ('post', 'get', 'put', 'delete'):
-      if hasattr():
+      if hasattr(self, m):
         methods.append(m.upper())
         
     self.set_header('Access-Control-Allow-Methods', ", ".join(methods))
@@ -23,6 +26,7 @@ class NeutronHandler (RequestHandler):
   def start_request (self):
     self.set_header('Content-Type', 'application/json')
     self.set_header('Access-Control-Allow-Origin', '*')
+    self.set_header('Neutron-Beam-Version', nbeam.version.__version__)
     
     self.data = {'status': 'invalid-request'}
     
@@ -47,8 +51,8 @@ class NeutronHandler (RequestHandler):
     except ValueError:
       self.json = {}
       
-    path, basedir = self.get_path()
-    if path.startswith(self.config['code_dir']):
+    self.get_path()
+    if self.path.startswith(self.config['code_dir']):
       return True
       
     else:
@@ -61,7 +65,7 @@ class NeutronHandler (RequestHandler):
     raise Exception("Not Implemented")
     
   def hashstr (self, path):
-    return hashlib.sha256(path).hexdigest()
+    return 'nbeam-' + hashlib.sha256(path).hexdigest()
     
   def get_path (self):
     if 'path' in self.json:
@@ -72,48 +76,14 @@ class NeutronHandler (RequestHandler):
       path = os.path.normpath(self.config['code_dir'])
       basedir = ''
       
-    return path, basedir
+    self.path = path
+    self.basedir = basedir
     
-class ListHandler (NeutronHandler):
+class PostMixin (object):
   def post (self):
     self.start_request()
-    self.get_headers()
     if self.valid_request():
-      path, basedir = self.get_path()
-      
-      dirs_only = 'dirs_only' in self.json and self.json['dirs_only']
-      
-      files = []
-      dirs = []
-      
-      fdlist = os.listdir(path)
-      fdlist.sort()
-      for f in fdlist:
-        fp = os.path.join(path, f)
-        rp = os.path.join(basedir, f)
-        
-        if os.path.isdir(fp):
-          dirs.append(dict(name=f, path=rp, id=self.hashstr(fp)))
-          
-        elif not dirs_only:
-          files.append(dict(name=f, path=rp, id=self.hashstr(fp)))
-          
-      self.data = {
-        'status': 'OK',
-        'id': self.hashstr(path),
-        'path': path,
-        'files': files,
-        'dirs': dirs,
-      }
-      
-    self.finish_request()
-    
-class FileHandler (NeutronHandler):
-  def post (self):
-    self.start_request()
-    self.get_headers()
-    if self.valid_request():
-      self.data = {'status': 'OK'}
+      self.post_request()
       
     self.finish_request()
     
