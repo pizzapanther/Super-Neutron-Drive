@@ -45,6 +45,81 @@ var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
   };
 };
 
+var NBeamsCtrl = function ($scope, $rootScope, $modalInstance, $modal) {
+  $scope.form = {beams: []};
+  for (var i=0; i < $rootScope.neutron_beams.length; i++) {
+    var b = angular.copy($rootScope.neutron_beams[i]);
+    b.rm = false;
+    $scope.form.beams.push(b);
+  }
+  
+  $scope.confirm = function () {
+    $modal.open({
+      templateUrl: 'modals/confirm.html',
+      controller: ConfirmCtrl,
+      windowClass: 'confirmModal',
+      keyboard: true,
+      resolve: {
+        message: function () { return 'Deleting a Neutron Beam will delete any projects associated with it.'; },
+        f: function () { return $scope.save_beams }
+      }
+    });
+  };
+  
+  $scope.nothing = function () {};
+  $scope.save_beams = function (confirmed) {
+    if (!confirmed) {
+      for (var i=0; i < $scope.form.beams.length; i++) {
+        if ($scope.form.beams[i].rm) {
+          $scope.confirm();
+          return null;
+        }
+      }
+    }
+    
+    else if (confirmed === 'no') {
+      return null;
+    }
+    
+    for (i=0; i < $scope.form.beams.length; i++) {
+      var b = $scope.form.beams[i];
+      
+      if (b.rm) {
+        $rootScope.remove_beam(b.id);
+      }
+      
+      else {
+        var root = $rootScope.get_beam(b.id);
+        root.address = b.address;
+        root.port = b.port;
+        root.secure = b.secure;
+      }
+    }
+    
+    $rootScope.store_beams();
+    $modalInstance.dismiss('save');
+  };
+  
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+
+var ConfirmCtrl = function ($scope, $rootScope, $modalInstance, message, f) {
+  $scope.f = f;
+  $scope.message = message;
+  
+  $scope.do_no = function () {
+    $scope.f('no');
+    $modalInstance.dismiss('no');
+  };
+  
+  $scope.do_yes = function () {
+    $scope.f('yes');
+    $modalInstance.dismiss('yes');
+  };
+};
+
 ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal, AuthService) {
   $scope.messages = {};
   $scope.recent_files = [];
@@ -90,11 +165,22 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal, AuthService) 
     );
   };
   
+  $scope.nbeams_modal = function () {
+    $modal.open({
+      templateUrl: 'modals/beams.html',
+      controller: NBeamsCtrl,
+      windowClass: 'beamsModal',
+      keyboard: true,
+      size: 'lg',
+      resolve: {}
+    });
+  };
+  
   $scope.help_modal = function () {
     var version = $rootScope.manifest.version;
     
     $modal.open({
-      templateUrl: 'modal-help.html',
+      templateUrl: 'modals/help.html',
       controller: HelpCtrl,
       windowClass: 'helpModal',
       keyboard: true,

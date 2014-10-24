@@ -77,6 +77,7 @@ md-card.full {
 }
 md-card.page {
   max-width: 840px;
+  padding: 30px;
 }
 md-card.side {
   width: 320px;
@@ -94,6 +95,12 @@ md-input-group.md-input-focused label,
 }
 md-button.highlight {
   color: #4285f4;
+}
+pre {
+  border: 1px solid #999999;
+  padding: 20px;
+  font-size: 90%;
+  border-radius: 10px;
 }
 .buttons md-button {
   margin-left: 10px;
@@ -129,6 +136,10 @@ md-button.highlight {
   max-width: 100%;
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
+}
+#HelpPage .page > p strong {
+  display: block;
+  margin: 0 0 10px 0;
 }
 #HelpPage .side ul {
   margin: 0;

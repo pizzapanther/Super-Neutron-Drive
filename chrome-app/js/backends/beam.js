@@ -6,7 +6,7 @@ function NBeamFS (name, info, root, scope, pid) {
   this.outline = true;
   this.root = root;
   this.working = false;
-  this.pid = 'beam-' + pid;
+  this.pid = pid;
   this.path = '';
   
   this.beam_service = new scope.BeamFactory(this.info);

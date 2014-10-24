@@ -89,6 +89,22 @@ ndrive.run(function ($rootScope, $modal, $q) {
     return null;
   };
   
+  $rootScope.remove_beam = function (id) {
+    var b = null;
+    
+    for (var i=0; i < $rootScope.neutron_beams.length; i++) {
+      if ($rootScope.neutron_beams[i].id == id) {
+        b = i;
+        break;
+      }
+    }
+    
+    if (b !== null) {
+      $rootScope.neutron_beams.splice(b, 1);
+      $rootScope.$emit('remove-beam-project', id);
+    }
+  };
+  
   $rootScope.store_beams = function () {
     chrome.storage.sync.set({'neutron_beams': JSON.stringify($rootScope.neutron_beams)}, function() {
       console.log('Beams saved');

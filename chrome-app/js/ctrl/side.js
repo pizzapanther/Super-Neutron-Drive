@@ -290,9 +290,20 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q, BeamFacto
     }
   };
   
+  $scope.remove_beam = function ($event, id) {
+    for (var j=0; j < $scope.projects.length; j++) {
+      var project = $scope.projects[j];
+      
+      if (project.cid == 'NBeamFS' && project.pid == id) {
+        $scope.remove_project(project);
+      }
+    }
+  };
+  
   $scope.remove_project = function (project) {
     var i = -1;
     var j;
+    var p;
     
     if (project.cid == 'LocalFS') {
       for (j=0; j < $scope.local_pids.length; j++) {
@@ -318,9 +329,9 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q, BeamFacto
       }
     }
     
-    if (project.cid == 'GDriveFS') {
+    else {
       for (j=0; j < $scope.projects.length; j++) {
-        var p = $scope.projects[j];
+        p = $scope.projects[j];
         if (project.cid == p.cid && project.pid == p.pid) {
           $scope.projects.splice(j, 1);
           break;
@@ -328,7 +339,14 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q, BeamFacto
       }
       
       $scope.save_projects();
-      GDriveFS.store_projects($scope);
+      
+      if (project.cid == 'GDriveFS') {
+        GDriveFS.store_projects($scope);
+      }
+      
+      else if (project.cid == 'NBeamFS') {
+        NBeamFS.store_projects($scope);
+      }
     }
   };
   
@@ -430,6 +448,7 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q, BeamFacto
   $rootScope.$on('openFreeAgents', $scope.open_free_agents);
   $rootScope.$on('loadTabs', $scope.open_remembered_tabs);
   $rootScope.$on('save-projects', $scope.save_projects);
+  $rootScope.$on('remove-beam-project', $scope.remove_beam);
   
   window.load_local_files = $rootScope.load_local_files;
   $rootScope.get_beams().then(function () {

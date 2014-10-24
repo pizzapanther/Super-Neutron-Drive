@@ -167,6 +167,7 @@
     .btn {
       padding: 3px 9px;
       font-size: 12px;
+      border: 0;
     }
     
     .buttons {
@@ -581,5 +582,33 @@
     .btn {
       font-size: 150%;
     }
+  }
+}
+
+.beamsModal {
+  h4 {
+    display: inline-block;
+  }
+  
+  .form-inline {
+    > div {
+      > div {
+        margin-right: 20px;
+        
+        &.checkbox {
+          margin-top: 5px;
+        }
+        
+        &:last-child {
+          margin-left: 20px;
+        }
+      }
+    }
+  }
+}
+
+.confirmModal {
+  strong {
+    font-size: 140%;
   }
 }
