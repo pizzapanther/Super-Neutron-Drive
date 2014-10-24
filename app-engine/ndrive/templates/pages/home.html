@@ -5,8 +5,9 @@
     <md-card class="full">
       <img class="main" src="{% static "img/super-neutron-1.png" %}" alt="">
       <h2>
-        The cross platform code editor built for the cloud.
+        The open-source, cross platform code editor built for the cloud.
       </h2>
+      <img class="mobile" src="{% static "img/super-neutron-1.png" %}" alt="">
       <h3>
         With Neutron Drive your development environment follows you on any 
         computer or any where you go. 
@@ -15,9 +16,525 @@
         <a href="https://chrome.google.com/webstore/detail/super-neutron-drive/hjmodhnpiombojkgckmmhjhihfhphajp" class="chrome">
           <img src="{% static "img/chrome-store.png" %}" alt="Available in the Chrome Web Store">
           <br>
-          <strong>Install Now &raquo;</strong>
+          <strong style="font-size: 130%;">Install Now &raquo;</strong>
         </a>
       </p>
+      <hr>
+      <h3>
+        Looking for the old <a href="https://www.neutrondrive.com/edit">hosted version of Neutron Drive?</a>
+      </h3>
+      <br>
+      <h2 style="margin-bottom: 10px;">Features:</h2>
+      <ul class="features">
+        <li>Syncs editor preferences between computers</li>
+        <li>Windows, Mac, Linux, and Chrome OS compatible</li>
+        <li>Google Drive support for Multiple Accounts</li>
+        <li>Remote editing via Neutron Beam</li>
+        <li>Auto indentation and outdent</li>
+        <li>Themes</li>
+        <li>Project file browser</li>
+        <li>Tabbed interface</li>
+        <li>Search and Replace</li>
+        <li>Pay what you want, even free!</li>
+      </ul>
+    </md-card>
+    <md-card class="full ss">
+      <div layout="horizontal" layout-align="center" class="flexer">
+        <div>
+          <h3>Screenshot #1: Tabbed Interface</h3>
+          <a class="clickme" ng-click="enlarge($event, '/static/img/ss/shot1.png', 'Neutron in action with several tabs open')">
+            <img src="/static/img/ss/shot1.jpg" class="thumbnail" alt="" style="width: 300px;">
+            <span class="screenshot-zoom"></span>
+          </a>
+        </div>
+        <div>
+          <h3>Screenshot #2: Preferences</h3>
+          <a class="clickme" ng-click="enlarge($event, '/static/img/ss/shot2.png', 'Preference dialog showing all editor preferences')">
+            <img src="/static/img/ss/shot2.jpg" class="thumbnail" alt="" style="width: 300px;">
+            <span class="screenshot-zoom"></span>
+          </a>
+        </div>
+        <div>
+          <h3>Screenshot #3: Themes and Search</h3>
+          <a class="clickme" ng-click="enlarge($event, '/static/img/ss/shot3.png', 'Search and Replace tool shown with a dark editor theme')">
+            <img src="/static/img/ss/shot3.jpg" class="thumbnail" alt="" style="width: 300px;">
+            <span class="screenshot-zoom"></span>
+          </a>
+        </div>
+  		</div>
+    </md-card>
+    <md-card class="full langs">
+      <h2>Supported Languages</h2>
+      <div>
+        <div class="emodes">
+          <div>
+            <h4>Programming</h4>
+            <div layout="horizontal" layout-align="start" class="flexer">
+              <div class="wrap">
+                <span class="radio" for="emode_abap">ABAP</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_ada">ADA</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_assembly_x86">Assembly x86</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_csharp">C#</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_c_cpp">C/C++</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_clojure">Clojure</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_cobol">Cobol</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_d">D</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_erlang">Erlang</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_forth">Forth</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_golang">Go</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_groovy">Groovy</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_haskell">Haskell</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_haxe">Haxe</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_java">Java</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_julia">Julia</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_lisp">Lisp</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_objectivec">Objective-C</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_ocaml">OCaml</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_pascal">Pascal</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_prolog">Prolog</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_rust">Rust</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_scala">Scala</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_scheme">Scheme</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_vhdl">VHDL</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4>Scripting</h4>
+            <div layout="horizontal" layout-align="start" class="flexer">
+              <div class="wrap">
+                <span class="radio" for="emode_actionscript">ActionScript</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_autohotkey">AutoHotKey</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_batchfile">Batch File</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_cirru">Cirru</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_coffee">Coffee Script</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_coldfusion">Cold Fusion</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_dart">Dart</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_gherkin">Gherkin</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_jack">Jack</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_javascript">Javascript</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_jsp">JSP</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_jsx">JSX</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_livescript">LiveScript</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_lsl">LSL</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_lua">Lua</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_makefile">Make File</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_mel">Maya Embedded Language</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_nix">Nix</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_perl">Perl</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_php">PHP</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_powershell">PowerShell</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_python">Python</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_ruby">Ruby</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_sh">Shell</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_sjs">Sugar JS</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_tcl">TCL</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_typescript">TypeScript</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_vbscript">VBScript</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4>Markup/Template</h4>
+            <div layout="horizontal" layout-align="start" class="flexer">
+              <div class="wrap">
+                <span class="radio" for="emode_asciidoc">AsciiDoc</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_curly">Curly</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_django">Django Template</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_ejs">Embedded JS</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_ftl">FreeMarker</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_haml">Haml</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_handlebars">Handlebars</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_html">HTML</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_html_completions">HTML Completions</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_jade">Jade</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_latex">Latex</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_liquid">Liquid Markup</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_luapage">Lua Page</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_markdown">Markdown</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_rdoc">RDoc</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_rhtml">RHTML</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_html_ruby">Ruby HTML</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_smarty">Smarty</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_soy_template">Soy Template</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_svg">SVG</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_tex">Tex</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_textile">Textile</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_toml">TOML</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_twig">Twig</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_velocity">Velocity</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_xml">XML</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_yaml">YAML</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4>Query/Data</h4>
+            <div layout="horizontal" layout-align="start" class="flexer">
+              <div class="wrap">
+                <span class="radio" for="emode_apache_conf">Apache Conf</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_diff">Diff</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_ini">INI</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_json">JSON</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_jsoniq">JSONiq</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_logiql">LogiQL</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_lucene">Lucene</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_mysql">MySQL</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_pgsql">PostgreSQL</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_properties">Properties</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_protobuf">Protobuf</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_r">R</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_space">Space</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_sql">SQL</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_xquery">XQuery</span>
+              </div></div>
+          </div>
+          <div>
+            <h4>Other</h4>
+            <div layout="horizontal" layout-align="start" class="flexer">
+              <div class="wrap">
+                <span class="radio" for="emode_css">CSS</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_dot">Dot</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_glsl">GLSL</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_less">Less</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_matlab">Matlab</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_minecraft">Minecraft</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_sass">Sass</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_scad">Scad</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_scss">SCSS</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_snippets">Snippets</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_stylus">Stylus</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_plain_text">Text</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_mushcode">TinyMUSH</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_mushcode_high_rules">TinyMUSH High Rules</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_tmsnippet">tmSnippet</span>
+              </div>
+              
+              <div class="wrap">
+                <span class="radio" for="emode_verilog">Verilog</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </md-card>
   </div>
 </div>

@@ -7,7 +7,7 @@ var ndrive = angular.module(
   }
 );
 
-ndrive.run(function ($rootScope) {
+ndrive.run(function ($rootScope, $mdDialog) {
   $rootScope.menu_on = false;
   
   $rootScope.toggle_menu = function () {
@@ -18,7 +18,24 @@ ndrive.run(function ($rootScope) {
     else {
       $rootScope.menu_on = true;
     }
-    
-    console.log($rootScope.menu_on);
+  };
+  
+  $rootScope.enlarge = function($event, img, title) {
+    $mdDialog.show({
+      targetEvent: $event,
+      controller: 'EnlargeController',
+      templateUrl: '/static/templates/enlarge.html',
+      locals: {img: img, title: title}
+    });
+  };
+});
+
+ndrive.controller('EnlargeController', function($scope, $mdDialog, img, title) {
+  $scope.img = img;
+  $scope.title = title;
+  console.log($scope);
+  
+  $scope.closeDialog = function() {
+    $mdDialog.hide();
   };
 });

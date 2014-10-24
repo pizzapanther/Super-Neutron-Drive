@@ -1,10 +1,21 @@
 #HomePage {
+  > div {
+    flex-wrap: wrap;
+  }
+  
   md-card.full {
     img.main {
       display: block;
       float: right;
-      width: 600px;
+      width: 50%;
       margin: 0 0 20px 20px;
+      border: 1px solid @color-border;
+    }
+    
+    img.mobile {
+      display: none;
+      width: 100%;
+      margin: 0 0 20px 0;
       border: 1px solid @color-border;
     }
     
@@ -24,6 +35,70 @@
     
     h3 {
       font-weight: normal;
+    }
+    
+    ul.features {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      
+      li {
+        margin: 0 0 15px 20px;
+        padding: 0;
+        
+        &:before {
+          content: "\27A4";
+          padding: 0 10px 0 0;
+        }
+      }
+    }
+  }
+  
+  .ss {
+    .flexer {
+      flex-wrap: wrap;
+      
+      > div {
+        margin: 0 20px 30px 20px;
+      }
+      
+      img {
+        border: 1px solid @color-border;
+      }
+      
+      h3 {
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+    }
+  }
+  
+  .langs {
+    h4 {
+      margin: 20px 0 10px 0;
+    }
+    
+    .emodes {
+      > div {
+        border-bottom: 1px solid @color-border;
+        padding: 0 0 20px 0;
+        
+        &:last-child {
+          border-bottom: 0;
+        }
+        
+        .flexer {
+          flex-wrap: wrap;
+          margin-left: 20px;
+        }
+        
+        .wrap {
+          font-size: 90%;
+          margin: 0 20px 10px 0;
+          max-width: 150px;
+          width: 130px;
+        }
+      }
     }
   }
 }

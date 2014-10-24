@@ -12,6 +12,9 @@ a {
 a:hover {
   text-decoration: underline;
 }
+.clickme {
+  cursor: pointer;
+}
 .clearfix {
   clear: both;
 }
@@ -121,6 +124,22 @@ md-input-group.md-input-focused label,
 md-button.highlight {
   color: #4285f4;
 }
+md-dialog.enlarge {
+  height: 90%;
+  max-height: 90%;
+  max-width: 90%;
+}
+md-dialog.enlarge h3 {
+  font-size: 1.5rem;
+  margin: 0 0 1.0rem 0;
+}
+md-dialog.enlarge .dialog-content {
+  height: calc(100% - 60px);
+}
+md-dialog.enlarge img {
+  height: calc(100% - 3.0rem);
+  display: block;
+}
 pre {
   border: 1px solid #999999;
   padding: 20px;
@@ -136,11 +155,20 @@ pre {
 .buttons md-button.extra {
   margin-left: 20px;
 }
+#HomePage > div {
+  flex-wrap: wrap;
+}
 #HomePage md-card.full img.main {
   display: block;
   float: right;
-  width: 600px;
+  width: 50%;
   margin: 0 0 20px 20px;
+  border: 1px solid #999999;
+}
+#HomePage md-card.full img.mobile {
+  display: none;
+  width: 100%;
+  margin: 0 0 20px 0;
   border: 1px solid #999999;
 }
 #HomePage md-card.full a.chrome {
@@ -156,6 +184,52 @@ pre {
 }
 #HomePage md-card.full h3 {
   font-weight: normal;
+}
+#HomePage md-card.full ul.features {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+#HomePage md-card.full ul.features li {
+  margin: 0 0 15px 20px;
+  padding: 0;
+}
+#HomePage md-card.full ul.features li:before {
+  content: "\27A4";
+  padding: 0 10px 0 0;
+}
+#HomePage .ss .flexer {
+  flex-wrap: wrap;
+}
+#HomePage .ss .flexer > div {
+  margin: 0 20px 30px 20px;
+}
+#HomePage .ss .flexer img {
+  border: 1px solid #999999;
+}
+#HomePage .ss .flexer h3 {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+#HomePage .langs h4 {
+  margin: 20px 0 10px 0;
+}
+#HomePage .langs .emodes > div {
+  border-bottom: 1px solid #999999;
+  padding: 0 0 20px 0;
+}
+#HomePage .langs .emodes > div:last-child {
+  border-bottom: 0;
+}
+#HomePage .langs .emodes > div .flexer {
+  flex-wrap: wrap;
+  margin-left: 20px;
+}
+#HomePage .langs .emodes > div .wrap {
+  font-size: 90%;
+  margin: 0 20px 10px 0;
+  max-width: 150px;
+  width: 130px;
 }
 #HelpPage > div {
   max-width: 100%;
@@ -209,5 +283,11 @@ pre {
   md-toolbar .menu ul li:after {
     content: "";
     padding: 0 0 0 0;
+  }
+  #HomePage md-card.full img.main {
+    display: none;
+  }
+  #HomePage md-card.full img.mobile {
+    display: block;
   }
 }
