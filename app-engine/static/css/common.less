@@ -41,6 +41,38 @@ md-toolbar {
       display: block;
     }
   }
+  
+  .menu {
+    ul {
+      float: right;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      
+      li {
+        display: inline-block;
+        margin: 0 5px;
+        padding: 0;
+        font-weight: bold;
+        font-size: 85%;
+        
+        &.mobile {
+          display: none;
+          cursor: pointer;
+        }
+        
+        &:last-child:after {
+          content: "";
+          padding: 0 0 0 0;
+        }
+        
+        &:after {
+          content: "\2E31";
+          padding: 0 0 0 10px;
+        }
+      }
+    }
+  }
 }
 
 md-card {

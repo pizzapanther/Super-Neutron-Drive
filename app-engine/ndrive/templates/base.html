@@ -20,7 +20,22 @@
         <span class="site-name">
           <a href="/" {% target %}>{{ site_name }}</a>
         </span>
-        <span flex></span>
+        <span class="menu" flex>
+          <ul ng-class="{mon: menu_on}">
+            <li class="mobile">
+              <a ng-click="toggle_menu()" class="btn"><i class="fa fa-bars"></i></a>
+            </li>
+            <li>
+              <a href="https://chrome.google.com/webstore/detail/super-neutron-drive/hjmodhnpiombojkgckmmhjhihfhphajp">Install</a>
+            </li>
+            <li>
+              <a href="http://blog.neutrondrive.com/">Blog</a>
+            </li>
+            <li>
+              <a href="/help/">Help</a>
+            </li>
+          </ul>
+        </span>
       </div>
     </md-toolbar>
     <md-content>

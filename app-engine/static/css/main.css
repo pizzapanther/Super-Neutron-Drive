@@ -34,6 +34,31 @@ md-toolbar .site-name img {
   width: 48px;
   display: block;
 }
+md-toolbar .menu ul {
+  float: right;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+md-toolbar .menu ul li {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 0;
+  font-weight: bold;
+  font-size: 85%;
+}
+md-toolbar .menu ul li.mobile {
+  display: none;
+  cursor: pointer;
+}
+md-toolbar .menu ul li:last-child:after {
+  content: "";
+  padding: 0 0 0 0;
+}
+md-toolbar .menu ul li:after {
+  content: "\2E31";
+  padding: 0 0 0 10px;
+}
 md-card {
   background-color: #ffffff;
   min-width: 300px;
@@ -144,4 +169,45 @@ pre {
 #HelpPage .side ul {
   margin: 0;
   padding: 0 0 0 30px;
+}
+@media (max-width: 670px) {
+  md-toolbar .menu {
+    position: relative;
+  }
+  md-toolbar .menu ul {
+    position: absolute;
+    top: -10px;
+    right: 0px;
+    height: 1.0em;
+    overflow: hidden;
+    z-index: 10;
+    background-color: #e6e6e6;
+  }
+  md-toolbar .menu ul.mon {
+    height: auto;
+  }
+  md-toolbar .menu ul.mon li {
+    border-bottom: 1px solid #999999;
+  }
+  md-toolbar .menu ul.mon li:first-child {
+    border-bottom: 0;
+  }
+  md-toolbar .menu ul.mon li:last-child {
+    margin-bottom: 0;
+  }
+  md-toolbar .menu ul li {
+    display: block;
+    text-align: right;
+    margin: 0;
+    padding: 20px 25px;
+  }
+  md-toolbar .menu ul li.mobile {
+    display: block;
+    margin: 0;
+    padding: 0 25px;
+  }
+  md-toolbar .menu ul li:after {
+    content: "";
+    padding: 0 0 0 0;
+  }
 }
