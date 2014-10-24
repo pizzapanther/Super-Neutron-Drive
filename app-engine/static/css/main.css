@@ -24,7 +24,7 @@ hr {
   margin: 30px 0;
 }
 md-toolbar {
-  background-color: #e6e6e6;
+  background-color: #00c4a3;
 }
 md-toolbar .site-name {
   font-family: 'VT323', cursive;
@@ -255,13 +255,13 @@ pre {
     height: 1.0em;
     overflow: hidden;
     z-index: 10;
-    background-color: #e6e6e6;
+    background-color: #00c4a3;
   }
   md-toolbar .menu ul.mon {
     height: auto;
   }
   md-toolbar .menu ul.mon li {
-    border-bottom: 1px solid #999999;
+    border-bottom: 1px solid #333333;
   }
   md-toolbar .menu ul.mon li:first-child {
     border-bottom: 0;
