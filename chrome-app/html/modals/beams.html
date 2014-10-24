@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+  <h4 class="modal-title">Neutron Beams</h4>&nbsp; -&nbsp; 
+  <a href="https://super.neutrondrive.com/help/neutron-beam-setup" target="_blank">How to Setup Neutron Beam &raquo;</a>
+</div>
+<div class="modal-body">
+  <form role="form" class="form-inline" ng-submit="save_beams()">
+    <div ng-repeat="beam in form.beams" class="clearfix">
+      <hr ng-if="$index">
+      <div class="form-group">
+        <input class="form-control" placeholder="Address" ng-model="beam.address">
+      </div>
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control" placeholder="Port" ng-model="beam.port">
+        </div>
+      </div>
+      <div class="checkbox">
+        <input type="checkbox" ng-model="beam.secure" id="beam-secure-{{ $index }}">
+        <label for="beam-secure-{{ $index }}"></label>
+        <label class="real" for="beam-secure-{{ $index }}">Use Encryption</label>
+      </div>
+      <div class="checkbox">
+        <input type="checkbox" ng-model="beam.rm" id="beam-rm-{{ $index }}">
+        <label for="beam-rm-{{ $index }}"></label>
+        <label class="real" for="beam-rm-{{ $index }}">Delete</label>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <div class="pull-left">
+    <em>To add a Beam, add a project.</em>
+  </div>
+  <button class="btn" ng-click="save_beams()">Save</button>
+  <button class="btn btn-cancel" ng-click="cancel()">Cancel</button>
+</div>

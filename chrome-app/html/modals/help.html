@@ -1,0 +1,91 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+  <h4 class="modal-title">Help</h4>
+</div>
+<div class="modal-body">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#help-about" data-toggle="tab">About</a></li>
+    <li><a href="#help-keyboard" data-toggle="tab">Keyboard Shortcuts</a></li>
+    <li><a href="#help-credits" data-toggle="tab">Credits</a></li>
+  </ul>
+  
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane active" id="help-about">
+      <img src="/img/logo-256.png" alt="">
+      <h3>Super Neutron Drive</h3>
+      <div class="version">Version {{ version }}</div>
+      <p>
+        For support and help see our <a href="https://super.neutrondrive.com/help/" target="_blank">Frequently Asked Questions</a> or visit our 
+        <a href="https://plus.google.com/u/0/communities/103400845906318724539" target="_blank">community support page</a>.
+      </p>
+      <p>
+        <br>
+        Written By: <a href="https://plus.google.com/u/0/+PaulPizzaPantherBailey/posts" target="_blank">Paul Bailey</a>
+      </p>
+      <p>
+        License: <a href="https://github.com/pizzapanther/Super-Neutron-Drive/blob/master/LICENSE" target="_blank">MIT License</a>
+      </p>
+      <p>
+        Github: <a href="https://github.com/pizzapanther/Super-Neutron-Drive" target="_blank">https://github.com/pizzapanther/Super-Neutron-Drive</a>
+      </p>
+      <p>
+        Additional info on Neutron Drive can be found at <a href="https://super.neutrondrive.com/" target="_blank">super.neutrondrive.com</a>
+      </p>
+      <div class="clearfix"></div>
+    </div>
+    <div class="tab-pane" id="help-keyboard" ng-include="'keyboard-shortcuts.html'"></div>
+    <div class="tab-pane" id="help-credits">
+      <p>
+        Thanks to the following open source projects that made Super Neutron Drive possible.
+      </p>
+      <ul>
+        <li>
+          <a href="http://ace.c9.io/" target="_blank">ACE Editor</a><br>
+          Ace is an embeddable code editor written in JavaScript. It matches the features and 
+          performance of native editors such as Sublime, Vim and TextMate. It can be easily 
+          embedded in any web page and JavaScript application. Ace is maintained as the primary 
+          editor for Cloud9 IDE and is the successor of the Mozilla Skywriter (Bespin) project.
+        </li>
+        <li>
+          <a href="https://angularjs.org/" target="_blank">AngularJS</a><br>
+          An open-source web application framework, maintained by Google and community, that 
+          assists with creating single-page applications, one-page web applications that only 
+          require HTML, CSS, and JavaScript on the client side. Its goal is to augment web 
+          applications with model–view–controller (MVC) capability, in an effort to make both 
+          development and testing easier.
+        </li>
+        <li>
+          <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a><br>
+          Bootstrap is the most popular HTML, CSS, and JS framework for developing responsive, 
+          mobile first projects on the web.
+        </li>
+        <li>
+          <a href="http://fortawesome.github.io/Font-Awesome/" target="_blank">Font Awesome</a><br>
+          Font Awesome gives you scalable vector icons that can instantly be customized — size, 
+          color, drop shadow, and anything that can be done with the power of CSS.
+        </li>
+        <li>
+          <a href="http://jquery.com/" target="_blank">jQuery</a><br>
+          jQuery is a fast, small, and feature-rich JavaScript library. It makes things like HTML 
+          document traversal and manipulation, event handling, animation, and Ajax much simpler 
+          with an easy-to-use API that works across a multitude of browsers. With a combination of 
+          versatility and extensibility, jQuery has changed the way that millions of people write 
+          JavaScript.
+        </li>
+        <li>
+          <a href="http://angular-ui.github.io/" target="_blank">AngularUI</a><br>
+          User interface companion suite to the AngularJS framework.
+        </li>
+        <li>
+          <a href="https://github.com/blueimp/JavaScript-MD5" target="_blank">Javascript MD5</a><br>
+          JavaScript MD5 implementation. Compatible with server-side environments like node.js, 
+          module loaders like RequireJS and all web browsers.
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-cancel" ng-click="cancel()" id="error-ok">OK</button>
+</div>

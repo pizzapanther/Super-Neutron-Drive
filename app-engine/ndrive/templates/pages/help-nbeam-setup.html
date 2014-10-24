@@ -1,0 +1,71 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}Neutron Beam Setup{% endblock %}
+{% block content %}
+<div id="HelpPage">
+  <div layout="horizontal" layout-align="center">
+    <md-card class="page">
+      <h2>Neutron Beam Setup</h2>
+      <hr>
+      <h3>Ubuntu/Debian</h3>
+      <pre>
+#Required Software
+sudo apt-get install python-pip build-essential python-dev
+sudo pip install neutron-beam
+
+# Start Neutron Beam
+nbeam start
+
+# Enter your code directory
+# Enter your username
+
+# Input your Server Address and Port to Neutron Drive
+# If you have a firewall make sure the port is open to your browser's IP.
+
+# Optional: Start Neutron Beam on boot
+(crontab -l; echo @reboot `which nbeam` start) | uniq - | crontab -
+      </pre>
+      <hr>
+      <h3>Redhat/Cent OS/Other Redhat Based Distros</h3>
+      <pre>
+#Required Software
+su
+yum install python-setuptools gcc python-devel
+curl https://bootstrap.pypa.io/get-pip.py | python
+pip install neutron-beam
+exit
+
+# Start Neutron Beam
+nbeam start
+
+# Enter your code directory
+# Enter your username
+
+# Input your Server Address and Port to Neutron Drive
+# If you have a firewall make sure the port is open to your browser's IP.
+
+# Optional: Start Neutron Beam on boot
+(crontab -l; echo @reboot `which nbeam` start) | uniq - | crontab -
+      </pre>
+      <hr>
+      <h3>Mac OS X</h3>
+      <pre>
+#Required Software
+sudo -i
+curl https://bootstrap.pypa.io/get-pip.py | python
+pip install neutron-beam
+exit
+
+# Start Neutron Beam
+nbeam start
+
+# Enter your code directory
+# Enter your username
+
+# Input your Server Address and Port to Neutron Drive
+# If you have a firewall make sure the port is open to your browser's IP.
+      </pre>
+    </md-card>
+    {% include "pages/help-side.html" %}
+  </div>
+</div>
+{% endblock content %}
