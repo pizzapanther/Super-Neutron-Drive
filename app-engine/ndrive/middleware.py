@@ -1,10 +1,12 @@
 
+from django import http
 from django.conf import settings
 
 class Secure (object):
-  def process_response(self, request, response):
+  def process_response (self, request, response):
     if not settings.DEV and not request.is_secure():
-      response['Strict-Transport-Security'] = 'max-age=15768000'
+      url = request.build_absolute_uri().replace('http://', 'https://')
+      return http.HttpResponseRedirect(url)
       
     return response
     
