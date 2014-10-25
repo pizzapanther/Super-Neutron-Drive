@@ -154,15 +154,16 @@ LocalFS.prototype.open_file = function (file, range) {
   });
 };
 
-LocalFS.prototype.new_file = function ($modal, entry) {
+LocalFS.prototype.new_file = function ($modal, entry, dir) {
   var self = this;
   
   var pmodal = $modal.open({
-    templateUrl: 'modal-new-file.html',
+    templateUrl: 'modals/new-file.html',
     controller: NewFileInstanceCtrl,
     windowClass: 'newFileModal',
     keyboard: true,
     resolve: {
+      dir: function () { return dir; },
       entry: function () { return entry; },
       project: function () { return self; }
     }
@@ -305,7 +306,7 @@ LocalFS.prototype.do_rm = function (entry) {
   }
 };
 
-LocalFS.prototype.save_new_file = function (entry, name) {
+LocalFS.prototype.save_new_file = function (entry, name, dir) {
   var self = this;
   var path = '';
   if (entry.path) {
@@ -324,27 +325,41 @@ LocalFS.prototype.save_new_file = function (entry, name) {
       self.scope.rootScope.$emit('addMessage', 'new-file', 'error', 'Error Creating: ' + name, true);
     };
     
-    self.info.entry.getFile(path, {create: true}, function (fileEntry) {
-      fileEntry.createWriter(function(fileWriter) {
-        fileWriter.onwriteend = function (e) {
-          self.scope.rootScope.$emit('removeMessage', 'new-file');
-          entry.state = 'closed';
-          entry.dirs = [];
-          entry.files = [];
-          
-          self.scope.$apply();
-          self.list_dir(entry);
-          self.open_file({name: name, path: path, retainer: path});
-        };
+    if (dir) {
+      self.info.entry.getDirectory(path, {create: true}, function (fileEntry) {
+        self.scope.rootScope.$emit('removeMessage', 'new-file');
+        entry.state = 'closed';
+        entry.dirs = [];
+        entry.files = [];
         
-        fileWriter.onerror = function (e) {
-          errorHandler();
-        };
-        
-        var blob = new Blob([''], {type: 'text/plain'});
-        fileWriter.write(blob);
+        apply_updates(self.scope);
+        self.list_dir(entry);
       }, errorHandler);
-    }, errorHandler);
+    }
+    
+    else {
+      self.info.entry.getFile(path, {create: true}, function (fileEntry) {
+        fileEntry.createWriter(function(fileWriter) {
+          fileWriter.onwriteend = function (e) {
+            self.scope.rootScope.$emit('removeMessage', 'new-file');
+            entry.state = 'closed';
+            entry.dirs = [];
+            entry.files = [];
+            
+            apply_updates(self.scope);
+            self.list_dir(entry);
+            self.open_file({name: name, path: path, retainer: path});
+          };
+          
+          fileWriter.onerror = function (e) {
+            errorHandler();
+          };
+          
+          var blob = new Blob([''], {type: 'text/plain'});
+          fileWriter.write(blob);
+        }, errorHandler);
+      }, errorHandler);
+    }
   });
 };
 
@@ -354,8 +369,8 @@ LocalFS.prototype.right_menu = function (rtype, entry, event) {
   
   if (rtype == 'dir') {
     menu = [
-      ['New File', 'file-text', function ($modal) { self.new_file($modal, entry); }],
-      
+      ['New File', 'file-text', function ($modal) { self.new_file($modal, entry, false); }],
+      ['New Directory', 'folder', function ($modal) { self.new_file($modal, entry, true); }],
       //'-'
     ];
     

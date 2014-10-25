@@ -140,38 +140,56 @@ Drive.newfile = function (data, callback) {
     metadata.parents = [{'id': data.parentId}];
   }
   
-  var base64Data = '';
-  var multipartRequestBody =
-    delimiter +
-    'Content-Type: application/json\r\n\r\n' +
-    JSON.stringify(metadata) +
-    delimiter +
-    'Content-Type: application/octet-stream\r\n' +
-    'Content-Transfer-Encoding: base64\r\n' +
-    '\r\n' +
-    base64Data +
-    close_delim;
+  if (data.dir) {
+    metadata.mimeType = "application/vnd.google-apps.folder";
     
-  var request = gapi.client.request({
-    'path': '/upload/drive/v2/files',
-    'method': 'POST',
-    'params': {
-      'uploadType': 'multipart',
-      'useContentAsIndexableText': 'true'
-    },
-    'headers': {
-      'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
-    },
-    'body': multipartRequestBody});
-    
-  request.execute(function (file) {
-    if (file.error) {
-      callback({error: 'Error Creating ' + data.name, parentId: data.parentId});
-    }
-    
-    else {
-      file.parentId = data.parentId;
-      callback(file);
-    }
-  });
+    gapi.client.drive.files.insert({'resource': metadata}).execute(function (file) {
+      if (file.error) {
+        callback({error: 'Error Creating ' + data.name, parentId: data.parentId});
+      }
+      
+      else {
+        file.parentId = data.parentId;
+        file.dir = true;
+        callback(file);
+      }
+    });
+  }
+  
+  else {
+    var base64Data = '';
+    var multipartRequestBody =
+      delimiter +
+      'Content-Type: application/json\r\n\r\n' +
+      JSON.stringify(metadata) +
+      delimiter +
+      'Content-Type: application/octet-stream\r\n' +
+      'Content-Transfer-Encoding: base64\r\n' +
+      '\r\n' +
+      base64Data +
+      close_delim;
+      
+    var request = gapi.client.request({
+      'path': '/upload/drive/v2/files',
+      'method': 'POST',
+      'params': {
+        'uploadType': 'multipart',
+        'useContentAsIndexableText': 'true'
+      },
+      'headers': {
+        'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+      },
+      'body': multipartRequestBody});
+      
+    request.execute(function (file) {
+      if (file.error) {
+        callback({error: 'Error Creating ' + data.name, parentId: data.parentId});
+      }
+      
+      else {
+        file.parentId = data.parentId;
+        callback(file);
+      }
+    });
+  }
 };

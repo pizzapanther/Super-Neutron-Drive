@@ -225,7 +225,7 @@ GDriveFS.prototype.trash_callback = function (data) {
   delete self.transactions[data.fileId];
 };
 
-GDriveFS.prototype.save_new_file = function (entry, name) {
+GDriveFS.prototype.save_new_file = function (entry, name, dir) {
   var self = this;
   var parentId;
   
@@ -239,7 +239,7 @@ GDriveFS.prototype.save_new_file = function (entry, name) {
   
   self.scope.rootScope.$emit('addMessage', 'new-file', 'info', 'Creating: ' + name, null, true);
   self.transactions[parentId] = entry;
-  self.postMessage({task: 'newfile', name: name, parentId: parentId});
+  self.postMessage({task: 'newfile', name: name, parentId: parentId, dir: dir});
 };
 
 GDriveFS.prototype.save_new_file_callback = function (data) {
@@ -258,7 +258,10 @@ GDriveFS.prototype.save_new_file_callback = function (data) {
     entry.files = [];
     
     apply_updates(self.scope);
-    self.open_file({name: data.title, id: data.id, path: data.title, retainer: data.id});
+    
+    if (!data.dir) {
+      self.open_file({name: data.title, id: data.id, path: data.title, retainer: data.id});
+    }
     
     if (entry.id) {
       self.list_dir(entry);

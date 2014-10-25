@@ -9,7 +9,6 @@ import time
 import errno
 import logging
 import signal
-
 import begin
 
 import nbeam.version
@@ -32,9 +31,11 @@ DEFAULTS = {
   'encrypt': True,
 }
 
-def get_config (config_dir, **kwargs):
-  if not os.path.exists(config_dir):
-    os.makedirs(config_dir)
+def LOAD_DEFAULTS ():
+  config_dir = DEFAULTS['config_dir']
+  if '--config-dir' in sys.argv:
+    i = sys.argv.index('--config-dir')
+    config_dir = sys.argv[i + 1]
     
   json_config = os.path.join(config_dir, 'config.json')
   if os.path.exists(json_config):
@@ -42,18 +43,22 @@ def get_config (config_dir, **kwargs):
     config = json.loads(fh.read())
     fh.close()
     
-  else:
-    config = {}
+    for key, value in config.items():
+      DEFAULTS[key] = value
+      
+LOAD_DEFAULTS()
+
+def get_config (config_dir, **kwargs):
+  if not os.path.exists(config_dir):
+    os.makedirs(config_dir)
     
-  for key in DEFAULTS:
-    if key != 'config_dir':
-      if key not in config:
-        config[key] = DEFAULTS[key]
-        
+  config = {}
   for key in kwargs:
     if kwargs[key] is not None:
       config[key] = kwargs[key]
       
+  json_config = os.path.join(config_dir, 'config.json')
+  
   if config['code_dir'] is None:
     config['code_dir'] = raw_input('Enter your code directory: ')
     

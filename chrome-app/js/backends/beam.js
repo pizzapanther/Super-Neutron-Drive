@@ -113,7 +113,7 @@ NBeamFS.prototype.rename_callback = function (self, entry, data) {
   entry.id = data.id;
 };
 
-NBeamFS.prototype.save_new_file = function (entry, name) {
+NBeamFS.prototype.save_new_file = function (entry, name, dir) {
   var self = this;
   var parentId;
   
@@ -126,7 +126,7 @@ NBeamFS.prototype.save_new_file = function (entry, name) {
   }
   
   self.scope.rootScope.$emit('addMessage', 'new-file', 'info', 'Creating: ' + name, null, true);
-  self.beam_service.file_new(self, entry, name, self.save_new_file_callback);
+  self.beam_service.file_new(self, entry, name, dir, self.save_new_file_callback);
 };
 
 NBeamFS.prototype.save_new_file_callback = function (self, entry, data) {
@@ -137,7 +137,10 @@ NBeamFS.prototype.save_new_file_callback = function (self, entry, data) {
     entry.dirs = [];
     entry.files = [];
     
-    self.open_file({name: data.name, id: data.id, path: data.path, retainer: data.path});
+    if (data.dir) {}
+    else {
+      self.open_file({name: data.name, id: data.id, path: data.path, retainer: data.path});
+    }
     
     if (entry.id) {
       self.list_dir(entry);

@@ -89,15 +89,20 @@ class FileNoobHandler (PostMixin, NeutronHandler):
     fp = os.path.join(self.path, name)
     
     fp = os.path.normpath(fp)
-    if fp.startswith(self.config['code_dir']):
-      fh = open(fp, 'w')
-      fh.close()
-      
+    if fp.startswith(self.config['code_dir']) and not os.path.exists(fp):
+      if self.json['dir']:
+        os.mkdir(fp)
+        
+      else:
+        fh = open(fp, 'w')
+        fh.close()
+        
       self.data = {
         'status': 'OK',
         'path': fp,
         'id': self.hashstr(fp),
         'name': name,
+        'dir': self.json['dir']
       }
       
     else:

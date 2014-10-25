@@ -54,11 +54,18 @@ ndrive.factory('BeamFactory', function ($q, $http, $rootScope) {
       });
     };
     
-    this.file_new = function (fs, entry, name, callback) {
+    this.file_new = function (fs, entry, name, dir, callback) {
       var self = this;
-      
-      $http.post(self.beam_url('file/new/'), {path: entry.path, name: name}, self.config).success(function (data) {
-        callback(fs, entry, data);
+      console.log(dir);
+      $http.post(self.beam_url('file/new/'), {path: entry.path, name: name, dir: dir}, self.config).success(function (data) {
+        if (data.status === 'OK') {
+          callback(fs, entry, data);
+        }
+        
+        else {
+          $rootScope.error_message('Error creating: ' + name);
+          callback(fs, entry);
+        }
       }).error(function () {
         $rootScope.error_message('Error creating: ' + name);
         callback(fs, entry);

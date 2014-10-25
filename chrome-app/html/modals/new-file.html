@@ -1,11 +1,11 @@
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
-  <h4 class="modal-title">New File In: {{ entry.name }}</h4>
+  <h4 class="modal-title">New {{ display_name }} In: {{ entry.name }}</h4>
 </div>
 <div class="modal-body">
   <form role="form" ui-keypress="{13: 'add_file()'}">
     <div class="form-group">
-      <label for="new-file-name">File Name:</label>
+      <label for="new-file-name">{{ display_name }} Name:</label>
       <input type="text" class="form-control" id="new-file-name" ng-model="form.name">
     </div>
   </form>

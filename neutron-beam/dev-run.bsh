@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export PYTHONPATH=`pwd`
+
+./nbeam/run.py "$@"

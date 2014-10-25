@@ -1,10 +1,15 @@
 var lastNewFile = '';
-var NewFileInstanceCtrl = function ($scope, $rootScope, $modalInstance, entry, project) {
+var NewFileInstanceCtrl = function ($scope, $rootScope, $modalInstance, entry, project, dir) {
   $scope.form = {
     name: lastNewFile,
     error: ''
   };
   
+  $scope.dir = dir;
+  $scope.display_name = 'File';
+  if ($scope.dir) {
+    $scope.display_name = 'Directory';
+  }
   $scope.entry = entry;
   $scope.project = project;
   
@@ -15,7 +20,7 @@ var NewFileInstanceCtrl = function ($scope, $rootScope, $modalInstance, entry, p
   $scope.add_file = function () {
     if ($scope.form.name) {
       lastNewFile = $scope.form.name;
-      $scope.project.save_new_file(entry, $scope.form.name);
+      $scope.project.save_new_file(entry, $scope.form.name, $scope.dir);
       $modalInstance.dismiss('create');
     }
     
