@@ -1,10 +1,13 @@
 from django import http
 from django.conf import settings
 from django.template.response import TemplateResponse
-from django.views.decorators.csrf import requires_csrf_token
+from django.views.decorators.csrf import requires_csrf_token, csrf_exempt
 from django.contrib.auth import login, logout
 
 from .forms import LoginForm
+from .auth import requires_token
+from .models import BeamApiKey
+
 from account.models import User
 
 @requires_csrf_token
@@ -49,4 +52,13 @@ def logout_view (request, token):
     session.flush()
     
   return http.JsonResponse({'result': 'OK'})
+  
+@csrf_exempt
+@requires_token
+def gen_api_key (request):
+  bkey = BeamApiKey.get_or_create(request.user, request.json['id'])
+  if 'new' in request.json and request.json['new']:
+    bkey.regen()
+    
+  return http.JsonResponse({'status': 'OK', 'key': bkey.akey})
   

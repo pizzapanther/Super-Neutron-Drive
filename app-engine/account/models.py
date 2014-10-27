@@ -52,11 +52,14 @@ class User (AbstractBaseUser, PermissionsMixin):
     return ("id__iexact", "username__icontains", "email__icontains", "first_name__icontains", "last_name__icontains")
     
   def chrome_token (self, session):
-    return jwt.encode({'session': session.session_key}, settings.SECRET_KEY)
+    return jwt.encode({
+      'session': session.session_key,
+      'exp': datetime.datetime(2030, 1, 1)
+    }, settings.SECRET_KEY)
     
   @staticmethod
   def get_session (token):
-    payload = jwt.decode(token, settings.SECRET_KEY)
+    payload = jwt.decode(token, settings.SECRET_KEY, verify_expiration=False)
     return SESSION_ENGINE.SessionStore(payload['session'])
     
   def send_verify (self, request):
