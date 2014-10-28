@@ -26,3 +26,10 @@ libraries:
   
 builtins:
 - remote_api: on
+
+manual_scaling:
+  instances: 1
+  
+vm_settings:
+  machine_type: n1-standard-1
+  
