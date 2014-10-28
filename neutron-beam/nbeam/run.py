@@ -19,6 +19,7 @@ DEFAULT_CONFIG_PATH = os.path.join(os.environ['HOME'], '.config', 'neutron-beam'
 DEFAULTS = {
   'config_dir': DEFAULT_CONFIG_PATH,
   'auto_reload': False,
+  'api_key': None,
   'port': 32828,
   'foreground': False,
   'view_timeout': 30,
@@ -48,30 +49,38 @@ def LOAD_DEFAULTS ():
       
 LOAD_DEFAULTS()
 
-def get_config (config_dir, **kwargs):
+def get_config (config_dir, **config):
   if not os.path.exists(config_dir):
     os.makedirs(config_dir)
     
-  config = {}
-  for key in kwargs:
-    if kwargs[key] is not None:
-      config[key] = kwargs[key]
+  for key, value in DEFAULTS.items():
+    if key not in config:
+      config[key] = value
       
   json_config = os.path.join(config_dir, 'config.json')
   
+  write = False
   if config['code_dir'] is None:
     config['code_dir'] = raw_input('Enter your code directory: ')
+    write = True
     
   if config['username'] is None:
     config['username'] = raw_input('Enter your Neutron Drive username: ')
+    write = True
+    
+  if config['api_key'] is None:
+    config['api_key'] = raw_input('Enter your Beam API Key (Leave blank for no encryption): ')
+    write = True
     
   if config['pid_file'] is None:
     config['pid_file'] = os.path.join(config_dir, 'nbeam.pid')
+    write = True
     
   if config['log_file'] is None:
     config['log_file'] = os.path.join(config_dir, 'nbeam.log')
+    write = True
     
-  if not os.path.exists(json_config):
+  if write or not os.path.exists(json_config):
     fh = open(json_config, 'w')
     fh.write(json.dumps(config, indent=2))
     fh.close()
@@ -98,6 +107,7 @@ def start (
     pid_file=DEFAULTS['pid_file'],
     log_file=DEFAULTS['log_file'],
     encrypt=DEFAULTS['encrypt'],
+    api_key=DEFAULTS['api_key'],
   ):
   "Start Neutron Beam"
   
@@ -114,6 +124,7 @@ def start (
     log_file=log_file,
     pid_file=pid_file,
     encrypt=encrypt,
+    api_key=api_key,
   )
   
   if not config['foreground']:
@@ -153,10 +164,10 @@ def get_pid (config):
     return pid
     
 @begin.subcommand
-def stop (config_dir=DEFAULT_CONFIG_PATH):
+def stop (config_dir=DEFAULT_CONFIG_PATH, pid_file=DEFAULTS['pid_file']):
   "Stop Neutron Beam"
   
-  config = get_config(config_dir)
+  config = get_config(config_dir, pid_file=pid_file)
   
   print('Stopping Neutron Beam ...')
   pid = get_pid(config)
@@ -183,6 +194,7 @@ def restart (
     pid_file=DEFAULTS['pid_file'],
     log_file=DEFAULTS['log_file'],
     encrypt=DEFAULTS['encrypt'],
+    api_key=DEFAULTS['api_key'],
   ):
   "Restart Neutron Beam"
   
@@ -200,6 +212,7 @@ def restart (
     log_file=log_file,
     pid_file=pid_file,
     encrypt=encrypt,
+    api_key=api_key,
   )
   
 @begin.subcommand
@@ -210,10 +223,10 @@ def config (config_dir=DEFAULT_CONFIG_PATH):
   print(json.dumps(config, indent=2))
   
 @begin.subcommand
-def running (config_dir=DEFAULT_CONFIG_PATH):
+def running (config_dir=DEFAULT_CONFIG_PATH, pid_file=DEFAULTS['pid_file']):
   "Print whether Neutron Beam is running"
   
-  config = get_config(config_dir)
+  config = get_config(config_dir, pid_file=pid_file)
   
   pid = get_pid(config)
   

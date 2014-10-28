@@ -1,4 +1,7 @@
+import datetime
+
 from django import http
+from django.utils import timezone
 from django.conf import settings
 from django.template.response import TemplateResponse
 from django.views.decorators.csrf import requires_csrf_token, csrf_exempt
@@ -6,7 +9,7 @@ from django.contrib.auth import login, logout
 
 from .forms import LoginForm
 from .auth import requires_token
-from .models import BeamApiKey
+from .models import BeamApiKey, EKey
 
 from account.models import User
 
@@ -57,8 +60,38 @@ def logout_view (request, token):
 @requires_token
 def gen_api_key (request):
   bkey = BeamApiKey.get_or_create(request.user, request.json['id'])
-  if 'new' in request.json and request.json['new']:
+  if 'regen' in request.json and request.json['regen']:
     bkey.regen()
     
-  return http.JsonResponse({'status': 'OK', 'key': bkey.akey})
+  return http.JsonResponse({'status': 'OK', 'key': bkey.akey, 'user': bkey.user.username})
+  
+@csrf_exempt
+@requires_token
+def ekey (request):
+  e = EKey.create(request.user, request.json['id'])
+  return http.JsonResponse({'status': 'OK', 'key': e.ekey})
+  
+@csrf_exempt
+def get_ekey (request):
+  beam = request.POST.get('beam', '')
+  akey = request.POST.get('akey', '')
+  
+  old = timezone.now() - datetime.timedelta(minutes=3)
+  
+  try:
+    api = BeamApiKey.objects.get(beam=beam, akey=akey)
+    
+  except BeamApiKey.DoesNotExist:
+    raise http.Http404
+    
+  try:
+    e = EKey.objects.filter(user=api.user, beam=beam, created__gt=old).latest()
+    
+  except EKey.DoesNotExist:
+    raise http.Http404
+    
+  key = e.ekey
+  e.delete()
+  
+  return http.JsonResponse({'result': 'OK', 'key': key})
   

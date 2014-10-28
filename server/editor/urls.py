@@ -6,4 +6,6 @@ urlpatterns = patterns('editor.views',
   url(r'^logout/(.*)$', 'logout_view'),
   
   url(r'^generate-api-key$', 'gen_api_key'),
+  url(r'^ekey$', 'ekey'),
+  url(r'^get-ekey$', 'get_ekey'),
 )

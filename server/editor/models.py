@@ -2,6 +2,7 @@ import base64
 
 from django.db import models
 from django.utils.crypto import get_random_string
+from cryptography.fernet import Fernet
 
 class BeamApiKey (models.Model):
   user = models.ForeignKey('account.User')
@@ -38,4 +39,26 @@ class BeamApiKey (models.Model):
   def regen (self):
     self.akey = BeamApiKey.gen_key()
     self.save()
+    
+class EKey (models.Model):
+  user = models.ForeignKey('account.User')
+  beam = models.CharField(max_length=255)
+  ekey = models.CharField(max_length=255, blank=True, null=True)
+  
+  created = models.DateTimeField(auto_now_add=True)
+  
+  class Meta:
+    unique_together = (('user', 'ekey'),)
+    verbose_name = 'Encryption Key'
+    get_latest_by = "created"
+    
+  def __unicode__ (self):
+    return self.beam
+    
+  @staticmethod
+  def create (user, beam):
+    key = Fernet.generate_key()
+    ekey = EKey(user=user, beam=beam, ekey=key)
+    ekey.save()
+    return ekey
     

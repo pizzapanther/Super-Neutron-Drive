@@ -21,6 +21,10 @@ setup(
       'tornado==4.0.2',
       'begins==0.9',
       'python-daemon==1.5.5',
+      'cryptography==0.6.1',
+      'PyJWT==0.3.0',
+      'pycrypto',
+      'requests==2.4.3'
     ],
     entry_points = {
         "console_scripts": [

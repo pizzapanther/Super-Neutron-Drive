@@ -1,15 +1,23 @@
 import os
 import json
+import base64
 import hashlib
+import requests
+
+import jwt
+from cryptography.fernet import Fernet
 
 from tornado.web import RequestHandler, StaticFileHandler, HTTPError
 from tornado.escape import json_encode, json_decode
 
 import nbeam.version
 
+EKEY = ''
+
 class NeutronHandler (RequestHandler):
   def __init__ (self, *args, **kwargs):
     self.config = args[0].config
+    self.ekey = None
     super(NeutronHandler, self).__init__(*args, **kwargs)
     
   def options (self):
@@ -36,7 +44,12 @@ class NeutronHandler (RequestHandler):
     self.set_header('Expires', '0')
     
   def finish_request (self):
-    j = json_encode(self.data)
+    if self.config['encrypt']:
+      j = self.encrypt(self.data)
+      
+    else:
+      j = json_encode(self.data)
+      
     self.write(j)
     self.finish()
     
@@ -61,8 +74,19 @@ class NeutronHandler (RequestHandler):
       
     return False
     
+  def encrypt (self, body):
+    global EKEY
+    
+    body = json_encode(body)
+    
+    f = Fernet(EKEY)
+    return f.encrypt(body)
+    
   def decrypt (self, body):
-    raise Exception("Not Implemented")
+    global EKEY
+    
+    f = Fernet(EKEY)
+    return f.decrypt(body)
     
   def hashstr (self, path):
     return 'nbeam-' + hashlib.sha256(path).hexdigest()
@@ -86,4 +110,34 @@ class PostMixin (object):
       self.post_request()
       
     self.finish_request()
+    
+class SetupHandler (NeutronHandler):
+  def url (self):
+    url = 'http'
+    if self.config['ssl']:
+      url += 's'
+      
+    url += '://' + self.config['server'] + '/editor/get-ekey'
+    
+    return url
+    
+  def post (self):
+    global EKEY
+    self.start_request()
+    
+    payload = jwt.decode(self.request.body, self.config['api_key'])
+    if payload['user'].lower() == self.config['username'].lower():
+      r = requests.post(self.url(), data={'beam': payload['id'], 'akey': self.config['api_key']})
+      
+      if r.status_code == 200:
+        EKEY = str(r.json()['key'])
+        
+        j = json_encode({'status': 'OK'})
+        self.write(j)
+        self.finish()
+        return None
+        
+    self.clear()
+    self.set_status(401)
+    self.finish("Unauthorized")
     

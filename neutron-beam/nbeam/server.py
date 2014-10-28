@@ -14,6 +14,7 @@ from tornado.web import Application
 from tornado.options import options
 from tornado.log import enable_pretty_logging
 
+from nbeam.handlers import SetupHandler
 from nbeam.file_handlers import ListHandler, FileHandler, FileDeleteHandler, FileNoobHandler, FileRenameHandler, FileSaveHandler
 
 def run (config):
@@ -42,6 +43,7 @@ def server (config):
   
   app = Application([
     #(r"/\S+/public/(.*)", StaticHandler, {'path': config['dir']}),
+    (r"/setup/", SetupHandler),
     (r"/list/", ListHandler),
     (r"/file/get/", FileHandler),
     (r"/file/save/", FileSaveHandler),
