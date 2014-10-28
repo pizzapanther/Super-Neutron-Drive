@@ -1,4 +1,7 @@
-Django==1.7
+Django==1.7.1
 django-grappelli==2.6.1
 PyJWT==0.2.3
 cryptography==0.6.1
+pytz==2014.7
+gunicorn==19.1.1
+psycopg2==2.5.4
