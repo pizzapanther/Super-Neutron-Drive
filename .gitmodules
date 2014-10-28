@@ -1,0 +1,3 @@
+[submodule "server/ndrive/settings/private"]
+	path = server/ndrive/settings/private
+	url = git@github.com:pizzapanther/Private-Settings.git

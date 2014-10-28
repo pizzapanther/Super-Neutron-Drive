@@ -16,21 +16,18 @@ MANAGERS = ADMINS
 
 DATABASES = {
   'default': {
-    'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-    'NAME': '',                      # Or path to database file if using sqlite3.
-    # The following settings are not used with sqlite3:
-    'USER': '',
+    'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+    'NAME': 'sndrive',                      # Or path to database file if using sqlite3.
+    'USER': 'postgres',
     'PASSWORD': '',
-    'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-    'PORT': '',                      # Set to empty string for default.
+    'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+    'PORT': '5432',                      # Set to empty string for default.
   }
 }
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
-  'super-neutron-drive.appspot.com',
-  '.super-neutron-drive.appspot.com',
   'super.neutrondrive.com',
 ]
 
@@ -93,7 +90,6 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
   'ndrive.middleware.Secure',
-  'google.appengine.ext.ndb.django_middleware.NdbDjangoMiddleware',
   'django.contrib.sessions.middleware.SessionMiddleware',
   'django.middleware.common.CommonMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
@@ -123,7 +119,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 CACHES = {
   'default': {
-    'BACKEND': 'ndrive.cache.MemcachedCache',
+    'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+    'LOCATION': '127.0.0.1:11211',
   }
 }
 
@@ -185,19 +182,24 @@ SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = False
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
-from ndrive.settings.private.settings import *
-
 DEV = False
 
-if os.environ.has_key('SERVER_SOFTWARE') and os.environ['SERVER_SOFTWARE'].startswith('Dev'):
-  DEV = True
-  from ndrive.settings.private.dev import *
-  
-elif os.environ.has_key('DBENV'):
-  if os.environ['DBENV'] == 'Dev':
-    DEV = True
-    from ndrive.settings.private.dev import *
-    
-  elif os.environ['DBENV'] == 'Prod':
-    from ndrive.settings.private.prodlocal import *
-    
+import sys
+import socket
+
+machine = socket.gethostname().split('.')[0]
+
+try:
+  istr = 'ndrive.settings.private.' + machine
+  tmp = __import__(istr)
+  mod = sys.modules[istr]
+
+except ImportError:
+  print 'No settings module for %s' % machine
+
+else:
+  print 'Importing settings for %s' % machine
+  for setting in dir(mod):
+    if setting == setting.upper():
+      setattr(sys.modules[__name__], setting, getattr(mod, setting))
+      

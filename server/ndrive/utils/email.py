@@ -3,7 +3,7 @@ import urllib
 import logging
 import types
 
-from google.appengine.api import urlfetch
+import requests
 
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -54,20 +54,16 @@ def send_mail (subject, to, template, context={}, from_address=settings.DEFAULT_
     data['to'] = settings.DEV_EMAIL
     data['subject'] = '[Dev] ' + data['subject']
     
-  form_data = urllib.urlencode(data)
-  
-  auth = base64.b64encode("api:{}".format(settings.MAILGUN))
-  result = urlfetch.fetch(
-    url='https://api.mailgun.net/v2/neutrondrive.com/messages',
-    payload=form_data,
-    method=urlfetch.POST,
-    headers={"Authorization": "Basic {}".format(auth)},
-    deadline=20,
+  result = requests.post(
+    'https://api.mailgun.net/v2/neutrondrive.com/messages',
+    data=data,
+    auth=('api', settings.MAILGUN),
+    timeout=20
   )
   
   if result.status_code == 200:
-    return result.content
+    return result.text
     
-  logging.error(result.content)
+  logging.error(result.text)
   raise MailError('Mail API Error: {}'.format(result.status_code))
   
