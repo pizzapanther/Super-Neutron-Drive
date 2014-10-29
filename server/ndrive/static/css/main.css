@@ -141,10 +141,11 @@ md-dialog.enlarge img {
   display: block;
 }
 pre {
-  border: 1px solid #999999;
+  border: 5px solid #999999;
   padding: 20px;
   font-size: 90%;
-  border-radius: 10px;
+  border-radius: 5px;
+  overflow: auto;
 }
 .buttons md-button {
   margin-left: 10px;

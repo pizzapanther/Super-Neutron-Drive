@@ -5,18 +5,24 @@
   <div layout="horizontal" layout-align="center">
     <md-card class="page">
       <h2>Neutron Beam Setup</h2>
+      Before you install Neutron Beam on your server, add a project and get 
+      your API Key. This is needed for your server installation.
       <hr>
       <h3>Ubuntu/Debian</h3>
       <pre>
 #Required Software
-sudo apt-get install python-pip build-essential python-dev
-sudo pip install neutron-beam
+sudo -i
+apt-get install build-essential python-dev libssl-dev libffi-dev
+curl https://bootstrap.pypa.io/get-pip.py | python
+pip install neutron-beam
+exit
 
 # Start Neutron Beam
 nbeam start
 
 # Enter your code directory
 # Enter your username
+# Enter your API Key
 
 # Input your Server Address and Port to Neutron Drive
 # If you have a firewall make sure the port is open to your browser's IP.
@@ -29,8 +35,9 @@ nbeam start
       <pre>
 #Required Software
 su
-yum install python-setuptools gcc python-devel
+yum install python-setuptools gcc python-devel openssl-devel libffi-devel
 curl https://bootstrap.pypa.io/get-pip.py | python
+pip install six>=1.4.1 --upgrade
 pip install neutron-beam
 exit
 
@@ -39,6 +46,7 @@ nbeam start
 
 # Enter your code directory
 # Enter your username
+# Enter your API Key
 
 # Input your Server Address and Port to Neutron Drive
 # If you have a firewall make sure the port is open to your browser's IP.
@@ -52,14 +60,23 @@ nbeam start
 #Required Software
 sudo -i
 curl https://bootstrap.pypa.io/get-pip.py | python
-pip install neutron-beam
 exit
+
+brew install openssl libffi pkg-config
+export PKG_CONFIG_PATH=/usr/local/Cellar/libffi/3.0.13/lib/pkgconfig/
+env ARCHFLAGS="-arch x86_64" LDFLAGS="-L/usr/local/opt/openssl/lib" CFLAGS="-I/usr/local/opt/openssl/include" pip install cryptography==0.6.1 --user
+pip install neutron-beam --user
+
+# Add to your ~/.bash_profile:
+# export PATH=$PATH:/Users/paul/Library/Python/2.7/bin
+# restart your shell
 
 # Start Neutron Beam
 nbeam start
 
 # Enter your code directory
 # Enter your username
+# Enter your API Key
 
 # Input your Server Address and Port to Neutron Drive
 # If you have a firewall make sure the port is open to your browser's IP.

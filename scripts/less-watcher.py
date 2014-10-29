@@ -26,7 +26,7 @@ def run_watcher ():
   basedir = os.path.abspath(os.path.dirname(__file__))
   os.chdir(basedir)
   
-  ldir = os.path.join(basedir, '..', 'app-engine', 'static', 'css')
+  ldir = os.path.join(basedir, '..', 'server', 'ndrive', 'static', 'css')
   
   wm = pyinotify.WatchManager()
   handler = LessCompile(ldir)
