@@ -45,7 +45,7 @@ var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
   };
 };
 
-var NBeamsCtrl = function ($scope, $rootScope, $modalInstance, $modal) {
+var NBeamsCtrl = function ($scope, $rootScope, $modalInstance, $modal, BeamSetupService) {
   $scope.form = {beams: []};
   for (var i=0; i < $rootScope.neutron_beams.length; i++) {
     var b = angular.copy($rootScope.neutron_beams[i]);
@@ -103,6 +103,40 @@ var NBeamsCtrl = function ($scope, $rootScope, $modalInstance, $modal) {
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
   };
+  
+  $scope.view_api = function (index, regen) {
+    var b = $scope.form.beams[index];
+    $scope.bname = b.address + ':' + b.port;
+    BeamSetupService.generate_api(b.id, regen, $scope.show_api);
+  };
+  
+  $scope.show_api = function (data) {
+    $modal.open({
+      templateUrl: 'modals/apikey.html',
+      controller: KeyCtrl,
+      windowClass: 'keyModal',
+      keyboard: true,
+      resolve: {
+        server: function () {return $scope.bname},
+        api_key: function () {return data.key}
+      }
+    });
+  };
+};
+
+var KeyCtrl = function ($scope, $rootScope, $modalInstance, server, api_key) {
+  $scope.server = server;
+  $scope.api_key = api_key;
+  
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  
+  $scope.copy_key = function () {
+    var i = document.querySelector('.api_key input');
+    i.setSelectionRange(0, i.value.length);
+    document.execCommand('copy');
+  };
 };
 
 var ConfirmCtrl = function ($scope, $rootScope, $modalInstance, message, f) {
@@ -151,7 +185,7 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal, AuthService) 
   
   $scope.pref_modal = function () {
     $scope.pmodal = $modal.open({
-      templateUrl: 'modal-prefs.html',
+      templateUrl: 'modals/prefs.html',
       controller: PrefCtrl,
       windowClass: 'prefModal',
       keyboard: true,
@@ -191,7 +225,7 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal, AuthService) 
   
   $scope.donate_modal = function () {
     $modal.open({
-      templateUrl: 'modal-donate.html',
+      templateUrl: 'modals/donate.html',
       controller: DonateCtrl,
       windowClass: 'donateModal',
       keyboard: true,

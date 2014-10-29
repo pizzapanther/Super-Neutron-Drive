@@ -22,6 +22,7 @@
     "identity",
     "storage",
     "webview",
+    "clipboardWrite",
     {"fileSystem": ["write", "retainEntries", "directory"]},
     
     "http://manx.neutrondrive.com:8080/*",
@@ -37,5 +38,5 @@
     }
   },
   
-  "server_url": "http://manx.neutrondrive.com:8080"
+  "server_url": "http://manx.neutrondrive.com:8000"
 }

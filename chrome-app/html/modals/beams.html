@@ -25,6 +25,10 @@
         <label for="beam-rm-{{ $index }}"></label>
         <label class="real" for="beam-rm-{{ $index }}">Delete</label>
       </div>
+      <div class="form-group">
+        <a class="clickme" ng-click="view_api($index, false)">API Key</a>&nbsp; &sdot;&nbsp; 
+        <a class="clickme" ng-click="view_api($index, true)">New Key</a>
+      </div>
     </div>
   </form>
 </div>

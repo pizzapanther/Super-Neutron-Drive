@@ -1,8 +1,8 @@
 ndrive.service("AuthService", function ($http, $rootScope) {
   this.base_url = $rootScope.server_url + '/editor/';
   
-  this.login = function () {
-    if (PREFS.show_login) {
+  this.login = function (callback) {
+    if (PREFS.show_login || callback) {
       var self = this;
       var webAuth = {
         url: self.base_url + "login/?app_id=" + chrome.runtime.id,
@@ -24,6 +24,10 @@ ndrive.service("AuthService", function ($http, $rootScope) {
             apply_updates($rootScope);
             $rootScope.$emit('loggedIn');
             $rootScope.$emit('addMessage', 'logged-in', 'info', 'Login Successful', true);
+            
+            if (callback) {
+              callback();
+            }
           }
         }
         

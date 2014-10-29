@@ -1,4 +1,4 @@
-var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScope) {
+var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, BeamSetupService, sideScope) {
   $scope.view = 'main';
   $scope.project_types = [
     {name: 'Local', cls: 'LocalFS'},
@@ -34,12 +34,13 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
   $scope.bform = {
     address: '',
     port: 32828,
-    secure: false
+    secure: true
   };
   $scope.bform_error = '';
   
   $scope.local_dir = null;
   $scope.sideScope = sideScope;
+  $scope.api_key = null;
   
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
@@ -92,13 +93,15 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
     if ($scope.form.beam && $scope.form.beam.value === 'add-beam') {
       $scope.form.beam = '';
       $scope.view = 'add-beam';
+      $scope.api_key = null;
     }
     
     else if ($scope.form.beam) {
-      //var account = $rootScope.get_account($scope.form.google_account.value);
-      //if (!account.webview) {
-      //  $rootScope.$emit('google-account-init', account);
-      //}
+      var b = $rootScope.get_beam($scope.form.beam.value);
+      if (b.secure) {
+        $scope.api_key = 'Retrieving API Key ...';
+        BeamSetupService.generate_api(b.id, $scope.set_api_key);
+      }
     }
   };
   
@@ -124,7 +127,22 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, sideScop
       $scope.form.beam = $scope.beams[$scope.beams.length - 1];
       
       $scope.view = 'main';
+      
+      if (b.secure) {
+        $scope.api_key = 'Retrieving API Key ...';
+        BeamSetupService.generate_api(b.id, false, $scope.set_api_key);
+      }
     }
+  };
+  
+  $scope.set_api_key = function (data) {
+    $scope.api_key = data.key;
+  };
+  
+  $scope.copy_key = function () {
+    var i = document.querySelector('.api_key input');
+    i.setSelectionRange(0, i.value.length);
+    document.execCommand('copy');
   };
   
   $scope.cancel_beam = function () {

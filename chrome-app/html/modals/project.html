@@ -25,11 +25,21 @@
         <option value="">-- Choose A Google Account --</option>
       </select>
     </div>
-    <div class="form-group" ng-show="beamUi()">
+    <div class="form-group beam-info" ng-show="beamUi()">
       <label for="project-beam">Neutron Beam:</label><br>
       <select class="form-control" id="project-beam" ng-options="ga.name for ga in beams" ng-model="form.beam" ng-change="beam_choosen()">
         <option value="">-- Choose A Beam --</option>
       </select>
+      <p ng-if="api_key" class="api_key">
+        API Key:<br><input class="form-control" ng-model="api_key" disabled>
+        <span ng-if="api_key != 'Retrieving API Key ...'">
+          <br>
+          <a class="clickme" ng-click="copy_key()">Copy to clipboard</a>
+        </span>
+      </p>
+      <p>
+        <a href="https://super.neutrondrive.com/help/neutron-beam-setup" target="_blank">How to Setup Neutron Beam &raquo;</a>
+      </p>
     </div>
     <div class="form-group button-assist" ng-show="gdriveUiPicker()">
       <label for="project-folderid">Folder ID:</label><br>
@@ -49,8 +59,17 @@
       <label for="beam-port">Port:</label>
       <input type="number" setp="1" class="form-control" id="beam-port" ng-model="bform.port">
     </div>
-    <div class="error-message">
-      Warning: this connection is not encrypted so please use a VPN or local address!
+    <div class="form-group">
+      <div class="checkbox">
+        <input type="checkbox" ng-model="bform.secure" id="beam-secure">
+        <label for="beam-secure"></label>
+        <label class="real" for="beam-secure">
+          Use Encryption<br> 
+          <em>
+            Turn off only if using an address via a VPN, SSH tunnel, or locally.
+          </em>
+        </label>
+      </div>
     </div>
   </form>
 </div>

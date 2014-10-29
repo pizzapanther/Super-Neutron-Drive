@@ -53,7 +53,7 @@ ndrive.run(function ($rootScope, $modal, $q) {
   
   $rootScope.error_message = function (m) {
     $rootScope.modal = $modal.open({
-      templateUrl: 'modal-error.html',
+      templateUrl: 'modals/error.html',
       controller: ModalInstanceCtrl,
       windowClass: 'loadingModal errorModal',
       keyboard: true,

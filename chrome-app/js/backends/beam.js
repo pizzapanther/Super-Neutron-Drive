@@ -23,13 +23,17 @@ NBeamFS.prototype.list_fs = function (parentEntry, entry) {
   
   parentEntry.working = true;
   
-  self.beam_service.list(parentEntry, self.list_fs_callback);
+  self.beam_service.list(self, parentEntry, self.list_fs_callback);
 };
 
-NBeamFS.prototype.list_fs_callback = function (entry, data) {
+NBeamFS.prototype.list_fs_callback = function (self, entry, data) {
   entry.working = false;
   
   if (data) {
+    if (self.info.secure) {
+      data = self.beam_service.decrypt(data);
+    }
+    
     entry.dirs = [];
     entry.files = [];
     entry.state = 'open';
@@ -69,6 +73,10 @@ NBeamFS.prototype.open_file_callback = function (file, self, data) {
   self.scope.rootScope.$emit('removeMessage', 'open-file' + file.id);
   
   if (data) {
+    if (self.info.secure) {
+      data = self.beam_service.decrypt(data);
+    }
+    
     var utf8output = base64DecToArr(data.base64);
     var content = UTF8ArrToStr(utf8output);
     
@@ -95,6 +103,10 @@ NBeamFS.prototype.do_save = function (tab, name, path, text, md5sum, mid, errorH
 };
 
 NBeamFS.prototype.do_save_callback = function (pass_thru, self, data) {
+  if (self.info.secure) {
+    data = self.beam_service.decrypt(data);
+  }
+  
   pass_thru.tab.saved_md5sum = pass_thru.md5sum;
   pass_thru.tab.saving = false;
   self.scope.rootScope.$emit('removeMessage', pass_thru.mid);
@@ -107,6 +119,10 @@ NBeamFS.prototype.do_rename = function (entry, name) {
 };
 
 NBeamFS.prototype.rename_callback = function (self, entry, data) {
+  if (self.info.secure) {
+    data = self.beam_service.decrypt(data);
+  }
+  
   entry.name = data.name;
   entry.path = data.path;
   self.scope.rootScope.$emit('renameTab', self.pid, entry.id, entry);
@@ -158,6 +174,10 @@ NBeamFS.prototype.do_rm = function (entry) {
 };
 
 NBeamFS.prototype.trash_callback = function (self, entry, data) {
+  if (self.info.secure) {
+    data = self.beam_service.decrypt(data);
+  }
+  
   self.collapse_listing(entry.parent);
   self.list_dir(entry.parent);
 };

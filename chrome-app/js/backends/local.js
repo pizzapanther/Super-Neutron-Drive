@@ -179,7 +179,7 @@ LocalFS.prototype.rename = function ($modal, entry) {
   var self = this;
   
   var pmodal = $modal.open({
-    templateUrl: 'modal-rename-file.html',
+    templateUrl: 'modals/rename-file.html',
     controller: RenameFileInstanceCtrl,
     windowClass: 'renameFileModal',
     keyboard: true,
