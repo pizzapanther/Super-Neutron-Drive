@@ -29,6 +29,7 @@ DATABASES = {
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
   'super.neutrondrive.com',
+  'snd.neutrondrive.com',
 ]
 
 # Local time zone for this installation. Choices can be found here:
