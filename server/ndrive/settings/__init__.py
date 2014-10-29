@@ -63,7 +63,7 @@ MEDIA_ROOT = ''
 # Examples: "http://example.com/media/", "http://media.example.com/"
 MEDIA_URL = ''
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/var/www/html/static/'
 STATIC_URL = '/static/'
 
 # Additional locations of static files
