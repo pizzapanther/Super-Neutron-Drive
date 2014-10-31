@@ -44,6 +44,9 @@ class NeutronHandler (RequestHandler):
     self.set_header('Expires', '0')
     
   def finish_request (self):
+    if self.get_status() == 409:
+      return None
+      
     if self.config['encrypt']:
       j = self.encrypt(self.data)
       
@@ -57,6 +60,9 @@ class NeutronHandler (RequestHandler):
     body = self.request.body
     if self.config['encrypt']:
       body = self.decrypt(body)
+      
+    if self.get_status() == 409:
+      return False
       
     try:
       self.json = json.loads(body)
@@ -85,9 +91,15 @@ class NeutronHandler (RequestHandler):
   def decrypt (self, body):
     global EKEY
     
-    f = Fernet(EKEY)
-    return f.decrypt(body)
-    
+    try:
+      f = Fernet(EKEY)
+      return f.decrypt(body)
+      
+    except:
+      self.set_status(409)
+      self.write(json_encode({'status': 'invalid-encryption'}))
+      self.finish()
+      
   def hashstr (self, path):
     return 'nbeam-' + hashlib.sha256(path).hexdigest()
     

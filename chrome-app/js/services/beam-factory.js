@@ -44,6 +44,10 @@ ndrive.factory('BeamFactory', function ($q, $http, $rootScope, $timeout, BeamSet
       return data;
     };
     
+    BeamFactory.set_callback_args = function () {
+      BeamFactory.callback_args = arguments;
+    };
+    
     BeamFactory.eready = function () {
       if (BeamFactory.beam.secure) {
         if (BeamFactory.akey) {
@@ -51,13 +55,11 @@ ndrive.factory('BeamFactory', function ($q, $http, $rootScope, $timeout, BeamSet
             return true;
           }
           
-          BeamFactory.callback_args = arguments;
           BeamSetupService.new_ekey(BeamFactory, BeamFactory.beam.id, BeamFactory.edone);
           
           return false;
         }
         
-        BeamFactory.callback_args = arguments;
         BeamSetupService.generate_api(BeamFactory.beam.id, false, BeamFactory.adone);
         
         return false;
@@ -128,76 +130,102 @@ ndrive.factory('BeamFactory', function ($q, $http, $rootScope, $timeout, BeamSet
       });
     };
     
+    BeamFactory.retryable = function (status) {
+      if (status == 409) {
+        BeamFactory.ekey = null;
+        BeamFactory.resume();
+        
+        return true;
+      }
+      
+      return false;
+    };
+    
     BeamFactory.list = function (fs, entry, callback, failed_setup) {
+      BeamFactory.set_callback_args('list', fs, entry, callback);
+      
       if (failed_setup) {
         callback(fs, entry, null);
       }
       
-      else if (BeamFactory.eready('list', fs, entry, callback)) {
+      else if (BeamFactory.eready()) {
         var path = entry.path;
         var name = entry.name;
         
         var d = BeamFactory.prepare_data({path: path});
         $http.post(BeamFactory.beam_url('list/'), d, BeamFactory.config).success(function (data) {
           callback(fs, entry, data);
-        }).error(function () {
-          $rootScope.error_message('Error listing: ' + name);
-          callback(fs, entry, null);
+        }).error(function (data, status, headers, config) {
+          if (!BeamFactory.retryable(status)) {
+            $rootScope.error_message('Error listing: ' + name);
+            callback(fs, entry, null);
+          }
         });
       }
     };
     
     BeamFactory.file_get = function (entry, fs, callback, failed_setup) {
+      BeamFactory.set_callback_args('file_get', entry, fs, callback);
+      
       if (failed_setup) {
         callback(entry, fs, null);
       }
       
-      else if (BeamFactory.eready('file_get', entry, fs, callback)) {
+      else if (BeamFactory.eready()) {
         var d = BeamFactory.prepare_data({path: entry.path});
         $http.post(BeamFactory.beam_url('file/get/'), d, BeamFactory.config).success(function (data) {
           callback(entry, fs, data);
-        }).error(function () {
-          $rootScope.error_message('Error opening: ' + entry.name);
-          callback(entry, fs, null);
+        }).error(function (data, status) {
+          if (!BeamFactory.retryable(status)) {
+            $rootScope.error_message('Error opening: ' + entry.name);
+            callback(entry, fs, null);
+          }
         });
       }
     };
     
     BeamFactory.file_save = function (name, path, text, fs, pass_thru, callback, failed_setup) {
+      BeamFactory.set_callback_args('file_save', name, path, text, fs, pass_thru, callback);
       if (failed_setup) {}
       
-      else if (BeamFactory.eready('file_save', name, path, text, fs, pass_thru, callback)) {
+      else if (BeamFactory.eready()) {
         var utf8input = strToUTF8Arr(text);
         var base64 = base64EncArr(utf8input);
         
         var d = BeamFactory.prepare_data({path: path, base64: base64});
         $http.post(BeamFactory.beam_url('file/save/'), d, BeamFactory.config).success(function (data) {
           callback(pass_thru, fs, data);
-        }).error(function () {
-          pass_thru.errorHandler();
+        }).error(function (data, status) {
+          if (!BeamFactory.retryable(status)) {
+            pass_thru.errorHandler();
+          }
         });
       }
     };
     
     BeamFactory.file_rename = function (fs, entry, name, callback, failed_setup) {
+      BeamFactory.set_callback_args('file_rename', fs, entry, name, callback);
       if (failed_setup) {}
       
-      else if (BeamFactory.eready('file_rename', fs, entry, name, callback)) {
+      else if (BeamFactory.eready()) {
         var d = BeamFactory.prepare_data({path: entry.path, name: name});
         $http.post(BeamFactory.beam_url('file/rename/'), d, BeamFactory.config).success(function (data) {
           callback(fs, entry, data);
-        }).error(function () {
-          $rootScope.error_message('Error renaming: ' + entry.name);
+        }).error(function (data, status) {
+          if (!BeamFactory.retryable(status)) {
+            $rootScope.error_message('Error renaming: ' + entry.name);
+          }
         });
       }
     };
     
     BeamFactory.file_new = function (fs, entry, name, dir, callback, failed_setup) {
+      BeamFactory.set_callback_args('file_new', fs, entry, name, dir, callback);
       if (failed_setup) {
         callback(fs, entry);
       }
       
-      else if (BeamFactory.eready('file_new', fs, entry, name, dir, callback)) {
+      else if (BeamFactory.eready()) {
         var d = BeamFactory.prepare_data({path: entry.path, name: name, dir: dir});
         $http.post(BeamFactory.beam_url('file/new/'), d, BeamFactory.config).success(function (data) {
           if (BeamFactory.beam.secure) {
@@ -212,22 +240,27 @@ ndrive.factory('BeamFactory', function ($q, $http, $rootScope, $timeout, BeamSet
             $rootScope.error_message('Error creating: ' + name);
             callback(fs, entry);
           }
-        }).error(function () {
-          $rootScope.error_message('Error creating: ' + name);
-          callback(fs, entry);
+        }).error(function (data, status) {
+          if (!BeamFactory.retryable(status)) {
+            $rootScope.error_message('Error creating: ' + name);
+            callback(fs, entry);
+          }
         });
       }
     };
     
     BeamFactory.file_delete = function (fs, entry, callback, failed_setup) {
+      BeamFactory.set_callback_args('file_delete', fs, entry, callback);
       if (failed_setup) {}
       
-      else if (BeamFactory.eready('file_delete', fs, entry, callback)) {
+      else if (BeamFactory.eready()) {
         var d = BeamFactory.prepare_data({path: entry.path});
         $http.post(BeamFactory.beam_url('file/delete/'), d, BeamFactory.config).success(function (data) {
           callback(fs, entry, data);
-        }).error(function () {
-          $rootScope.error_message('Error deleting: ' + entry.name);
+        }).error(function (data, status) {
+          if (!BeamFactory.retryable(status)) {
+            $rootScope.error_message('Error deleting: ' + entry.name);
+          }
         });
       }
     };
