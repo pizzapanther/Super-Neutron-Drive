@@ -363,6 +363,10 @@ LocalFS.prototype.save_new_file = function (entry, name, dir) {
   });
 };
 
+LocalFS.prototype.custom_menu = function (rtype, entry, event) {
+  return null;
+};
+
 LocalFS.prototype.right_menu = function (rtype, entry, event) {
   var self = this;
   var menu = [];
@@ -384,6 +388,14 @@ LocalFS.prototype.right_menu = function (rtype, entry, event) {
       ['Rename', 'pencil-square-o', function ($modal) { self.rename($modal, entry); }],
       //'-'
     ];
+  }
+  
+  var cmenu = self.custom_menu(rtype, entry, event)
+  if (cmenu && cmenu.length > 0) {
+    menu.push('-');
+    for (var c=0; c < cmenu.length; c++) {
+      menu.push(cmenu[c]);
+    }
   }
   
   if (!entry.cid) {

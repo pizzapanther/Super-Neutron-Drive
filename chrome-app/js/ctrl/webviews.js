@@ -40,7 +40,7 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
   };
   
   $scope.server_url = function (id) {
-    var url = $rootScope.server_url + "/view-" + id;
+    var url = $rootScope.server_url + "/view-" + id + '?dt=' + Date.now();
     return url;
   };
   
@@ -93,7 +93,8 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
           save: 'do_save_callback',
           rename: 'rename_callback',
           newfile: 'save_new_file_callback',
-          trash: 'trash_callback'
+          trash: 'trash_callback',
+          webview: 'pub_callback'
         };
         
         if (account_tasks.indexOf(event.data.task) > -1 || tasks_callbacks[event.data.task]) {

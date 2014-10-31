@@ -80,6 +80,18 @@ ndrive.controller('RightClickCtrl', function($scope, $rootScope, $modal) {
   $scope.menu = [];
   $scope.modal = $modal;
   
+  $scope.hide_right = function () {
+    $rootScope.$emit('hideRightMenu');
+  };
+  
+  $scope.is_function = function (m) {
+    if (m != '-' && m[2] !== null) {
+      return true;
+    }
+    
+    return false;
+  };
+  
   $scope.hide_menu = function () {
     $scope.display = 'none';
   };

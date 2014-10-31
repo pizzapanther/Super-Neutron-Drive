@@ -1,3 +1,4 @@
+var immediateAuth = false;
 var Neutron = {
   gdrive_api_loaded: false,
   authorized: false,
@@ -35,7 +36,7 @@ Neutron.auth_init = function (setkey, force_slow) {
   
   var options = {
     client_id: GOOGLE_CLIENT_ID,
-    immediate: false,
+    immediate: immediateAuth,
     scope: [
       'https://www.googleapis.com/auth/drive',
       'https://www.googleapis.com/auth/drive.scripts'
@@ -55,7 +56,6 @@ Neutron.auth_init = function (setkey, force_slow) {
 
 Neutron.auth_callback = function (OAuth) {
   Neutron.parent.postMessage({'task': 'close-popup', id: Neutron.id}, Neutron.origin);
-  console.log(OAuth);
   
   if (OAuth && OAuth.error) {
     Neutron.auth_init(false, true);
@@ -89,6 +89,7 @@ Neutron.auth_callback = function (OAuth) {
         var request = gapi.client.drive.about.get();
         request.execute(function (response) {
           document.querySelector("#email").innerHTML = 'Account: ' + response.user.emailAddress;
+          immediateAuth = true;
           Neutron.parent.postMessage({
             task: 'token',
             oauth: oauth,
@@ -134,10 +135,8 @@ Neutron.receive_message = function (event) {
         Neutron.parent = event.source;
         Neutron.origin = event.origin;
         Neutron.id = event.data.id;
-        console.log(event.data);
         
         if (event.data.oauth) {
-          console.log(event.data.oauth);
           document.querySelector("#email").innerHTML = 'Initializing Account: ' + event.data.email;
           gapi.load('auth:client,drive-realtime,drive-share,picker', function () {
             gapi.auth.setToken({

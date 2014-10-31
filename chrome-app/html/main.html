@@ -12,11 +12,16 @@
     <div id="mainWrapper">
       <div id="rightClickMenu" ng-controller="RightClickCtrl" style="display: {{ display }}; {{ position }};">
         <ul>
-          <li ng-repeat="m in menu">
+          <li ng-repeat="m in menu track by $index">
             <hr ng-if="m == '-'">
-            <a ng-if="m != '-'" ng-click="m[2](modal)" class="clickme">
-              <i class="fa fa-{{ m[1] }}"></i> {{ m[0] }}
-            </a>
+            <span ng-if="m !== '-'">
+              <a ng-if="is_function(m)" ng-click="m[2](modal)" class="clickme">
+                <i class="fa fa-{{ m[1] }}"></i> {{ m[0] }}
+              </a>
+              <a ng-if="!is_function(m)" target="_blank" href="{{ m[3] }}" ng-click="hide_right()">
+                <i class="fa fa-{{ m[1] }}"></i> {{ m[0] }}
+              </a>
+            </span>
           </li>
         </ul>
       </div>

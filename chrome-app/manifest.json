@@ -2,7 +2,7 @@
   "name": "Super Neutron Drive",
   "short_name": "N-Drive",
   "description": "The honey badger of code editors",
-  "version": "14.10.4",
+  "version": "14.10.5",
   
   "app": {
     "background": {

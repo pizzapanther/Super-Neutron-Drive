@@ -2,7 +2,10 @@ const boundary = '-------314159265358979323846';
 const delimiter = "\r\n--" + boundary + "\r\n";
 const close_delim = "\r\n--" + boundary + "--";
 
-var Drive = {};
+var Drive = {
+  requests: [],
+  fields: 'id,mimeType,labels,fileExtension,title,webViewLink,properties(key,value),alternateLink,webContentLink'
+};
 
 Drive.list_dir = function (data, callback) {
   var folderId = data.folderId;
@@ -30,7 +33,7 @@ Drive.list_dir = function (data, callback) {
   
   var params = {
     q: "'root' in parents",
-    fields: 'items(id,mimeType,labels,fileExtension,title,webViewLink,properties(key,value),alternateLink,webContentLink)'
+    fields: 'items(' + Drive.fields + ')'
   };
   if (folderId) {
     if (folderId === 'sharedWithMe') {
@@ -109,6 +112,73 @@ Drive.save = function (data, callback) {
     }
   });
 };
+
+Drive.webview = function (data, callback) {
+  var request;
+  
+  if (data.make_public) {
+    var body = {'value': '', 'type': 'anyone', 'role': 'reader'};
+    request = gapi.client.drive.permissions.insert({
+      'fileId': data.fileId,
+      'resource': body
+    });
+    
+    request.execute(function (resp) {
+      Drive.get_file(data.fileId, callback);
+    });
+  }
+  
+  else {
+    request = gapi.client.drive.permissions.list({'fileId': data.fileId});
+    request.execute(function(resp) {
+      Drive.requests = [];
+      for (var i=0; i < resp.items.length; i++) {
+        if (resp.items[i].type == 'anyone') {
+          r = gapi.client.drive.permissions.delete({
+            'fileId': data.fileId,
+            'permissionId': resp.items[i].id
+          });
+          
+          Drive.requests.push(r);
+        }
+      }
+      
+      if (Drive.requests.length > 0) {
+        Drive.do_requests(0, function () {
+          Drive.get_file(data.fileId, callback);
+        });
+      }
+      
+      else {
+        Drive.get_file(data.fileId, callback);
+      }
+    });
+  }
+};
+
+
+Drive.get_file = function (fileId, callback) {
+  var request = gapi.client.drive.files.get({'fileId': fileId, fields: Drive.fields});
+  
+  request.execute(function (resp) {
+    resp.fileId = fileId;
+    callback(resp);
+  });
+};
+
+Drive.do_requests = function (r, done) {
+  Drive.requests[r].execute(function (resp) {
+    r = r + 1;
+    
+    if (r < Drive.requests.length) {
+      Drive.do_requests(r, done);
+    }
+    
+    else {
+      done();
+    }
+  });
+}
 
 Drive.rename = function (data, callback) {
   var body = {'title': data.new_name};

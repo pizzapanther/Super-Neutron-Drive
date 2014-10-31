@@ -85,11 +85,17 @@ GDriveFS.prototype.process_entries = function (self, parentEntry, entries, dirs,
           state: 'closed',
           id: entry.id,
           working: false,
-          parent: parentEntry
+          parent: parentEntry,
+          webViewLink: entry.webViewLink
         });
       }
       
       else {
+        var link = null;
+        if (parentEntry && parentEntry.webViewLink) {
+          link = parentEntry.webViewLink + entry.title;
+        }
+        
         files.push({
           path: path,
           name: entry.title,
@@ -97,7 +103,8 @@ GDriveFS.prototype.process_entries = function (self, parentEntry, entries, dirs,
           retainer: entry.id,
           working: false,
           mimeType: entry.mimeType,
-          parent: parentEntry
+          parent: parentEntry,
+          webViewLink: link
         });
       }
     }
@@ -133,6 +140,27 @@ GDriveFS.prototype.process_entries = function (self, parentEntry, entries, dirs,
   
   self.working = false;
   self.scope.$apply();
+};
+
+GDriveFS.prototype.custom_menu = function (rtype, entry, event) {
+  var self = this;
+  var menu = [];
+  
+  if (rtype == 'dir') {
+    if (entry.webViewLink) {
+      menu.push(['Turn off Web View', 'globe', function ($modal) { self.public_viewing($modal, entry, false); }]);
+    }
+    
+    else {
+      menu.push(['Turn on Web View', 'globe', function ($modal) { self.public_viewing($modal, entry, true); }]);
+    }
+  }
+  
+  if (entry.webViewLink) {
+    menu.push(['View on the Web', 'eye', null, entry.webViewLink]);
+  }
+  
+  return menu;
 };
 
 GDriveFS.prototype.open_file = function (file, range) {
@@ -197,6 +225,34 @@ GDriveFS.prototype.do_rename = function (entry, name) {
   var self = this;
   self.transactions[entry.id] = entry;
   self.postMessage({task: 'rename', new_name: name, fileId: entry.id});
+};
+
+GDriveFS.prototype.public_viewing = function ($modal, entry, make_public) {
+  var self = this;
+  self.transactions[entry.id] = entry;
+  self.postMessage({task: 'webview', make_public: make_public, fileId: entry.id});
+  
+  self.scope.rootScope.$emit('hideRightMenu');
+};
+
+GDriveFS.prototype.pub_callback = function (data) {
+  var self = this;
+  var entry = self.transactions[data.fileId];
+  delete self.transactions[data.fileId];
+  
+  entry.webViewLink = data.webViewLink;
+  if (entry.state == 'open') {
+    self.collapse_listing(entry);
+    if (entry.id) {
+      self.list_dir(entry);
+    }
+    
+    else {
+      self.list_dir();
+    }
+  }
+  
+  apply_updates(self.scope);
 };
 
 GDriveFS.prototype.do_rm = function (entry) {
