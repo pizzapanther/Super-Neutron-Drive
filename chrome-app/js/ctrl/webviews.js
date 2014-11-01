@@ -1,5 +1,6 @@
-ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
+ndrive.controller('WebViewCtrl', function($scope, $rootScope, $timeout) {
   $scope.get_account = $rootScope.get_account;
+  $scope.doing_init = false;
   
   $scope.add_account = function (event) {
     var id = null;
@@ -45,28 +46,39 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
   };
   
   $scope.init_account = function (event, account, postData) {
-    var id = account.id;
-    var webview = document.querySelector("#webview" + id);
-    $scope.show_webview(account);
-    
-    if (!account.postData) {
-      account.postData = [];
+    if ($scope.doing_init) {
+      $timeout(function () {
+        $scope.init_account(event, account, postData);
+      }, 250);
     }
     
-    if (postData) {
-      account.postData.push(postData);
+    else {
+      console.log('GDrive Init', dayTimeStamp(), account.id);
+      
+      $scope.doing_init = true;
+      var id = account.id;
+      var webview = document.querySelector("#webview" + id);
+      $scope.show_webview(account);
+      
+      if (!account.postData) {
+        account.postData = [];
+      }
+      
+      if (postData) {
+        account.postData.push(postData);
+      }
+      apply_updates($scope);
+      webview.src = $scope.server_url(id);
+      webview.addEventListener('newwindow', $scope.handle_popup);
+      webview.addEventListener("loadstop", function (event) {
+        webview.contentWindow.postMessage({
+          task: 'handshake',
+          id: id,
+          oauth: account.oauth,
+          email: account.email
+        }, '*');
+      });
     }
-    apply_updates($scope);
-    webview.src = $scope.server_url(id);
-    webview.addEventListener('newwindow', $scope.handle_popup);
-    webview.addEventListener("loadstop", function (event) {
-      webview.contentWindow.postMessage({
-        task: 'handshake',
-        id: id,
-        oauth: account.oauth,
-        email: account.email
-      }, '*');
-    });
   };
   
   $scope.handle_popup = function (event) {
@@ -156,6 +168,7 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope) {
   };
   
   $scope.hide_webview = function (account) {
+    $scope.doing_init = false;
     account.style = {'z-index': '-2000', 'visibility': 'hidden'};
     account.cancel_style = {display: 'none'};
   };
