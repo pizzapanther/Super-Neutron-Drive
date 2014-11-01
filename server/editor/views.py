@@ -1,3 +1,7 @@
+from __future__ import print_function
+
+import json
+import urllib
 import datetime
 
 from django import http
@@ -26,7 +30,9 @@ def login_view (request):
   if request.user.is_authenticated() and request.user.is_active:
     token = request.user.chrome_token(request.session)
     return http.HttpResponseRedirect(
-      'https://{}.chromiumapp.org/token/{}'.format(initial['app_id'], token)
+      'https://{}.chromiumapp.org/token/{}/{}'.format(
+        initial['app_id'], urllib.quote(request.user.username), token
+      )
     )
     
   form = LoginForm(request.POST or None, initial=initial)
@@ -35,7 +41,9 @@ def login_view (request):
       login(request, form.cleaned_data['user'])
       token = request.user.chrome_token(request.session)
       return http.HttpResponseRedirect(
-        'https://{}.chromiumapp.org/token/{}'.format(initial['app_id'], token)
+        'https://{}.chromiumapp.org/token/{}/{}'.format(
+          initial['app_id'], urllib.quote(request.user.username), token
+        )
       )
       
   context = {
@@ -94,4 +102,22 @@ def get_ekey (request):
   e.delete()
   
   return http.JsonResponse({'result': 'OK', 'key': key})
+  
+def print_map (m):
+  if hasattr(m, 'keys'):
+    for key, value in m.items():
+      settings.JS_ERROR_LOGGER.error("{}: {}".format(key, value))
+      
+  else:
+    settings.JS_ERROR_LOGGER.error("{}".format(m))
+    
+@csrf_exempt
+def report_error (request):
+  data = json.loads(request.body)
+  if data['apikey'] == 'errors-are-a-bitch':
+    print_map({'username': data['username']})
+    print_map({'error': json.loads(data['error'])})
+    print_map(json.loads(data['data']))
+    
+  return http.JsonResponse({'result': 'OK'})
   

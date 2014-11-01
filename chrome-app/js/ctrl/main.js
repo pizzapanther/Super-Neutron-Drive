@@ -49,6 +49,10 @@ ndrive.controller('MainCtrl', function($scope, $rootScope, AuthService) {
   $scope.set_hasher = true;
   $scope.recent_files = [];
   
+  $scope.bugMe = function () {
+    narf();
+  };
+  
   $scope.hide_right = function () {
     $rootScope.$emit('hideRightMenu');
   };

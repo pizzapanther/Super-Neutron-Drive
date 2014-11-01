@@ -20,7 +20,8 @@ ndrive.service("AuthService", function ($http, $rootScope) {
           }
           
           else if (parts[3] === 'token') {
-            $rootScope.neutron_account.token = parts[4];
+            $rootScope.neutron_account.username = decodeURIComponent(parts[4]);
+            $rootScope.neutron_account.token = parts[5];
             apply_updates($rootScope);
             $rootScope.$emit('loggedIn');
             $rootScope.$emit('addMessage', 'logged-in', 'info', 'Login Successful', true);

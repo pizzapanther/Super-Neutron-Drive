@@ -8,4 +8,6 @@ urlpatterns = patterns('editor.views',
   url(r'^generate-api-key$', 'gen_api_key'),
   url(r'^ekey$', 'ekey'),
   url(r'^get-ekey$', 'get_ekey'),
+  
+  url(r'^error$', 'report_error'),
 )

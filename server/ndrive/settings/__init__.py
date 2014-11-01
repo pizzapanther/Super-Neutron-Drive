@@ -1,6 +1,8 @@
 # Django settings for myproject project.
 
 import os
+import logging
+from logging.handlers import RotatingFileHandler
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_DIR = os.path.normpath(os.path.dirname(BASE_DIR))
@@ -168,6 +170,20 @@ LOGGING = {
     },
   }
 }
+
+LOGS_DIR = os.path.join(os.path.dirname(BASE_DIR), 'logs')
+if not os.path.exists(LOGS_DIR):
+  os.makedirs(LOGS_DIR)
+  
+JS_ERROR_LOGGER = logging.getLogger("JS_ERROR_LOGGER")
+JS_ERROR_LOGGER.setLevel(logging.INFO)
+JS_LOG = os.path.join(LOGS_DIR, 'js-errors.log')
+
+formatter = logging.Formatter('%(asctime)s:%(levelname)s: %(message)s')
+handler = RotatingFileHandler(JS_LOG, maxBytes=1024 * 1024, backupCount=9)
+handler.setFormatter(formatter)
+
+JS_ERROR_LOGGER.addHandler(handler)
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 

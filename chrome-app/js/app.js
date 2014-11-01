@@ -12,6 +12,27 @@ var UndoManager = require("ace/undomanager").UndoManager;
 
 var ndrive = angular.module('ndrive', ['ui.utils', 'ui.bootstrap']);
 
+var LAST_EXCEPTION = null;
+
+ndrive.factory('$exceptionHandler', function ($log) {
+  return function (exception, cause) {
+    LAST_EXCEPTION = exception;
+    report_error(exception.message, {cause: '' + cause + '', stack: exception.stack});
+    
+    //default action taken by angular
+    $log.error.apply($log, arguments);
+  };
+});
+
+window.onerror = function (msg, url, line) {
+  report_error(msg, {url: url, line: line});
+};
+
+function report_error (error, data) {
+  var service = angular.element('html').injector().get('ErrorService');
+  service.report_error(error, data);
+}
+
 ndrive.run(function ($rootScope, $modal, $q) {
   $rootScope.manifest = chrome.runtime.getManifest();
   
@@ -22,7 +43,7 @@ ndrive.run(function ($rootScope, $modal, $q) {
   
   $rootScope.google_accounts = [];
   $rootScope.neutron_beams = [];
-  $rootScope.neutron_account = {token: null};
+  $rootScope.neutron_account = {token: null, username: null};
   
   $rootScope.load_editor = function () {
     Editor = ace.edit("editor");
