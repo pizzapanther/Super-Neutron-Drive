@@ -8,12 +8,17 @@ var Neutron = {
   parent: null,
   origin: null,
   id: null,
-  init_token: null
+  init_token: null,
+  share: null
 };
 
 Neutron.auth_init = function (setkey, force_slow) {
   if (setkey) {
     gapi.client.setApiKey(GOOGLE_KEY);
+  }
+  
+  if (!Neutron.share) {
+    Neutron.share = new gapi.drive.share.ShareClient(GOOGLE_CLIENT_ID);
   }
   
   if (!Neutron.parent) {

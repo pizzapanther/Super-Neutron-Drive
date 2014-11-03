@@ -189,6 +189,8 @@ GDriveFS.prototype.custom_menu = function (rtype, entry, event) {
   var self = this;
   var menu = [];
   
+  menu.push(['Sharing', 'share-alt', function ($modal) { self.sharing($modal, entry); }]);
+  
   if (rtype == 'dir') {
     if (entry.webViewLink) {
       menu.push(['Turn off Web View', 'globe', function ($modal) { self.public_viewing($modal, entry, false); }]);
@@ -204,6 +206,14 @@ GDriveFS.prototype.custom_menu = function (rtype, entry, event) {
   }
   
   return menu;
+};
+
+GDriveFS.prototype.sharing = function (modal, entry) {
+  var self = this;
+  self.transactions[entry.id] = entry;
+  self.scope.rootScope.$emit('hideRightMenu');
+  self.scope.rootScope.$emit('show-webview', self.account);
+  self.postMessage({task: 'share', fileId: entry.id});
 };
 
 GDriveFS.prototype.open_file = function (file, range) {

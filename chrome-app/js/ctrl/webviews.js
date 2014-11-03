@@ -196,9 +196,20 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope, $timeout) {
     account.webview.contentWindow.postMessage({task: 'pick-folder'}, '*');
   };
   
+  $scope.show_event = function (event, account) {
+    $scope.show_webview(account);
+  };
+  
+  $scope.hide_event = function (event, account) {
+    $scope.hide_webview(account);
+  };
+  
   $rootScope.$on('add-google-account', $scope.add_account);
   $rootScope.$on('google-account-init', $scope.init_account);
   $rootScope.$on('google-picker-folder', $scope.picker_folder);
   $rootScope.$on('webview-init', $scope.webview_init);
+  $rootScope.$on('show-webview', $scope.show_event);
+  $rootScope.$on('hide-webview', $scope.hide_event);
+  
   window.addEventListener("message", $scope.receive_message, false);
 });

@@ -262,3 +262,15 @@ Drive.newfile = function (data, callback) {
     });
   }
 };
+
+Drive.share = function (data, callback) {
+  Neutron.share.setItemIds([data.fileId]);
+  Neutron.share.showSettingsDialog();
+  
+  document.querySelector('#sharing-btn').style.display = 'block';
+};
+
+Drive.done_sharing = function () {
+  document.querySelector('#sharing-btn').style.display = 'none';
+  Neutron.parent.postMessage({'task': 'hide-webview', id: Neutron.id}, Neutron.origin);
+};
