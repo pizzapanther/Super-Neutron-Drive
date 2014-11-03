@@ -68,16 +68,22 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope, $timeout) {
         account.postData.push(postData);
       }
       apply_updates($scope);
-      webview.src = $scope.server_url(id);
-      webview.addEventListener('newwindow', $scope.handle_popup);
-      webview.addEventListener("loadstop", function (event) {
-        webview.contentWindow.postMessage({
-          task: 'handshake',
-          id: id,
-          oauth: account.oauth,
-          email: account.email
-        }, '*');
-      });
+      if (webview.src) {
+        webview.contentWindow.postMessage({task: 'reauth'}, '*');
+      }
+      
+      else {
+        webview.src = $scope.server_url(id);
+        webview.addEventListener('newwindow', $scope.handle_popup);
+        webview.addEventListener("loadstop", function (event) {
+          webview.contentWindow.postMessage({
+            task: 'handshake',
+            id: id,
+            oauth: account.oauth,
+            email: account.email
+          }, '*');
+        });
+      }
     }
   };
   

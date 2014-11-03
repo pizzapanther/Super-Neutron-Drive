@@ -13,15 +13,21 @@ Drive.list_dir = function (data, callback) {
   var retrievePageOfFiles = function(request, params, result) {
     request.execute(function(resp) {
       if (resp) {
-        result = result.concat(resp.items);
-        if (resp.nextPageToken) {
-          params.pageToken = resp.nextPageToken;
-          request = gapi.client.drive.files.list(params);
-          retrievePageOfFiles(request, params, result);
+        if (resp.error) {
+          callback({folderId: folderId, result: resp});
         }
         
         else {
-          callback({folderId: folderId, result: result});
+          result = result.concat(resp.items);
+          if (resp.nextPageToken) {
+            params.pageToken = resp.nextPageToken;
+            request = gapi.client.drive.files.list(params);
+            retrievePageOfFiles(request, params, result);
+          }
+          
+          else {
+            callback({folderId: folderId, result: result});
+          }
         }
       }
       
@@ -71,7 +77,13 @@ Drive.open = function (data, callback) {
     }
     
     else {
-      callback({title: title, fileId: fileId, error: 'Can Not Open: ' + title});
+      if(response.error) {
+        callback({title: title, fileId: fileId, error: response.error});
+      }
+      
+      else {
+        callback({title: title, fileId: fileId, error: 'Can Not Open: ' + title});
+      }
     }
   });
 };
@@ -103,13 +115,12 @@ Drive.save = function (data, callback) {
     'body': multipartRequestBody});
     
   request.execute(function (file) {
+    var response = {fileId: data.fileId}
     if (file.error) {
-      callback({error: 'Error Saving ' + data.title, fileId: data.fileId});
+      response.error = file.error;
     }
     
-    else {
-      callback({fileId: data.fileId});
-    }
+    callback(response);
   });
 };
 
@@ -214,15 +225,9 @@ Drive.newfile = function (data, callback) {
     metadata.mimeType = "application/vnd.google-apps.folder";
     
     gapi.client.drive.files.insert({'resource': metadata}).execute(function (file) {
-      if (file.error) {
-        callback({error: 'Error Creating ' + data.name, parentId: data.parentId});
-      }
-      
-      else {
-        file.parentId = data.parentId;
-        file.dir = true;
-        callback(file);
-      }
+      file.parentId = data.parentId;
+      file.dir = true;
+      callback(file);
     });
   }
   
@@ -252,14 +257,8 @@ Drive.newfile = function (data, callback) {
       'body': multipartRequestBody});
       
     request.execute(function (file) {
-      if (file.error) {
-        callback({error: 'Error Creating ' + data.name, parentId: data.parentId});
-      }
-      
-      else {
-        file.parentId = data.parentId;
-        callback(file);
-      }
+      file.parentId = data.parentId;
+      callback(file);
     });
   }
 };

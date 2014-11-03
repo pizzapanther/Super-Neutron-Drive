@@ -219,6 +219,7 @@ LocalFS.prototype.collapse_listing = function (entry) {
     entry = this;
   }
   
+  entry.working = false;
   entry.state = 'closed';
   entry.dirs = [];
   entry.files = [];

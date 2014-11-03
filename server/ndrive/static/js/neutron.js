@@ -156,6 +156,10 @@ Neutron.receive_message = function (event) {
       }
     }
     
+    else if (event.data.task === 'reauth') {
+      Neutron.auth_init(true);
+    }
+    
     else if (event.data.task === 'pick-folder') {
       Neutron.pick_folder();
     }
