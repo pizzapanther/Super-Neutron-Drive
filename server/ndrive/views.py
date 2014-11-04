@@ -13,9 +13,13 @@ def gdrive_webview (request, index=None):
   if index is None:
     index = request.GET.get('view', '0')
     
+  tpl = 'gdrive_webview.html'
+  if index == 'test':
+    tpl = 'test.html'
+    
   return TemplateResponse(
     request,
-    'gdrive_webview.html',
+    tpl,
     {
       'index': index,
       'google_key': settings.GOOGLE_KEY,
