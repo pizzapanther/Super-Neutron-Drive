@@ -44,7 +44,10 @@ Neutron.auth_init = function (setkey, force_slow) {
     immediate: immediateAuth,
     scope: [
       'https://www.googleapis.com/auth/drive',
-      'https://www.googleapis.com/auth/drive.scripts'
+      'https://www.googleapis.com/auth/drive.scripts',
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/drive.install',
+      'https://www.googleapis.com/auth/drive.file'
     ]
   };
   
