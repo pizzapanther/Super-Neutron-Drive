@@ -18,7 +18,7 @@ Neutron.auth_init = function (setkey, force_slow) {
   }
   
   if (!Neutron.share) {
-    Neutron.share = new gapi.drive.share.ShareClient(GOOGLE_CLIENT_ID);
+    Neutron.share = new gapi.drive.share.ShareClient(GOOGLE_CLIENT_ID_FULL);
   }
   
   if (!Neutron.parent) {
