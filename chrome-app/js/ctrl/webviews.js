@@ -41,7 +41,7 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope, $timeout) {
   };
   
   $scope.server_url = function (id) {
-    var url = $rootScope.server_url + "/view-" + id + '?dt=' + Date.now();
+    var url = $rootScope.server_url + "/edit?view=" + id + '&dt=' + Date.now();
     return url;
   };
   

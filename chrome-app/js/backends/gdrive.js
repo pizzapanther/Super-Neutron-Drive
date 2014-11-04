@@ -189,20 +189,22 @@ GDriveFS.prototype.custom_menu = function (rtype, entry, event) {
   var self = this;
   var menu = [];
   
-  menu.push(['Sharing', 'share-alt', function ($modal) { self.sharing($modal, entry); }]);
-  
-  if (rtype == 'dir') {
-    if (entry.webViewLink) {
-      menu.push(['Turn off Web View', 'globe', function ($modal) { self.public_viewing($modal, entry, false); }]);
+  if (!entry.info) {
+    menu.push(['Sharing', 'share-alt', function ($modal) { self.sharing($modal, entry); }]);
+    
+    if (rtype == 'dir') {
+      if (entry.webViewLink) {
+        menu.push(['Turn off Web View', 'globe', function ($modal) { self.public_viewing($modal, entry, false); }]);
+      }
+      
+      else {
+        menu.push(['Turn on Web View', 'globe', function ($modal) { self.public_viewing($modal, entry, true); }]);
+      }
     }
     
-    else {
-      menu.push(['Turn on Web View', 'globe', function ($modal) { self.public_viewing($modal, entry, true); }]);
+    if (entry.webViewLink) {
+      menu.push(['View on the Web', 'eye', null, entry.webViewLink]);
     }
-  }
-  
-  if (entry.webViewLink) {
-    menu.push(['View on the Web', 'eye', null, entry.webViewLink]);
   }
   
   return menu;
