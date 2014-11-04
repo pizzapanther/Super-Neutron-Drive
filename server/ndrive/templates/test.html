@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Super Neutron Drive</title>
+    <meta charset="utf-8">
+    <link href='//fonts.googleapis.com/css?family=VT323|Open+Sans' rel='stylesheet' type='text/css'>
+    <style>
+      body {
+        font-family: 'Open Sans', sans-serif;
+        text-align: center;
+        margin: 20px;
+        padding: 0;
+      }
+      
+      h1 {
+        font-family: 'VT323';
+        font-size: 60px;
+        font-weight: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="email"></div>
+    <img src="/static/img/logo.png" alt="">
+    <h1>Super Neutron Drive</h1>
+    <h2>Google Service</h2>
+    <h3 id="sharing-btn" style="display: none;">
+      <a href="javascript: void(0);" onclick="Drive.done_sharing()" style="text-decoration: none;">&laquo; Done Sharing &raquo;</a>
+    </h3>
+    <script>
+      var GOOGLE_KEY = '{{ google_key }}';
+      var GOOGLE_CLIENT_ID = '{{ google_client_id }}';
+      var GOOGLE_APP_ID = '{{ google_app_id }}';
+    </script>
+    
+    <script src="/static/js/neutron-test.js?ds={% now "YmdHis" %}"></script>
+    <script src="/static/js/drive-test.js?ds={% now "YmdHis" %}"></script>
+    
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://apis.google.com/js/client.js"></script>
+  </body>
+</html>
