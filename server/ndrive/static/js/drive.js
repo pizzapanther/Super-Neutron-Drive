@@ -264,6 +264,7 @@ Drive.newfile = function (data, callback) {
 };
 
 Drive.share = function (data, callback) {
+  Neutron.share = new gapi.drive.share.ShareClient(GOOGLE_APP_ID);
   Neutron.share.setItemIds([data.fileId]);
   Neutron.share.showSettingsDialog();
   

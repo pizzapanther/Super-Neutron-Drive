@@ -17,10 +17,6 @@ Neutron.auth_init = function (setkey, force_slow) {
     gapi.client.setApiKey(GOOGLE_KEY);
   }
   
-  if (!Neutron.share) {
-    Neutron.share = new gapi.drive.share.ShareClient(GOOGLE_APP_ID);
-  }
-  
   if (!Neutron.parent) {
     setTimeout(Neutron.auth_init, 300);
     return 0;
