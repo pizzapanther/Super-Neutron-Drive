@@ -12,6 +12,13 @@ var Neutron = {
   share: null
 };
 
+function start () {
+          gapi.load('auth:client,drive-realtime,drive-share,picker', function () {
+            Neutron.auth_init(true);
+          });
+
+}
+
 Neutron.auth_init = function (setkey, force_slow) {
   if (setkey) {
     gapi.client.setApiKey(GOOGLE_KEY);
@@ -20,12 +27,7 @@ Neutron.auth_init = function (setkey, force_slow) {
   if (!Neutron.share) {
     Neutron.share = new gapi.drive.share.ShareClient(GOOGLE_APP_ID);
   }
-  
-  if (!Neutron.parent) {
-    setTimeout(Neutron.auth_init, 300);
-    return 0;
-  }
-  
+    
   if (!Neutron.gdrive_api_loaded) {
     gapi.client.load('drive', 'v2', function () {
       Neutron.gdrive_api_loaded = true;
@@ -59,9 +61,7 @@ Neutron.auth_init = function (setkey, force_slow) {
   gapi.auth.authorize(options, Neutron.auth_callback);
 };
 
-Neutron.auth_callback = function (OAuth) {
-  Neutron.parent.postMessage({'task': 'close-popup', id: Neutron.id}, Neutron.origin);
-  
+Neutron.auth_callback = function (OAuth) {  
   if (OAuth && OAuth.error) {
     Neutron.auth_init(false, true);
     return null;
@@ -95,12 +95,6 @@ Neutron.auth_callback = function (OAuth) {
         request.execute(function (response) {
           document.querySelector("#email").innerHTML = 'Account: ' + response.user.emailAddress;
           immediateAuth = true;
-          Neutron.parent.postMessage({
-            task: 'token',
-            oauth: oauth,
-            email: response.user.emailAddress,
-            id: Neutron.id
-          }, Neutron.origin);
         });
       });
     });
@@ -125,58 +119,12 @@ Neutron.pick_folder_callback = function (data) {
   if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
     var doc = data[google.picker.Response.DOCUMENTS][0];
     var id = doc[google.picker.Document.ID];
-    Neutron.parent.postMessage({'task': 'folder-picked', id: Neutron.id, folderId: id}, Neutron.origin);
+    console.log(id);
   }
   
   else if (data[google.picker.Response.ACTION] == google.picker.Action.CANCEL) {
-    Neutron.parent.postMessage({'task': 'hide-webview', id: Neutron.id}, Neutron.origin);
+    console.log('cancel');
   }
 };
 
-Neutron.receive_message = function (event) {
-  if (event.data && event.data.task) {
-    if (event.data.task === 'handshake') {
-      if (!Neutron.parent) {
-        Neutron.parent = event.source;
-        Neutron.origin = event.origin;
-        Neutron.id = event.data.id;
-        
-        if (event.data.oauth) {
-          document.querySelector("#email").innerHTML = 'Initializing Account: ' + event.data.email;
-          gapi.load('auth:client,drive-realtime,drive-share,picker', function () {
-            gapi.auth.setToken({
-              access_token: event.data.oauth.access_token
-            });
-            
-            Neutron.UserId = event.data.oauth.user_id;
-            Neutron.auth_init(true);
-          });
-        }
-        
-        else {
-          gapi.load('auth:client,drive-realtime,drive-share,picker', function () {
-            Neutron.auth_init(true);
-          });
-        }
-      }
-    }
-    
-    else if (event.data.task === 'reauth') {
-      Neutron.auth_init(true);
-    }
-    
-    else if (event.data.task === 'pick-folder') {
-      Neutron.pick_folder();
-    }
-    
-    else if (Drive[event.data.task]) {
-      Drive[event.data.task](event.data, function (result) {
-        Neutron.parent.postMessage({
-          'task': event.data.task, id: Neutron.id, result: result, pid: event.data.pid
-        }, Neutron.origin);
-      });
-    }
-  }
-};
 
-window.addEventListener("message", Neutron.receive_message, false);
