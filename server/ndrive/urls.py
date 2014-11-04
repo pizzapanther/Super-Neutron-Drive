@@ -17,4 +17,5 @@ urlpatterns = patterns('ndrive.views',
   url(r'^help/neutron-beam-setup$', 'page_view', name="help-nbeam-setup", kwargs={'template': 'pages/help-nbeam-setup.html'}),
   
   url(r'^view-(\d+)$', 'gdrive_webview'),
+  url(r'^edit$', 'gdrive_webview'),
 )

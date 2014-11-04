@@ -9,7 +9,10 @@ def home (request):
 def favicon (request):
   return http.HttpResponseRedirect('/static/favicon.png')
   
-def gdrive_webview (request, index):
+def gdrive_webview (request, index=None):
+  if index is None:
+    index = request.GET.get('view', '0')
+    
   return TemplateResponse(
     request,
     'gdrive_webview.html',
