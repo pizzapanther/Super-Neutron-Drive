@@ -137,6 +137,8 @@ Neutron.pick_folder_callback = function (data) {
 };
 
 Neutron.receive_message = function (event) {
+  document.querySelector('#sharing-btn').style.display = 'none';
+  
   if (event.data && event.data.task) {
     if (event.data.task === 'handshake') {
       if (!Neutron.parent) {
