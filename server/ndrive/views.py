@@ -20,7 +20,7 @@ def gdrive_webview (request, index=None):
       'index': index,
       'google_key': settings.GOOGLE_KEY,
       'google_client_id': settings.GOOGLE_CLIENT_ID,
-      'google_client_id_full': settings.GOOGLE_CLIENT_ID_FULL,
+      'google_app_id': settings.GOOGLE_APP_ID,
     }
   )
   
