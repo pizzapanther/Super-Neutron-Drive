@@ -63,8 +63,8 @@ NBeamFS.prototype.list_fs_callback = function (self, entry, data) {
 NBeamFS.prototype.open_file = function (file, range) {
   var self = this;
   
-  self.scope.rootScope.$emit('addMessage', 'open-file' + file.id, 'info', 'Opening: ' + file.name, null, true);
-  self.scope.rootScope.$emit('openTab', file.id, self.pid, range, function () {
+  self.scope.rootScope.$emit('openTab', file.path, self.pid, range, function () {
+    self.scope.rootScope.$emit('addMessage', 'open-file' + file.id, 'info', 'Opening: ' + file.name, null, true);
     self.beam_service.file_get(file, self, self.open_file_callback);
   });
 };
