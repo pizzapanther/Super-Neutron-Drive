@@ -73,6 +73,10 @@
         content: "\f05a";
       }
       
+      &.info.update:before {
+        content: "\f0aa";
+      }
+      
       &.error:before {
         content: "\f188";
       }
@@ -98,7 +102,7 @@
   position: relative;
 }
 
-.errorModal {
+.errorModal, .messageModal {
   i {
     display: block;
     text-align: center;

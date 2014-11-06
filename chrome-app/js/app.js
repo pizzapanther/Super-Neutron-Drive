@@ -14,6 +14,9 @@ var ndrive = angular.module('ndrive', ['ui.utils', 'ui.bootstrap']);
 
 var LAST_EXCEPTION = null;
 
+var show_update;
+
+
 ndrive.factory('$exceptionHandler', function ($log) {
   return function (exception, cause) {
     LAST_EXCEPTION = exception;
@@ -147,6 +150,13 @@ ndrive.run(function ($rootScope, $modal, $q) {
     
     return deferred.promise;
   };
+  
+  $rootScope.show_update = function (details) {
+    $rootScope.$emit('showUpdate', details);
+    apply_updates($rootScope);
+  };
+  
+  show_update = $rootScope.show_update;
 });
 
 function randomString (len, charSet) {

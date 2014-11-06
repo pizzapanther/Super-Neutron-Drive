@@ -158,6 +158,44 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal, AuthService) 
   $scope.messages = {};
   $scope.recent_files = [];
   $scope.form = {qsearch: ''};
+  $scope.update = null;
+  
+  $scope.show_update = function ($event, details) {
+    $scope.update = details;
+  };
+  
+  $scope.do_update = function (answer) {
+    if (answer == 'yes') {
+      chrome.runtime.reload();
+    }
+  };
+  
+  $scope.check_update = function () {
+    chrome.runtime.requestUpdateCheck(function(status) {
+      if (status == "update_available") {
+        $modal.open({
+          templateUrl: 'modals/confirm.html',
+          controller: ConfirmCtrl,
+          windowClass: 'confirmModal',
+          keyboard: true,
+          resolve: {
+            message: function () { return 'An update is available upon restarting the app.'; },
+            f: function () { return $scope.do_update }
+          }
+        });
+      }
+      
+      else {
+        $rootScope.modal = $modal.open({
+          templateUrl: 'modals/message.html',
+          controller: ModalInstanceCtrl,
+          windowClass: 'loadingModal messageModal',
+          keyboard: true,
+          resolve: {message: function () { return 'No update is available'; }}
+        });
+      }
+    });
+  };
   
   $scope.hide_right = function () {
     $rootScope.$emit('hideRightMenu');
@@ -321,6 +359,7 @@ ndrive.controller('MenuCtrl', function($scope, $rootScope, $modal, AuthService) 
   $rootScope.$on('donateModal', $scope.donate_modal);
   $rootScope.$on('addRecent', $scope.add_recent);
   $rootScope.$on('restoreRecent', $scope.restore_recent);
+  $rootScope.$on('showUpdate', $scope.show_update);
   
   $rootScope.$on('keyboard-quick-search', $scope.go_to_search);
 });

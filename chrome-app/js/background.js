@@ -46,4 +46,13 @@ function load_items (items) {
   }
 }
 
+function update_notification (details) {
+  var win = chrome.app.window.get("ndrive-main");
+  
+  if (win && win.contentWindow.show_update) {
+    win.contentWindow.show_update(details);
+  }
+}
+
 chrome.app.runtime.onLaunched.addListener(launch_main_window);
+chrome.runtime.onUpdateAvailable.addListener(update_notification);

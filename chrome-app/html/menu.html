@@ -5,6 +5,7 @@
 </div>
 <div class="pull-left" id="messages">
   <div ng-repeat="(id, m) in messages" id="message-{{ m.id }}" class="{{ m.mtype }}">{{ m.text }}</div>
+  <div class="info update clickme" ng-if="update" ng-click="do_update('yes')">Click to Update to V{{ update.version }}</div>
 </div>
 <div class="pull-right" id="buttons">
   <div id="quick-search">
@@ -31,6 +32,10 @@
         <li class="divider"></li>
         <li>
           <a class="clickme" ng-click="nbeams_modal()"><i class="fa fa-cloud"></i> Neutron Beams</a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a class="clickme" ng-click="check_update()"><i class="fa fa-arrow-circle-up"></i> Check for Update</a>
         </li>
         <li ng-if="!neutron_account.token">
           <a class="clickme" ng-click="login()"><i class="fa fa-caret-square-o-right"></i> Login</a>
