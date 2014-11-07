@@ -108,6 +108,27 @@ class FileNoobHandler (PostMixin, NeutronHandler):
     else:
       self.data = {'status': 'invalid-path'}
       
+class FileUploadHandler (PostMixin, NeutronHandler):
+  def post_request (self):
+    name = self.json['name']
+    fp = os.path.join(self.path, name)
+    
+    fp = os.path.normpath(fp)
+    if fp.startswith(self.config['code_dir']):
+      fh = open(fp, 'wb')
+      fh.write(base64.b64decode(self.json['content']))
+      fh.close()
+      
+      self.data = {
+        'status': 'OK',
+        'path': fp,
+        'id': self.hashstr(fp),
+        'name': name,
+      }
+      
+    else:
+      self.data = {'status': 'invalid-path'}
+      
 class FileRenameHandler (PostMixin, NeutronHandler):
   def post_request (self):
     name = self.json['name']

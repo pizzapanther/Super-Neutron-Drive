@@ -15,7 +15,8 @@ from tornado.options import options
 from tornado.log import enable_pretty_logging
 
 from nbeam.handlers import SetupHandler
-from nbeam.file_handlers import ListHandler, FileHandler, FileDeleteHandler, FileNoobHandler, FileRenameHandler, FileSaveHandler
+from nbeam.file_handlers import ListHandler, FileHandler, FileDeleteHandler, \
+  FileNoobHandler, FileRenameHandler, FileSaveHandler, FileUploadHandler
 
 def run (config):
   if config['foreground']:
@@ -49,6 +50,7 @@ def server (config):
     (r"/file/save/", FileSaveHandler),
     (r"/file/delete/", FileDeleteHandler),
     (r"/file/new/", FileNoobHandler),
+    (r"/file/upload/", FileUploadHandler),
     (r"/file/rename/", FileRenameHandler),
   ])
   

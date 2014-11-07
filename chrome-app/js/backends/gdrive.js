@@ -365,7 +365,6 @@ GDriveFS.prototype.trash_callback = function (data) {
 };
 
 GDriveFS.prototype.upload_new_file = function (self, name, content, index, entry, files) {
-  self.upload_progress = {name: name};
   self.transactions[entry.id] = [index, entry, files];
   
   self.postMessage({task: 'newupload', name: name, folderId: entry.id, content: content});

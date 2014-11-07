@@ -219,6 +219,37 @@ ndrive.factory('BeamFactory', function ($q, $http, $rootScope, $timeout, BeamSet
       }
     };
     
+    BeamFactory.upload_file = function (fs, name, content, index, entry, files, callback, failed_setup) {
+      BeamFactory.set_callback_args('upload_file', fs, name, content, index, entry, files, callback);
+      if (failed_setup) {
+        callback(fs, name, index, entry, files);
+      }
+      
+      else if (BeamFactory.eready()) {
+        var d = BeamFactory.prepare_data({path: entry.path, name: name, content: btoa(content)});
+        var config = {timeout: 1000 * 60 * 60};
+        $http.post(BeamFactory.beam_url('file/upload/'), d, config).success(function (data) {
+          if (BeamFactory.beam.secure) {
+            data = BeamFactory.decrypt(data);
+          }
+          
+          if (data.status === 'OK') {
+            callback(fs, name, index, entry, files, data);
+          }
+          
+          else {
+            $rootScope.error_message('Error creating: ' + name);
+            callback(fs, name, index, entry, files);
+          }
+        }).error(function (data, status) {
+          if (!BeamFactory.retryable(status)) {
+            $rootScope.error_message('Error creating: ' + name);
+            callback(fs, name, index, entry, files);
+          }
+        });
+      }
+    };
+    
     BeamFactory.file_new = function (fs, entry, name, dir, callback, failed_setup) {
       BeamFactory.set_callback_args('file_new', fs, entry, name, dir, callback);
       if (failed_setup) {

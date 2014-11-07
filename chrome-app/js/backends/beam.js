@@ -1,6 +1,7 @@
 function NBeamFS (name, info, root, scope, pid) {
   LocalFS.call(this, name, info, scope, pid);
   
+  this.id = this.info;
   this.cid = 'NBeamFS';
   this.cls = "fa fa-cloud";
   this.outline = true;
@@ -129,17 +130,16 @@ NBeamFS.prototype.rename_callback = function (self, entry, data) {
   entry.id = data.id;
 };
 
+NBeamFS.prototype.upload_new_file = function (self, name, content, index, entry, files) {
+  self.beam_service.upload_file(self, name, content, index, entry, files, self.upload_file_callback);
+};
+
+NBeamFS.prototype.upload_file_callback = function (self, name, index, entry, files, data) {
+  self.upload_next(self, index, entry, files);
+};
+
 NBeamFS.prototype.save_new_file = function (entry, name, dir) {
   var self = this;
-  var parentId;
-  
-  if (entry.id) {
-    parentId = entry.id;
-  }
-  
-  else {
-    parentId = entry.info;
-  }
   
   self.scope.rootScope.$emit('addMessage', 'new-file', 'info', 'Creating: ' + name, null, true);
   self.beam_service.file_new(self, entry, name, dir, self.save_new_file_callback);
@@ -180,6 +180,17 @@ NBeamFS.prototype.trash_callback = function (self, entry, data) {
   
   self.collapse_listing(entry.parent);
   self.list_dir(entry.parent);
+};
+
+NBeamFS.prototype.custom_menu = function (rtype, entry, event) {
+  var self = this;
+  var menu = [];
+  
+  if (rtype == 'dir') {
+    menu.push(['Upload Files', 'cloud-upload', function ($modal) { self.upload($modal, entry); }]);
+  }
+  
+  return menu;
 };
 
 NBeamFS.store_projects = function (scope) {
