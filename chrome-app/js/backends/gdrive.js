@@ -1,6 +1,7 @@
 function GDriveFS (name, info, root, scope, pid) {
   LocalFS.call(this, name, info, scope, pid);
   
+  this.id = this.info;
   this.cid = 'GDriveFS';
   this.cls = "fa fa-google";
   this.outline = true;
@@ -189,6 +190,10 @@ GDriveFS.prototype.custom_menu = function (rtype, entry, event) {
   var self = this;
   var menu = [];
   
+  if (rtype == 'dir') {
+    menu.push(['Upload Files', 'cloud-upload', function ($modal) { self.upload($modal, entry); }]);
+  }
+  
   if (!entry.info) {
     menu.push(['Sharing', 'share-alt', function ($modal) { self.sharing($modal, entry); }]);
     
@@ -359,21 +364,27 @@ GDriveFS.prototype.trash_callback = function (data) {
   delete self.transactions[data.fileId];
 };
 
+GDriveFS.prototype.upload_new_file = function (self, name, content, index, entry, files) {
+  self.upload_progress = {name: name};
+  self.transactions[entry.id] = [index, entry, files];
+  
+  self.postMessage({task: 'newupload', name: name, folderId: entry.id, content: content});
+};
+
+GDriveFS.prototype.newupload_callback = function (data) {
+  var self = this;
+  var stuff = self.transactions[data.folderId];
+  delete self.transactions[data.folderId];
+  
+  self.upload_next(self, stuff[0], stuff[1], stuff[2]);
+};
+
 GDriveFS.prototype.save_new_file = function (entry, name, dir) {
   var self = this;
-  var parentId;
-  
-  if (entry.id) {
-    parentId = entry.id;
-  }
-  
-  else {
-    parentId = entry.info;
-  }
   
   self.scope.rootScope.$emit('addMessage', 'new-file', 'info', 'Creating: ' + name, null, true);
-  self.transactions[parentId] = entry;
-  self.postMessage({task: 'newfile', name: name, parentId: parentId, dir: dir});
+  self.transactions[entry.id] = entry;
+  self.postMessage({task: 'newfile', name: name, parentId: entry.id, dir: dir});
 };
 
 GDriveFS.prototype.save_new_file_callback = function (data) {

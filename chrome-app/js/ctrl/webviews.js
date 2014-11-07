@@ -112,7 +112,8 @@ ndrive.controller('WebViewCtrl', function($scope, $rootScope, $timeout) {
           rename: 'rename_callback',
           newfile: 'save_new_file_callback',
           trash: 'trash_callback',
-          webview: 'pub_callback'
+          webview: 'pub_callback',
+          newupload: 'newupload_callback'
         };
         
         if (account_tasks.indexOf(event.data.task) > -1 || tasks_callbacks[event.data.task]) {

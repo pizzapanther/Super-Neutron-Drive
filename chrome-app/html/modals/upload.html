@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <h4 class="modal-title">Upload Files: {{ entry.name }}</h4>
+</div>
+<div class="modal-body">
+  <p>
+    <button type="button" class="btn" ng-click="choose_file()">Choose file(s)</button>
+  </p>
+  <p>
+    &nbsp;Files chosen: {{ file_count }}
+  </p>
+  <div ng-if="error">
+    <p class="error-message">{{ error }}</p>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn" ng-click="do_upload()">Upload</button>
+  <button class="btn btn-cancel" ng-click="cancel()">Cancel</button>
+</div>

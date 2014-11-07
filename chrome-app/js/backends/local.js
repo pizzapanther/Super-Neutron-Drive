@@ -175,6 +175,75 @@ LocalFS.prototype.new_file = function ($modal, entry, dir) {
   });
 };
 
+LocalFS.prototype.upload = function ($modal, entry) {
+  var self = this;
+  
+  $modal.open({
+    templateUrl: 'modals/upload.html',
+    controller: UploadCtrl,
+    windowClass: 'uploadModal',
+    keyboard: true,
+    resolve: {
+      entry: function () { return entry; },
+      project: function () { return self; }
+    }
+  });
+  
+  self.scope.rootScope.$emit('hideRightMenu');
+};
+
+LocalFS.prototype.do_upload = function (self, entry, files) {
+  $modal = angular.injector(["ng", "ui.bootstrap"]).get('$modal');
+  self.upload_file(self, 0, entry, files);
+};
+
+LocalFS.prototype.upload_next = function (self, index, entry, files) {
+  index += 1;
+  if (self.uploading) {
+    self.uploading.close('done');
+  }
+  
+  if (index >= files.length) {
+    delete self.uploading;
+    
+    self.collapse_listing(entry);
+    self.list_dir(entry);
+  }
+  
+  else {
+    self.upload_file(self, index, entry, files);
+  }
+};
+
+LocalFS.prototype.upload_file = function (self, index, entry, files) {
+  files[index].file(
+    function (f) {
+      var reader = new FileReader();
+      reader.onloadend = function (e) {
+        self.uploading = $modal.open({
+          templateUrl: 'modals/uploading.html',
+          controller: UploadingCtrl,
+          windowClass: 'uploadModal',
+          keyboard: false,
+          resolve: {
+            entry: function () { return entry; },
+            name: function () { return files[index].name; }
+          }
+        });
+        
+        self.upload_new_file(self, files[index].name, this.result, index, entry, files);
+      };
+      
+      reader.readAsBinaryString(f);
+    },
+    
+    function () {
+      self.upload_next(self, files.length, entry, files);
+      self.scope.rootScope.error_message('Error Reading: ' + file.name);
+    }
+  );
+};
+
 LocalFS.prototype.rename = function ($modal, entry) {
   var self = this;
   

@@ -263,6 +263,39 @@ Drive.newfile = function (data, callback) {
   }
 };
 
+Drive.newupload = function (data, callback) {
+  var metadata = {title: data.name};
+  if (data.folderId) {
+    metadata.parents = [{'id': data.folderId}];
+  }
+  
+  var base64Data = btoa(data.content);
+  var multipartRequestBody =
+    delimiter +
+    'Content-Type: application/json\r\n\r\n' +
+    JSON.stringify(metadata) +
+    delimiter +
+    'Content-Type: application/octet-stream\r\n' +
+    'Content-Transfer-Encoding: base64\r\n' +
+    '\r\n' +
+    base64Data +
+    close_delim;
+    
+  var request = gapi.client.request({
+    'path': '/upload/drive/v2/files',
+    'method': 'POST',
+    'params': {'uploadType': 'multipart'},
+    'headers': {
+      'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+    },
+    'body': multipartRequestBody});
+    
+  request.execute(function (file) {
+    file.folderId = data.folderId;
+    callback(file);
+  });
+};
+
 Drive.share = function (data, callback) {
   Neutron.share = new gapi.drive.share.ShareClient(GOOGLE_APP_ID);
   Neutron.share.setItemIds([data.fileId]);
