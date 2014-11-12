@@ -100,7 +100,7 @@ var ProjectInstanceCtrl = function ($scope, $rootScope, $modalInstance, BeamSetu
       var b = $rootScope.get_beam($scope.form.beam.value);
       if (b.secure) {
         $scope.api_key = 'Retrieving API Key ...';
-        BeamSetupService.generate_api(b.id, $scope.set_api_key);
+        BeamSetupService.generate_api(b.id, false, $scope.set_api_key);
       }
     }
   };
