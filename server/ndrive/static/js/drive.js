@@ -9,7 +9,6 @@ var Drive = {
 
 Drive.list_dir = function (data, callback) {
   var folderId = data.folderId;
-  
   var retrievePageOfFiles = function(request, params, result) {
     request.execute(function(resp) {
       if (resp) {

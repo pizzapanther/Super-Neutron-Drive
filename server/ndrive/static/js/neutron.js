@@ -179,3 +179,20 @@ Neutron.receive_message = function (event) {
 };
 
 window.addEventListener("message", Neutron.receive_message, false);
+
+function report_error (error, data) {
+  var post_data = {
+    error: JSON.stringify(error),
+    data: JSON.stringify(data),
+    apikey: 'errors-are-a-bitch',
+    username: 'GDrive-' + document.querySelector("#email").innerHTML
+  };
+  
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("POST", '/editor/error', true);
+  xmlhttp.send(JSON.stringify(post_data));
+}
+
+window.onerror = function (msg, url, line) {
+  report_error(msg, {url: url, line: line});
+};
