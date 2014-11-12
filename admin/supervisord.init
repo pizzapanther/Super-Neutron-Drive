@@ -29,7 +29,7 @@
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/bin/supervisord
-SUPERVISORCTL=/usr/bin/supervisorctl
+SUPERVISORCTL=/usr/local/bin/supervisorctl
 NAME=supervisord
 DESC=supervisor
 
