@@ -54,3 +54,4 @@ docs/_build/
 app-engine/static/bower_components/*
 chrome-app.zip
 super-neutron.zip
+server/release.txt
