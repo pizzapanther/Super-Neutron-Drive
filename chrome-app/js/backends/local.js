@@ -585,9 +585,8 @@ LocalFS.restore_local = function (i, scope, promise) {
     }
     
     catch (e) {
-      console.error(e);
-      i = i + 1;
       scope.bad_project(scope.local_pids[i].pid);
+      i = i + 1;
       LocalFS.restore_local(i, scope, promise);
     }
   }
@@ -615,8 +614,8 @@ LocalFS.init = function (entry, scope, i, promise) {
   }
   
   else {
-    i = i + 1;
     scope.bad_project(scope.local_pids[i].pid);
+    i = i + 1;
     LocalFS.restore_local(i, scope, promise);
   }
 };
