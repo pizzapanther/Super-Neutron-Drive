@@ -26,7 +26,7 @@ def deploy():
     sudo('su -c "./manage.py migrate" {}'.format(WEB_USER))
     sudo('su -c "./manage.py collectstatic --noinput" {}'.format(WEB_USER))
     
-  #sudo('supervisorctl restart snd')
+  sudo('supervisorctl restart snd')
   
 @hosts(WEB_HOST)
 def upgrade ():
