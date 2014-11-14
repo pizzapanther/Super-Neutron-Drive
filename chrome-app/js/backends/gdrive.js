@@ -33,6 +33,15 @@ GDriveFS.prototype.postMessage = function (data) {
   }
 };
 
+GDriveFS.prototype.transaction_empty = function (id) {
+  if (this.transactions[id] === undefined) {
+    return true;
+  }
+  
+  console.log('Duplicate Transaction: ', id);
+  return false;
+};
+
 GDriveFS.prototype.has_error = function (data) {
   var self = this;
   var error = null;
@@ -76,26 +85,28 @@ GDriveFS.prototype.list_fs = function (parentEntry, entry) {
   var folderId = self.info;
   if (parentEntry) {
     folderId = parentEntry.id;
-    self.transactions[parentEntry.id] = parentEntry;
-    parentEntry.working = true;
   }
   
-  self.working = true;
-  self.postMessage({task: 'list_dir', folderId: folderId});
+  if (self.transaction_empty(folderId)) {
+    self.transactions[folderId] = parentEntry;
+    
+    if (parentEntry) {
+      parentEntry.working = true;
+    }
+    
+    self.working = true;
+    self.postMessage({task: 'list_dir', folderId: folderId});
+  }
 };
 
 GDriveFS.prototype.list_fs_callback = function (listing) {
   var self = this;
-  var parentEntry = null;
+  var parentEntry = self.transactions[listing.folderId];
+  delete self.transactions[listing.folderId];
   
-  if (listing.folderId && self.transactions[listing.folderId]) {
-    parentEntry = self.transactions[listing.folderId];
-    delete self.transactions[listing.folderId];
-  }
-  
-  else if (listing.folderId && self.info !== listing.folderId) {
-    return null;
-  }
+  //else if (listing.folderId && self.info !== listing.folderId) {
+  //  return null;
+  //}
   
   if (self.has_error(listing)) {
     self.collapse_listing(parentEntry);
@@ -217,20 +228,24 @@ GDriveFS.prototype.custom_menu = function (rtype, entry, event) {
 
 GDriveFS.prototype.sharing = function (modal, entry) {
   var self = this;
-  self.transactions[entry.id] = entry;
-  self.scope.rootScope.$emit('hideRightMenu');
-  self.scope.rootScope.$emit('show-webview', self.account);
-  self.postMessage({task: 'share', fileId: entry.id});
+  if (self.transaction_empty(entry.id)) {
+    self.transactions[entry.id] = entry;
+    self.scope.rootScope.$emit('hideRightMenu');
+    self.scope.rootScope.$emit('show-webview', self.account);
+    self.postMessage({task: 'share', fileId: entry.id});
+  }
 };
 
 GDriveFS.prototype.open_file = function (file, range) {
   var self = this;
   
-  self.scope.rootScope.$emit('addMessage', 'open-file' + file.id, 'info', 'Opening: ' + file.name, null, true);
-  self.scope.rootScope.$emit('openTab', file.id, self.pid, range, function () {
-    self.transactions[file.id] = {range: range, entry: file};
-    self.postMessage({task: 'open', title: file.name, fileId: file.id});
-  });
+  if (self.transaction_empty(file.id)) {
+    self.scope.rootScope.$emit('addMessage', 'open-file' + file.id, 'info', 'Opening: ' + file.name, null, true);
+    self.scope.rootScope.$emit('openTab', file.id, self.pid, range, function () {
+      self.transactions[file.id] = {range: range, entry: file};
+      self.postMessage({task: 'open', title: file.name, fileId: file.id});
+    });
+  }
 };
 
 
@@ -263,10 +278,12 @@ GDriveFS.prototype.open_file_callback = function (file) {
 
 GDriveFS.prototype.do_save = function (tab, name, path, text, md5sum, mid, errorHandler) {
   var self = this;
-  self.transactions[tab.file.id] = {tab: tab, errorHandler: errorHandler, mid: mid, md5sum: md5sum};
-  self.postMessage({
-    task: 'save', text: text, title: name, fileId: tab.file.id, mimeType: tab.file.mimeType
-  });
+  if (self.transaction_empty(tab.file.id)) {
+    self.transactions[tab.file.id] = {tab: tab, errorHandler: errorHandler, mid: mid, md5sum: md5sum};
+    self.postMessage({
+      task: 'save', text: text, title: name, fileId: tab.file.id, mimeType: tab.file.mimeType
+    });
+  }
 };
 
 GDriveFS.prototype.do_save_callback = function (save) {
@@ -289,17 +306,21 @@ GDriveFS.prototype.do_save_callback = function (save) {
 
 GDriveFS.prototype.do_rename = function (entry, name) {
   var self = this;
-  self.transactions[entry.id] = entry;
-  self.postMessage({task: 'rename', new_name: name, fileId: entry.id});
+  if (self.transaction_empty(entry.id)) {
+    self.transactions[entry.id] = entry;
+    self.postMessage({task: 'rename', new_name: name, fileId: entry.id});
+  }
 };
 
 GDriveFS.prototype.public_viewing = function ($modal, entry, make_public) {
   var self = this;
-  self.transactions[entry.id] = entry;
-  self.postMessage({task: 'webview', make_public: make_public, fileId: entry.id});
-  
-  self.scope.rootScope.$emit('addMessage', 'public-view', 'info', 'Setting Web View: ' + entry.name, false);
-  self.scope.rootScope.$emit('hideRightMenu');
+  if (self.transaction_empty(entry.id)) {
+    self.transactions[entry.id] = entry;
+    self.postMessage({task: 'webview', make_public: make_public, fileId: entry.id});
+    
+    self.scope.rootScope.$emit('addMessage', 'public-view', 'info', 'Setting Web View: ' + entry.name, false);
+    self.scope.rootScope.$emit('hideRightMenu');
+  }
 };
 
 GDriveFS.prototype.pub_callback = function (data) {
@@ -331,8 +352,10 @@ GDriveFS.prototype.pub_callback = function (data) {
 
 GDriveFS.prototype.do_rm = function (entry) {
   var self = this;
-  self.transactions[entry.id] = entry;
-  self.postMessage({task: 'trash', fileId: entry.id});
+  if (self.transaction_empty(entry.id)) {
+    self.transactions[entry.id] = entry;
+    self.postMessage({task: 'trash', fileId: entry.id});
+  }
 };
 
 GDriveFS.prototype.rename_callback = function (data) {
@@ -365,9 +388,11 @@ GDriveFS.prototype.trash_callback = function (data) {
 };
 
 GDriveFS.prototype.upload_new_file = function (self, name, content, index, entry, files) {
-  self.transactions[entry.id] = [index, entry, files];
-  
-  self.postMessage({task: 'newupload', name: name, folderId: entry.id, content: content});
+  if (self.transaction_empty(entry.id)) {
+    self.transactions[entry.id] = [index, entry, files];
+    
+    self.postMessage({task: 'newupload', name: name, folderId: entry.id, content: content});
+  }
 };
 
 GDriveFS.prototype.newupload_callback = function (data) {
@@ -380,10 +405,11 @@ GDriveFS.prototype.newupload_callback = function (data) {
 
 GDriveFS.prototype.save_new_file = function (entry, name, dir) {
   var self = this;
-  
-  self.scope.rootScope.$emit('addMessage', 'new-file', 'info', 'Creating: ' + name, null, true);
-  self.transactions[entry.id] = entry;
-  self.postMessage({task: 'newfile', name: name, parentId: entry.id, dir: dir});
+  if (self.transaction_empty(entry.id)) {
+    self.scope.rootScope.$emit('addMessage', 'new-file', 'info', 'Creating: ' + name, null, true);
+    self.transactions[entry.id] = entry;
+    self.postMessage({task: 'newfile', name: name, parentId: entry.id, dir: dir});
+  }
 };
 
 GDriveFS.prototype.save_new_file_callback = function (data) {
