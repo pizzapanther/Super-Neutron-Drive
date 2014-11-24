@@ -197,7 +197,7 @@ GRAPPELLI_ADMIN_TITLE = 'Neutron Drive Admin'
 SESSION_COOKIE_NAME = 'snd-sessionid'
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = False
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 DEV = False
 
