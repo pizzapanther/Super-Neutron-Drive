@@ -26,7 +26,13 @@ LocalFree.prototype.open_file = function (fileEntry) {
     
     var reader = new FileReader();
     reader.onloadend = function (e) {
-      self.scope.rootScope.$emit('addTab', fileEntry, this.result, self, function (t) { t.fileEntry = fileEntry; });
+      if (this.result === null) {
+        self.scope.rootScope.error_message('Error Opening: ' + fileEntry.name);
+      }
+      
+      else {
+        self.scope.rootScope.$emit('addTab', fileEntry, this.result, self, function (t) { t.fileEntry = fileEntry; });
+      }
     };
     
     reader.readAsText(f);

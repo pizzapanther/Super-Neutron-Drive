@@ -145,7 +145,13 @@ LocalFS.prototype.open_file = function (file, range) {
       fileEntry.file(function (f) {
         var reader = new FileReader();
         reader.onloadend = function (e) {
-          self.scope.rootScope.$emit('addTab', file, this.result, self);
+          if (this.result === null) {
+            self.scope.rootScope.error_message('Error Opening: ' + file.name);
+          }
+          
+          else {
+            self.scope.rootScope.$emit('addTab', file, this.result, self);
+          }
         };
         
         reader.readAsText(f);

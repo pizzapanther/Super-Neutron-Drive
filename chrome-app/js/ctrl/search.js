@@ -92,11 +92,13 @@ ndrive.controller('SearchCtrl', function($scope, $rootScope) {
     }
     
     if ($scope.form.context == 'current') {
-      var session = tabs[0].session;
-      $scope.currentRange = $scope.searchObj.find(session);
-      
-      if ($scope.currentRange) {
-        session.getSelection().setSelectionRange($scope.currentRange, false);
+      if (tabs.length > 0) {
+        var session = tabs[0].session;
+        $scope.currentRange = $scope.searchObj.find(session);
+        
+        if ($scope.currentRange) {
+          session.getSelection().setSelectionRange($scope.currentRange, false);
+        }
       }
     }
   };

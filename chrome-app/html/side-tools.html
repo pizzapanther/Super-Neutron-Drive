@@ -16,7 +16,7 @@
   </div>
   <div id="projects" class="side-tool" ng-show="current_tool == 'projects'">
     <div>
-      <ul ng-repeat="project in projects" class="project {{ project.state }}" data-pid="{{ project.pid }}" data-type="{{ project.className() }}">
+      <ul ng-repeat="project in projects track by $index" class="project {{ project.state }}" data-pid="{{ project.pid }}" data-type="{{ project.className() }}">
         <li>
           <a class="clickme rm" ng-click="remove_project(project)">&times;</a>
           <a class="psort" project-drag><i class="fa fa-sort"></i></a>

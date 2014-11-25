@@ -293,7 +293,7 @@ GDriveFS.prototype.do_save_callback = function (save) {
   
   if (save.error) {
     if (self.has_error(save)) {}
-    errorHandler();
+    t.errorHandler();
   }
   
   else {
