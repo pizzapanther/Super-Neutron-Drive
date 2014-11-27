@@ -87,6 +87,7 @@ class FileNoobHandler (PostMixin, NeutronHandler):
   def post_request (self):
     name = self.json['name']
     fp = os.path.join(self.path, name)
+    rp = os.path.join(self.basedir, name)
     
     fp = os.path.normpath(fp)
     if fp.startswith(self.config['code_dir']) and not os.path.exists(fp):
@@ -99,7 +100,7 @@ class FileNoobHandler (PostMixin, NeutronHandler):
         
       self.data = {
         'status': 'OK',
-        'path': fp,
+        'path': rp,
         'id': self.hashstr(fp),
         'name': name,
         'dir': self.json['dir']
