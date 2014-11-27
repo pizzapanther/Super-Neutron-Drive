@@ -317,9 +317,7 @@ LocalFS.prototype.do_rename = function (entry, name) {
         entry.id = self.file_id(entry.path);
         
         if (entry.state == 'open') {
-          entry.state = 'closed';
-          entry.dirs = [];
-          entry.files = [];
+          self.collapse_listing(entry);
           self.list_dir(entry);
         }
         

@@ -126,7 +126,18 @@ NBeamFS.prototype.rename_callback = function (self, entry, data) {
   
   entry.name = data.name;
   entry.path = data.path;
-  self.scope.rootScope.$emit('renameTab', self.pid, entry.id, entry);
+  
+  if (entry.state) {
+    if (entry.state == 'open') {
+      self.collapse_listing(entry);
+      self.list_dir(entry);
+    }
+  }
+  
+  else {
+    self.scope.rootScope.$emit('renameTab', self.pid, entry.id, entry);
+  }
+  
   entry.id = data.id;
 };
 
