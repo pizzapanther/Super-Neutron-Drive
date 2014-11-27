@@ -38,6 +38,12 @@ var MODES = {
     cat: MODE_CATS.Q
   },
   
+  "applescript": {
+    name: 'AppleScript',
+    ext: ['scpt', 'applescript'],
+    cat: MODE_CATS.S
+  },
+  
   "asciidoc": {
     name: 'AsciiDoc',
     ext: ['asciidoc'],
@@ -146,10 +152,28 @@ var MODES = {
     cat: MODE_CATS.O
   },
   
+  "eiffel": {
+    name: 'Eiffel',
+    ext: ['e'],
+    cat: MODE_CATS.P
+  },
+  
   "ejs": {
     name: 'Embedded JS',
     ext: ['ejs'],
     cat: MODE_CATS.M
+  },
+  
+  "elixir": {
+    name: 'Elixir',
+    ext: ['ex', 'exs'],
+    cat: MODE_CATS.P
+  },
+  
+  "elm": {
+    name: 'Elm',
+    ext: ['elm'],
+    cat: MODE_CATS.P
   },
   
   "erlang": {
@@ -168,6 +192,18 @@ var MODES = {
     name: 'FreeMarker',
     ext: ['ftl'],
     cat: MODE_CATS.M
+  },
+  
+  "gcode": {
+    name: 'G-Code',
+    ext: ['gcode', 'mpt', 'mpf', 'nc'],
+    cat: MODE_CATS.P
+  },
+  
+  "gitignore": {
+    name: 'GitIgnore',
+    ext: ['gitignore'],
+    cat: MODE_CATS.O
   },
   
   "gherkin": {
@@ -380,6 +416,12 @@ var MODES = {
     cat: MODE_CATS.S
   },
   
+  "minecraft": {
+    name: 'Minecraft',
+    ext: ['mcc'],
+    cat: MODE_CATS.O
+  },
+  
   "mushcode_high_rules": {
     name: 'TinyMUSH High Rules',
     ext: [],
@@ -449,6 +491,12 @@ var MODES = {
   "powershell": {
     name: 'PowerShell',
     ext: ['ps1', 'psm1'],
+    cat: MODE_CATS.S
+  },
+  
+  "praat": {
+    name: 'Praat',
+    ext: ['praat'],
     cat: MODE_CATS.S
   },
   
@@ -630,6 +678,12 @@ var MODES = {
     name: 'TypeScript',
     ext: ['ts'],
     cat: MODE_CATS.S
+  },
+  
+  "vala": {
+    name: 'Vala',
+    ext: ['vala', 'vapi'],
+    cat: MODE_CATS.P
   },
   
   "vbscript": {
