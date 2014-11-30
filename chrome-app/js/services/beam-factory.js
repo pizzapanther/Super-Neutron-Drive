@@ -109,7 +109,7 @@ ndrive.factory('BeamFactory', function ($q, $http, $rootScope, $timeout, BeamSet
         BeamFactory.ekey = new fernet.Secret(data.key);
         BeamFactory.resume();
         
-        $timeout(BeamFactory.erefresh, 1000 * 60 * 50);
+        $timeout(BeamFactory.erefresh, 1000 * 60 * 30);
       }
       
       else {

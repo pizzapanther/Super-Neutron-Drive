@@ -1,5 +1,7 @@
 import os
 import json
+import time
+import types
 import base64
 import hashlib
 import requests
@@ -12,7 +14,7 @@ from tornado.escape import json_encode, json_decode
 
 import nbeam.version
 
-EKEY = ''
+EKEYS = {}
 
 class NeutronHandler (RequestHandler):
   def __init__ (self, *args, **kwargs):
@@ -81,25 +83,35 @@ class NeutronHandler (RequestHandler):
     return False
     
   def encrypt (self, body):
-    global EKEY
-    
     body = json_encode(body)
     
-    f = Fernet(EKEY)
+    f = Fernet(self.ekey)
     return f.encrypt(body)
     
   def decrypt (self, body):
-    global EKEY
+    global EKEYS
     
-    try:
-      f = Fernet(EKEY)
-      return f.decrypt(body)
-      
-    except:
-      self.set_status(409)
-      self.write(json_encode({'status': 'invalid-encryption'}))
-      self.finish()
-      
+    now = time.time()
+    for ts in EKEYS.keys():
+      if now - ts > 1800:
+        del EKEYS[ts]
+        
+    for ts, ekey in EKEYS.items():
+      try:
+        f = Fernet(ekey)
+        data = f.decrypt(body)
+        
+      except:
+        pass
+        
+      else:
+        self.ekey = ekey
+        return data
+        
+    self.set_status(409)
+    self.write(json_encode({'status': 'invalid-encryption'}))
+    self.finish()
+    
   def hashstr (self, path):
     return 'nbeam-' + hashlib.sha256(path).hexdigest()
     
@@ -134,21 +146,32 @@ class SetupHandler (NeutronHandler):
     return url
     
   def post (self):
-    global EKEY
+    global EKEYS
     self.start_request()
     
-    payload = jwt.decode(self.request.body, self.config['api_key'])
-    if payload['user'].lower() == self.config['username'].lower():
-      r = requests.post(self.url(), data={'beam': payload['id'], 'akey': self.config['api_key']})
+    api_keys = self.config['api_key']
+    if type(api_keys) not in (types.TupleType, types.ListType):
+      api_keys = [api_keys]
       
-      if r.status_code == 200:
-        EKEY = str(r.json()['key'])
+    for api_key in api_keys:
+      try:
+        payload = jwt.decode(self.request.body, api_key)
         
-        j = json_encode({'status': 'OK'})
-        self.write(j)
-        self.finish()
-        return None
+      except:
+        pass
         
+      else:
+        if payload['user'].lower() == self.config['username'].lower():
+          r = requests.post(self.url(), data={'beam': payload['id'], 'akey': api_key})
+          
+          if r.status_code == 200:
+            EKEYS[time.time()] = str(r.json()['key'])
+            
+            j = json_encode({'status': 'OK'})
+            self.write(j)
+            self.finish()
+            return None
+            
     self.clear()
     self.set_status(401)
     self.finish("Unauthorized")
