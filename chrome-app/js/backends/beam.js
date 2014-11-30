@@ -201,6 +201,11 @@ NBeamFS.prototype.custom_menu = function (rtype, entry, event) {
     menu.push(['Upload Files', 'cloud-upload', function ($modal) { self.upload($modal, entry); }]);
   }
   
+  else {
+    var link = self.beam_service.beam_view_url(entry.path);
+    menu.push(['View', 'eye', null, link]);
+  }
+  
   return menu;
 };
 

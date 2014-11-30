@@ -30,6 +30,7 @@ DEFAULTS = {
   'pid_file': None,
   'log_file': None,
   'encrypt': True,
+  'allowed_files': None,
 }
 
 def LOAD_DEFAULTS ():
@@ -78,6 +79,10 @@ def get_config (config_dir, **config):
     
   if config['log_file'] is None:
     config['log_file'] = os.path.join(config_dir, 'nbeam.log')
+    write = True
+    
+  if config['allowed_files'] is None:
+    config['allowed_files'] = ('\.(js|json|css|less|map|txt|x?html?|pdf|wav|mp3|mp4|m4v|mov|webm|webp|gif|jpe?g|png|ttf|woff|eot|otf|ogg|ogv|bmp|xml|flv|swf|svg)$',)
     write = True
     
   if write or not os.path.exists(json_config):

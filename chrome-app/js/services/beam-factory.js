@@ -14,6 +14,17 @@ ndrive.factory('BeamFactory', function ($q, $http, $rootScope, $timeout, BeamSet
       return 'http://' + BeamFactory.beam.address + ':' + BeamFactory.beam.port + '/' + endpoint;
     };
     
+    BeamFactory.beam_view_url = function (path) {
+      var token = 'unsecured';
+      if (BeamFactory.beam.secure) {
+        var hs256 = '{"typ": "JWT", "alg": "HS256"}';
+        var exp = parseInt(Date.now() / 1000) + 1800;
+        token = new jwt.WebToken(JSON.stringify({user: BeamFactory.user, exp: exp}), hs256);
+        token = token.serialize(BeamFactory.akey);
+      }
+      return 'http://' + BeamFactory.beam.address + ':' + BeamFactory.beam.port + '/' + token + '/public/' + path;
+    };
+    
     BeamFactory.encrypt = function (data) {
       data = JSON.stringify(data);
       

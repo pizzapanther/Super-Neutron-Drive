@@ -1,10 +1,62 @@
 import os
+import re
+import types
 import shutil
 import base64
+import calendar
 
 from nbeam.handlers import PostMixin, NeutronHandler
 from nbeam.utils import is_text
 
+import jwt
+
+from tornado.web import StaticFileHandler, HTTPError
+
+class StaticHandler (StaticFileHandler):
+  CACHE_MAX_AGE = 1
+  
+  def __init__ (self, *args, **kwargs):
+    self.config = args[0].config
+    super(StaticHandler, self).__init__(*args, **kwargs)
+    
+  def token_valid (self, token):
+    if self.config['encrypt']:
+      api_keys = self.config['api_key']
+      
+      if type(api_keys) not in (types.TupleType, types.ListType):
+        api_keys = [api_keys]
+        
+      for api_key in api_keys:
+        try:
+          payload = jwt.decode(token, api_key)
+          
+        except:
+          pass
+          
+        else:
+          if payload['user'].lower() == self.config['username'].lower():
+            return True
+            
+      return False
+      
+    return True
+    
+  def should_return_304 (self):
+    return False
+    
+  def get (self, path, include_body=True):
+    reobj = re.search('/(\S+?)/public/(.*)', self.request.path)
+    token = reobj.group(1)
+    for regex in self.config['allowed_files']:
+      if re.search(regex, path, re.I):
+        if self.token_valid(token):
+          return super(StaticHandler, self).get(path, include_body)
+          
+        else:
+          raise HTTPError(401)
+          
+    raise HTTPError(403)
+    
 class ListHandler (PostMixin, NeutronHandler):
   def post_request (self):
     dirs_only = 'dirs_only' in self.json and self.json['dirs_only']

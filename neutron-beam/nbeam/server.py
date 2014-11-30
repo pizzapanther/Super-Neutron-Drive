@@ -16,7 +16,8 @@ from tornado.log import enable_pretty_logging
 
 from nbeam.handlers import SetupHandler
 from nbeam.file_handlers import ListHandler, FileHandler, FileDeleteHandler, \
-  FileNoobHandler, FileRenameHandler, FileSaveHandler, FileUploadHandler
+  FileNoobHandler, FileRenameHandler, FileSaveHandler, FileUploadHandler, \
+  StaticHandler
 
 def run (config):
   if config['foreground']:
@@ -52,6 +53,7 @@ def server (config):
     (r"/file/new/", FileNoobHandler),
     (r"/file/upload/", FileUploadHandler),
     (r"/file/rename/", FileRenameHandler),
+    (r"/\S+/public/(.*)", StaticHandler, {'path': config['code_dir']}),
   ])
   
   app.config = config
