@@ -463,6 +463,25 @@ ndrive.controller('SideCtrl', function($scope, $rootScope, $modal, $q, BeamFacto
     }
   };
   
+  $scope.support_shown = function () {
+    $scope.current_tool = 'support';
+    apply_updates($scope);
+    chrome.storage.local.set({'support_shown': Date.now()}, function() {});
+  };
+  
+  chrome.storage.local.get('support_shown', function (obj) {
+    if (obj && obj.support_shown) {
+      //show every 6 months
+      if (Date.now() - obj.support_shown > 6 * 30 * 24 * 60 * 60 * 1000) {
+        $scope.support_shown();
+      }
+    }
+    
+    else {
+      $scope.support_shown();
+    }
+  });
+  
   $rootScope.$on('openFreeAgents', $scope.open_free_agents);
   $rootScope.$on('loadTabs', $scope.open_remembered_tabs);
   $rootScope.$on('save-projects', $scope.save_projects);

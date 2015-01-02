@@ -82,7 +82,7 @@ def get_config (config_dir, **config):
     write = True
     
   if config['allowed_files'] is None:
-    config['allowed_files'] = ('\.(js|json|css|less|map|txt|x?html?|pdf|wav|mp3|mp4|m4v|mov|webm|webp|gif|jpe?g|png|ttf|woff|eot|otf|ogg|ogv|bmp|xml|flv|swf|svg)$',)
+    config['allowed_files'] = ('\.(zip|js|json|css|less|map|txt|x?html?|pdf|wav|mp3|mp4|m4v|mov|webm|webp|gif|jpe?g|png|ttf|woff|eot|otf|ogg|ogv|bmp|xml|flv|swf|svg)$',)
     write = True
     
   if write or not os.path.exists(json_config):

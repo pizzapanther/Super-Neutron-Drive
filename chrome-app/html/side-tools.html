@@ -11,6 +11,9 @@
         <li id="searchToolTab" ng-class="{active: current_tool == 'search'}" ng-click="current_tool = 'search'">
           <span>Search</span>
         </li>
+        <li id="supportToolTab" ng-class="{active: current_tool == 'support'}" ng-click="current_tool = 'support'">
+          <span>Sponsor</span>
+        </li>
       </ul>
     </div>
   </div>
@@ -39,6 +42,27 @@
   <div id="search-tools" class="side-tool" ng-show="current_tool == 'search'">
     <div ng-controller="SearchCtrl">
       <ng-include src="'side-search.html'"></ng-include>
+    </div>
+  </div>
+  <div id="support-tools" class="side-tool" ng-show="current_tool == 'support'">
+    <div>
+      <h3>Sponsor Neutron Drive</h3>
+      <p>
+        Neutron Drive is brought to you for free but requires your support 
+        to continue development and maintenance. Consider sponsoring Neutron Drive 
+        today.
+      </p>
+      <ul>
+        <li>
+          <strong><a href="https://super.neutrondrive.com/members/" target="_blank">Become A Member</a>:</strong> 
+          Membership gives you access to elevated tech support and the ability to 
+          vote on and suggest new features for Neutron Drive.<br><br>
+        </li>
+        <li>
+          <strong><a href="http://neutron.spreadshirt.com/" target="_blank">Neutron Gear</a>:</strong> 
+          Support Neutron Drive with your purchase of a t-shirt or other swag.
+        </li>
+      </ul>
     </div>
   </div>
 </div>
