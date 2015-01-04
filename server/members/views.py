@@ -10,6 +10,7 @@ from django.utils import timezone
 from account.models import Subscription, SUBSCRIPTIONS
 from account.auth import login_required
 from editor.forms import LoginForm
+from members.forms import NameForm
 
 import stripe
 stripe.api_key = settings.STRIPE_SECRET
@@ -90,4 +91,22 @@ def members_cancel (request):
   subs.save()
   
   return http.HttpResponseRedirect(reverse('members:home'))
+  
+@login_required
+def edit_name (request):
+  subs = request.user.subscription()
+  form = NameForm(request.POST or None, initial={'name': subs.name})
+  
+  if request.POST:
+    if form.is_valid():
+      subs.name = form.cleaned_data['name']
+      subs.save()
+      return http.HttpResponseRedirect(reverse('members:home'))
+      
+  context = {
+    'form': form,
+    'action': 'Save',
+    'icon': 'caret-square-o-right',
+  }
+  return TemplateResponse(request, 'members/edit-name.html', context)
   
