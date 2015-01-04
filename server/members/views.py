@@ -64,7 +64,7 @@ def charge (request, level):
   customer = stripe.Customer.create(
     card=token,
     plan=level,
-    email="payinguser@example.com"
+    email=email,
   )
   
   subs = Subscription(
