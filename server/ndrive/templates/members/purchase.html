@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% load static ndrive %}
+{% block title %}{{ level.name }} Membership{% endblock %}
+{% block content %}
+<div id="MembersPage">
+  <div layout="horizontal" layout-align="center">
+    <md-card class="page">
+      <h2>{{ site_name }} {{ level.name }} Membership</h2>
+      <h3>
+        ${{ level.cost|dollars }}/year
+      </h3>
+      <form action="{% url 'members:charge' key %}" method="POST">
+        {% csrf_token %}
+        <script
+          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="{{ STRIPE_KEY }}"
+          data-image="{% static "img/logo.png" %}"
+          data-name="Neutron Drive"
+          data-description="{{ level.name }} Membership"
+          data-amount="{{ level.cost }}">
+        </script>
+      </form>
+    </md-card>
+  </div>
+</div>
+{% endblock content %}

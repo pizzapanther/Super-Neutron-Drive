@@ -1,4 +1,4 @@
-Django==1.7.1
+Django==1.7.2
 django-grappelli==2.6.1
 PyJWT==0.2.3
 cryptography==0.6.1
@@ -7,3 +7,4 @@ gunicorn==19.1.1
 psycopg2==2.5.4
 requests==2.4.3
 python-memcached==1.53
+stripe==1.19.1

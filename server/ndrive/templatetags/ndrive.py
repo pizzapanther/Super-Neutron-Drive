@@ -30,3 +30,8 @@ def isPassword (field):
     return True
     
   return False
+  
+@register.filter
+def dollars (value):
+  return value / 100
+  

@@ -4,6 +4,8 @@ from django.db.models import Q
 from account.models import User
 
 class SignUpForm (forms.ModelForm):
+  cont = forms.CharField(widget=forms.HiddenInput, required=False)
+  
   class Meta:
     model = User
     fields = (

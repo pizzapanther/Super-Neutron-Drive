@@ -1,6 +1,7 @@
 import urllib
 import datetime
 from importlib import import_module
+from collections import OrderedDict
 
 from django.db import models
 from django.conf import settings
@@ -69,6 +70,14 @@ class User (AbstractBaseUser, PermissionsMixin):
   def send_pwreset (self, request):
     EmailVerify.new_verify(self, request, True)
     
+  @cached_method
+  def subscription (self):
+    try:
+      return self.subscription_set.filter(expires__gte=timezone.now())[0]
+      
+    except:
+      return None
+      
 class EmailVerify (models.Model):
   user = models.ForeignKey(User)
   email = models.EmailField()
@@ -125,4 +134,53 @@ class EmailVerify (models.Model):
       verify.save()
       
     return verify
+    
+SUBS_TYPES = (
+  ('initiate', 'Initiate'),
+  ('padawan', 'Padawan'),
+  ('knight', 'Knight'),
+  ('master', 'Master'),
+  ('grand-master', 'Grand Master'),
+)
+
+SUBSCRIPTIONS = OrderedDict([
+  ('initiate', {
+    'cost': 2500,
+    'name': 'Initiate'
+  }),
+  ('padawan', {
+    'cost': 5000,
+    'name': 'Padawan'
+  }),
+  ('knight', {
+    'cost': 9900,
+    'name': 'Knight'
+  }),
+  ('master', {
+    'cost': 30000,
+    'name': 'Master'
+  }),
+  ('grand-master', {
+    'cost': 50000,
+    'name': 'Grand Master'
+  }),
+])
+
+class Subscription (models.Model):
+  user = models.ForeignKey(User)
+  name = models.CharField('Display Name for Credits', max_length=255)
+  stype = models.CharField('Subscription Type', max_length=20, choices=SUBS_TYPES)
+  
+  stripe_id = models.CharField(max_length=255, blank=True, null=True)
+  stripe_subs = models.CharField(max_length=255, blank=True, null=True)
+  
+  expires = models.DateTimeField()
+  cancelled = models.BooleanField(default=False)
+  created = models.DateTimeField(auto_now_add=True)
+  
+  class Meta:
+    ordering = ('-expires',)
+    
+  def __unicode__ (self):
+    return self.user.username
     

@@ -8,6 +8,8 @@ class LoginForm (forms.Form):
   username = forms.CharField()
   password = forms.CharField(widget=forms.PasswordInput)
   
+  cont = forms.CharField(widget=forms.HiddenInput, required=False, initial='/')
+  
   def clean (self):
     cleaned_data = super(LoginForm, self).clean()
     

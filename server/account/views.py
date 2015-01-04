@@ -10,7 +10,12 @@ from .forms import SignUpForm, ResetForm, PasswordForm
 from .models import EmailVerify
 
 def sign_up (request):
-  form = SignUpForm(request.POST or None)
+  cont = request.GET.get('cont', '')
+  init = {}
+  if cont:
+    init = {'cont': cont}
+    
+  form = SignUpForm(request.POST or None, initial=init)
   
   if request.POST:
     if form.is_valid():
@@ -25,12 +30,17 @@ def sign_up (request):
         password=form.cleaned_data['password']
       )
       login(request, user)
+      
+      if form.cleaned_data['cont']:
+        return http.HttpResponseRedirect(form.cleaned_data['cont'])
+        
       return http.HttpResponseRedirect(reverse('account:sign-up-success'))
       
   context = {
     'form': form,
     'icon': 'pencil-square-o',
     'action': 'Sign Up',
+    'continue': cont,
   }
   return TemplateResponse(request, 'account/sign-up.html', context)
   

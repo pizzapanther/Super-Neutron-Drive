@@ -1,0 +1,70 @@
+{% extends "base.html" %}{% load static ndrive %}
+{% block title %}Members{% endblock %}
+{% block content %}
+<div id="MembersPage">
+  <div layout="horizontal" layout-align="center">
+    <md-card class="page">
+      {% if request.user.is_authenticated %}
+      <h2>Neutron Drive Membership - {{ request.user.username }}</h2>
+      {% if subscription %}
+      <h3>Welcome Jedi {{ subscription.get_stype_display }}</h3>
+      <p>
+        Membership Renewal/Expiration: {{ subscription.expires|date:"m/d/Y" }}
+        <br><br>
+        {% if subscription.cancelled %}
+        <strong>Membership Cancelled</strong>
+        {% else %}
+        {% if subscription.stripe_id and not subscription.cancelled %}
+        <a href="{% url "members:cancel" %}" onclick="return confirm('Are you sure you want to cancel your subscription?')">Cancel Membership Renewal &raquo;</a>
+        {% endif %}
+        {% endif %}
+      </p>
+      <hr>
+      <p>
+        <strong>Coming soon!</strong> Look for formal support and feature 
+        submission and voting soon.
+        <br><br>
+        If you have request for support or features
+        please contact <a href="mailto: {{ MEMBER_EMAIL }}">{{ MEMBER_EMAIL }}</a>
+      </p>
+      {% else %}
+      <p>
+        Membership gives you access to elevated tech support and the ability to 
+        vote on and suggest new features for Neutron Drive. You'll also be listed
+        in the Neutron Drive credits.
+      </p>
+      <h3>Choose A Level</h3>
+      <ul>
+        {% for key, subs in subscriptions.items %}
+        <li>
+          <strong><a href="{% url 'members:purchase' key %}">{{ subs.name }}, ${{ subs.cost|dollars }}/year</a></strong>
+          <br><br>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% else %}
+      <h2>Neutron Drive Membership</h2>
+      <p>
+        Membership gives you access to elevated tech support and the ability to 
+        vote on and suggest new features for Neutron Drive. You'll also be listed
+        in the Neutron Drive credits.
+      </p>
+      <hr>
+      <h2>Become A Member Today</h2>
+      <p>
+        <md-button href="{% url "account:sign-up" %}?cont={% url "members:home" %}" class="md-button-raised md-button-colored">
+          Create An Account &raquo;
+        </md-button>
+        <br><br><br>
+        Already have an account?<br><br>
+        <md-button href="{% url "members:login" %}?cont={% url "members:home" %}" class="md-button-raised md-button-colored">
+          Sign In &raquo;
+        </md-button>
+      </p>
+      {% endif %}
+    </md-card>
+    
+  </div>
+</div>
+{% endblock content %}

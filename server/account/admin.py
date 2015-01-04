@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from .models import User, EmailVerify
+from .models import User, EmailVerify, Subscription
 
 class UserForm (forms.ModelForm):
   set_password = forms.CharField(
@@ -60,5 +60,15 @@ class VerifyAdmin (admin.ModelAdmin):
   
   autocomplete_lookup_fields = {'fk': ['user']}
   
+class SubsAdmin (admin.ModelAdmin):
+  list_display = ('user', 'stype', 'expires', 'cancelled', 'created')
+  list_filter = ('cancelled',)
+  search_fields = ('user__email',)
+  date_hierarchy = 'expires'
+  raw_id_fields = ('user',)
+  
+  autocomplete_lookup_fields = {'fk': ['user']}
+  
 admin.site.register(User, UserAdmin)
 admin.site.register(EmailVerify, VerifyAdmin)
+admin.site.register(Subscription, SubsAdmin)

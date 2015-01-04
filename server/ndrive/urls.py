@@ -8,6 +8,7 @@ urlpatterns = patterns('ndrive.views',
   
   url(r'^editor/', include('editor.urls', namespace='editor', app_name='editor')),
   url(r'^account/', include('account.urls', namespace='account', app_name='account')),
+  url(r'^members/', include('members.urls', namespace='members', app_name='members')),
   
   url(r'^$', 'home'),
   url(r'^favicon.ico$', 'favicon'),
