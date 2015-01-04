@@ -25,6 +25,7 @@ def deploy():
     sudo('su -c "pip install -r requirements.txt --user" {}'.format(WEB_USER))
     sudo('su -c "./manage.py migrate" {}'.format(WEB_USER))
     sudo('su -c "./manage.py collectstatic --noinput" {}'.format(WEB_USER))
+    sudo('su -c "lessc /var/www/html/static/css/main.less /var/www/html/static/css/main.css" {}'.format(WEB_USER))
     
   sudo('supervisorctl restart snd')
   
