@@ -8,4 +8,5 @@ urlpatterns = patterns('members.views',
   url(r'^purchase/(\S+)/$', 'purchase', name="purchase"),
   url(r'^charge/(\S+)/$', 'charge', name="charge"),
   url(r'^edit-name/$', 'edit_name', name="edit-name"),
+  url(r'^paypal-success/$', 'paypal_success', name="paypal-success"),
 )

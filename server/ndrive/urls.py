@@ -10,6 +10,8 @@ urlpatterns = patterns('ndrive.views',
   url(r'^account/', include('account.urls', namespace='account', app_name='account')),
   url(r'^members/', include('members.urls', namespace='members', app_name='members')),
   
+  url(r'^paypal-processing/', include('paypal.standard.ipn.urls')),
+  
   url(r'^$', 'home'),
   url(r'^favicon.ico$', 'favicon'),
   url(r'^favicon.png$', 'favicon'),

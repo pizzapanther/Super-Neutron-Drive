@@ -14,6 +14,8 @@ from ndrive.utils.email import send_mail
 
 import jwt
 
+from paypal.standard.ipn.signals import subscription_signup
+
 SESSION_ENGINE = import_module(settings.SESSION_ENGINE)
 
 class User (AbstractBaseUser, PermissionsMixin):
@@ -135,13 +137,13 @@ class EmailVerify (models.Model):
       
     return verify
     
-SUBS_TYPES = (
+SUBS_TYPES = [
   ('initiate', 'Initiate'),
   ('padawan', 'Padawan'),
   ('knight', 'Knight'),
   ('master', 'Master'),
   ('grand-master', 'Grand Master'),
-)
+]
 
 SUBSCRIPTIONS = OrderedDict([
   ('initiate', {
@@ -166,6 +168,10 @@ SUBSCRIPTIONS = OrderedDict([
   }),
 ])
 
+if settings.DEBUG:
+  SUBSCRIPTIONS['special'] = {'cost': 200, 'name': 'Special'}
+  SUBS_TYPES.append(('special', 'Special'))
+  
 class Subscription (models.Model):
   user = models.ForeignKey(User)
   name = models.CharField('Display Name for Credits', max_length=255)
@@ -173,6 +179,9 @@ class Subscription (models.Model):
   
   stripe_id = models.CharField(max_length=255, blank=True, null=True)
   stripe_subs = models.CharField(max_length=255, blank=True, null=True)
+  
+  paypal_id = models.CharField(max_length=255, blank=True, null=True)
+  paypal_subs = models.CharField(max_length=255, blank=True, null=True)
   
   expires = models.DateTimeField()
   cancelled = models.BooleanField(default=False)
@@ -184,3 +193,23 @@ class Subscription (models.Model):
   def __unicode__ (self):
     return self.user.username
     
+  def payment_type (self):
+    if self.stripe_id:
+      return 'Stripe'
+      
+    return 'PayPal'
+    
+def paypal_subs_created (sender, **kwargs):
+  user = User.objects.get(id=sender.custom)
+  
+  subs = Subscription(
+    user = user,
+    name = user.username,
+    stype = sender.item_number,
+    expires = timezone.now() + datetime.timedelta(days=365),
+    paypal_id = sender.payer_email,
+    paypal_subs = sender.subscr_id,
+  )
+  subs.save()
+  
+subscription_signup.connect(paypal_subs_created)

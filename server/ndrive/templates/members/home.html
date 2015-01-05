@@ -20,6 +20,8 @@
         {% else %}
         {% if subscription.stripe_id and not subscription.cancelled %}
         <a href="{% url "members:cancel" %}" onclick="return confirm('Are you sure you want to cancel your subscription?')">Cancel Membership Renewal &raquo;</a>
+        {% elif subscription.paypal_id and not subscription.cancelled %}
+        <a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-recurring-payments&encrypted_profile_id={{ subscription.paypal_subs }}" target="_blank">PayPal Subscription (you can cancel here) &raquo;</a>
         {% endif %}
         {% endif %}
       </p>

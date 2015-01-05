@@ -61,7 +61,7 @@ class VerifyAdmin (admin.ModelAdmin):
   autocomplete_lookup_fields = {'fk': ['user']}
   
 class SubsAdmin (admin.ModelAdmin):
-  list_display = ('user', 'stype', 'expires', 'cancelled', 'created')
+  list_display = ('user', 'stype', 'payment_type', 'expires', 'cancelled', 'created')
   list_filter = ('cancelled',)
   search_fields = ('user__email',)
   date_hierarchy = 'expires'

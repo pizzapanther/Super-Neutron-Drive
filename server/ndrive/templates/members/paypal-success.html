@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load static ndrive %}
+{% block title %}PayPal Payment Successful{% endblock %}
+{% block content %}
+<div id="MembersPage">
+  <div layout="horizontal" layout-align="center">
+    <md-card class="page">
+      <h2>
+        Your PayPal Payment was successful!
+        <br><br>
+        As soon as we receive the funds from PayPal your membership will be activated.
+      </h2>
+      <md-button href="{% url "members:home" %}" class="md-button-raised md-button-colored">
+        Return To Membership &raquo;
+      </md-button>
+    </md-card>
+  </div>
+</div>
+{% endblock content %}

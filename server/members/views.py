@@ -12,6 +12,8 @@ from account.auth import login_required
 from editor.forms import LoginForm
 from members.forms import NameForm
 
+from paypal.standard.forms import PayPalPaymentsForm
+
 import stripe
 stripe.api_key = settings.STRIPE_SECRET
 
@@ -43,6 +45,39 @@ def members_login (request):
   }
   return TemplateResponse(request, 'members/login.html', context)
   
+def paypal_button (request, key, subs):
+  base = 'http'
+  if request.is_secure():
+    base += 's://'
+    
+  else:
+    base += '://'
+    
+  base += request.get_host()
+  
+  paypal_dict = {
+    "cmd": "_xclick-subscriptions",
+    "business": settings.PAYPAL_RECEIVER_EMAIL,
+    "a3": "{:.2f}".format(subs['cost'] / 100),
+    "p3": 1,
+    "t3": "Y",
+    "src": "1",
+    "sra": "1",
+    "lc": "US",
+    "currency_code": "USD",
+    "bn": "PP-SubscriptionsBF:btn_subscribeCC_LG.gif:NonHosted",
+    "no_note": "1",
+    "no_shipping": "1",
+    "item_name": "{} {} Membership".format(settings.SITE_NAME, subs['name']),
+    "item_number": key,
+    "custom": "{}".format(request.user.id),
+    "notify_url": base + reverse('paypal-ipn'),
+    "return_url": base + reverse('members:paypal-success'),
+    "cancel_return": base + reverse('members:home'),
+  }
+  
+  return PayPalPaymentsForm(initial=paypal_dict, button_type="subscribe")
+  
 @login_required
 def purchase (request, level):
   try:
@@ -54,6 +89,7 @@ def purchase (request, level):
   context = {
     'key': level,
     'level': subs,
+    'paypal_button': paypal_button(request, level, subs)
   }
   return TemplateResponse(request, 'members/purchase.html', context)
   
@@ -109,4 +145,8 @@ def edit_name (request):
     'icon': 'caret-square-o-right',
   }
   return TemplateResponse(request, 'members/edit-name.html', context)
+  
+def paypal_success (request):
+  context = {}
+  return TemplateResponse(request, 'members/paypal-success.html', context)
   

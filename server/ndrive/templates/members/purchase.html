@@ -8,17 +8,27 @@
       <h3>
         ${{ level.cost|dollars }}/year
       </h3>
-      <form action="{% url 'members:charge' key %}" method="POST">
-        {% csrf_token %}
-        <script
-          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-          data-key="{{ STRIPE_KEY }}"
-          data-image="{% static "img/logo.png" %}"
-          data-name="Neutron Drive"
-          data-description="{{ level.name }} Membership"
-          data-amount="{{ level.cost }}">
-        </script>
-      </form>
+      <table style="width: auto; border: 0;">
+        <tr>
+          <td style="border: 0;">
+            <form action="{% url 'members:charge' key %}" method="POST">
+              {% csrf_token %}
+              <script
+                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key="{{ STRIPE_KEY }}"
+                data-image="{% static "img/logo.png" %}"
+                data-name="Neutron Drive"
+                data-description="{{ level.name }} Membership"
+                data-amount="{{ level.cost }}">
+              </script>
+            </form>
+          </td>
+          <td style="text-align: center; border: 0;">
+            <strong>PayPal</strong>
+            {{ paypal_button.render }}
+          </td>
+        </tr>
+      </table>
     </md-card>
   </div>
 </div>

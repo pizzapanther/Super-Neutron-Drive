@@ -8,3 +8,4 @@ psycopg2==2.5.4
 requests==2.4.3
 python-memcached==1.53
 stripe==1.19.1
+django-paypal==0.1.5
