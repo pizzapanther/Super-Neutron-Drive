@@ -12,7 +12,7 @@
         Membership Renewal/Expiration: {{ subscription.expires|date:"m/d/Y" }}
         <br><br>
         <strong>Display Name for Credits:</strong><br>
-        <strong>{{ subscription.name }}</strong>&nbsp; -&nbsp; 
+        {{ subscription.name }}&nbsp; -&nbsp; 
         <a href="{% url "members:edit-name" %}">Edit</a>
         <br><br>
         {% if subscription.cancelled %}
