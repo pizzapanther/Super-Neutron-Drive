@@ -99,7 +99,7 @@ var MODES = {
   },
   
   "coldfusion": {
-    name: 'Cold Fusion',
+    name: 'ColdFusion',
     ext: ['cfm', 'cfc', 'cfml'],
     cat: MODE_CATS.S
   },
