@@ -15,7 +15,7 @@ from .forms import LoginForm
 from .auth import requires_token
 from .models import BeamApiKey, EKey
 
-from account.models import User
+from account.models import User, Subscription, SUBS_TYPES
 
 @requires_csrf_token
 def login_view (request):
@@ -120,4 +120,15 @@ def report_error (request):
     print_map(json.loads(data['data']))
     
   return http.JsonResponse({'result': 'OK'})
+  
+@csrf_exempt
+def credits (request):
+  contribs = []
+  for c in SUBS_TYPES:
+    now = timezone.now()
+    subs = list(Subscription.objects.filter(stype=c[0], expires__gte=now).values('name'))
+    contribs.append((c[1], subs))
+    
+  contribs.reverse()
+  return http.JsonResponse({'credits': contribs})
   

@@ -174,7 +174,7 @@ if settings.DEBUG:
   
 class Subscription (models.Model):
   user = models.ForeignKey(User)
-  name = models.CharField('Display Name for Credits', max_length=255)
+  name = models.CharField('Display Name for Credits', max_length=30)
   stype = models.CharField('Subscription Type', max_length=20, choices=SUBS_TYPES)
   
   stripe_id = models.CharField(max_length=255, blank=True, null=True)

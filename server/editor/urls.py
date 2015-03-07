@@ -10,4 +10,6 @@ urlpatterns = patterns('editor.views',
   url(r'^get-ekey$', 'get_ekey'),
   
   url(r'^error$', 'report_error'),
+  
+  url(r'^credits$', 'credits'),
 )

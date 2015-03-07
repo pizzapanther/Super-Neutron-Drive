@@ -32,8 +32,9 @@ var DonateCtrl = function ($scope, $rootScope, $modalInstance) {
   };
 };
 
-var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
+var HelpCtrl = function ($scope, $rootScope, $modalInstance, NeutronService, version) {
   $scope.version = version;
+  $scope.credits = null;
   
   $scope.cancel = function () {
     $modalInstance.dismiss('cancel');
@@ -42,6 +43,14 @@ var HelpCtrl = function ($scope, $rootScope, $modalInstance, version) {
   $scope.donate_modal = function () {
     $modalInstance.dismiss('donate');
     $rootScope.$emit('donateModal');
+  };
+  
+  $scope.get_credits = function () {
+    if (!$scope.credits) {
+      NeutronService.get_credits().success(function (data) {
+        $scope.credits = data.credits;
+      });
+    }
   };
 };
 
