@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% load static ndrive %}
+{% block title %}Support Request{% endblock %}
+{% block content %}
+<div id="SupportPage">
+  <div layout="horizontal" layout-align="center">
+    <md-card class="page" ng-controller="FormController">
+      <h2>
+        We have successfully received your request.<br><br>
+        We will contact you shortly.
+      </h2>
+      <p>
+        <md-button href="../">Back to the Members Area &raquo;</md-button>
+      </p>
+    </md-card>
+  </div>
+</div>
+{% endblock %}

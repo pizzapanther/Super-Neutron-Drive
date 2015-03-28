@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% load static ndrive %}
+{% block title %}Support Request{% endblock %}
+{% block content %}
+<div id="SupportPage">
+  <div layout="horizontal" layout-align="center">
+    <md-card class="page" ng-controller="FormController">
+      <h2>Submit A Support Request</h2>
+      {% include "form.html" %}
+    </md-card>
+  </div>
+</div>
+{% endblock %}
+{% block js %}
+{{ block.super }}
+
+<script>
+  {% include "form-controller.js" %}
+</script>
+{% endblock js %}
