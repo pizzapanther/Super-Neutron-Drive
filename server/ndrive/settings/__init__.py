@@ -142,6 +142,7 @@ INSTALLED_APPS = (
   'ndrive',
   'account',
   'editor',
+  'members',
 )
 
 # A sample logging configuration. The only tangible logging
