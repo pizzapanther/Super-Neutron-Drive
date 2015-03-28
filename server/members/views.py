@@ -10,7 +10,8 @@ from django.utils import timezone
 from account.models import Subscription, SUBSCRIPTIONS
 from account.auth import login_required
 from editor.forms import LoginForm
-from members.forms import NameForm
+from members.forms import NameForm, SupportForm
+from ndrive.utils.email import send_mail
 
 from paypal.standard.forms import PayPalPaymentsForm
 
@@ -149,4 +150,25 @@ def edit_name (request):
 def paypal_success (request):
   context = {}
   return TemplateResponse(request, 'members/paypal-success.html', context)
+  
+@login_required
+def support (request):
+  form = SupportForm(request.POST or None, initial={'email': request.user.email})
+  
+  if request.POST:
+    if form.is_valid():
+      send_mail(
+        'Support Request - ' + form.cleaned_data['email'],
+        [settings.MEMBER_EMAIL],
+        'members/support-request.email',
+        {'request': request, 'email': form.cleaned_data['email'], 'info': form.cleaned_data['request']}
+      )
+      return TemplateResponse(request, 'members/support-success.html', {})
+      
+  context = {
+    'form': form,
+    'action': 'Submit',
+    'icon': 'caret-square-o-right',
+  }
+  return TemplateResponse(request, 'members/support.html', context)
   

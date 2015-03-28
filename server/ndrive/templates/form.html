@@ -20,7 +20,12 @@
   <div class="row inputs">
     <md-input-group>
       <label for="id_{{ field.name }}">{{ field.label }}{% if field.field.required %}<sup>(required)</sup>{% endif %}</label>
+      {% if field|isTextArea %}
+      <br>
+      <textarea name="{{ field.name }}" id="id_{{ field.name }}" ng-model="form.{{ field.name }}"></textarea>
+      {% else %}
       <md-input name="{{ field.name }}" id="id_{{ field.name }}" ng-model="form.{{ field.name }}" type="{{ field.field.widget.input_type }}">
+      {% endif %}
     </md-input-group>
     {% if field.errors %}
     <span class="error">{{ field.errors.0 }}</span>

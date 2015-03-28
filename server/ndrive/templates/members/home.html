@@ -26,12 +26,15 @@
         {% endif %}
       </p>
       <hr>
+      {% if subscription %}
       <p>
-        <strong>Coming soon!</strong> Look for formal support and feature 
-        submission and voting soon.
-        <br><br>
-        If you have request for support or features
-        please contact <a href="mailto: {{ MEMBER_EMAIL }}">{{ MEMBER_EMAIL }}</a>
+        <md-button href="{% url "members:support" %}"  class="md-button-raised md-button-colored">
+          Submit A Support Request &raquo;
+        </md-button>
+      </p>
+      {% endif %}
+      <p>
+        <strong>Coming soon!</strong> Look for feature submission and voting soon.
       </p>
       {% else %}
       <p>

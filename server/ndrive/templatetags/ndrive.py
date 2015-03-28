@@ -32,6 +32,13 @@ def isPassword (field):
   return False
   
 @register.filter
+def isTextArea (field):
+  if isinstance(field.field.widget, forms.Textarea):
+    return True
+    
+  return False
+  
+@register.filter
 def dollars (value):
   return value / 100
   
