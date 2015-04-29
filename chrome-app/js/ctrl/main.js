@@ -408,11 +408,11 @@ ndrive.controller('MainCtrl', function($scope, $rootScope, $timeout, debounce, A
   
   $scope.toggle_spellcheck = function (event) {
     if (PREFS.spellcheck) {
-      $scope.set_prefs(null, {spellcheck: false});
+      $scope.set_prefs(true, {spellcheck: false});
     }
     
     else {
-      $scope.set_prefs(null, {spellcheck: true});
+      $scope.set_prefs(true, {spellcheck: true});
     }
     
     
