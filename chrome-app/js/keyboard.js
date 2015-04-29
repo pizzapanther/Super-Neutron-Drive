@@ -20,6 +20,13 @@ var SHORTCUTS = [
     event: 'save'
   },
   
+  {
+    name: 'Spell Check Toggle',
+    win: 'Alt-S',
+    mac: 'Alt-S',
+    event: 'spellcheck'
+  },
+  
   //{
   //  name: 'Save and New Revision',
   //  win: 'Shift-Ctrl-S',

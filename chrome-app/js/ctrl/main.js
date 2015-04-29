@@ -43,14 +43,72 @@ Tab.prototype.update_hash = function () {
   this.md5sum = md5(this.session.getValue());
 };
 
-ndrive.controller('MainCtrl', function($scope, $rootScope, AuthService) {
+ndrive.controller('MainCtrl', function($scope, $rootScope, $timeout, debounce, AuthService) {
   $scope.tabs = [];
   $scope.current_tab = null;
   $scope.set_hasher = true;
   $scope.recent_files = [];
+  $scope.suggestions = [];
+  $scope.suggestions_menu = [];
   
   $scope.bugMe = function () {
     narf();
+  };
+  
+  $scope.fix_word = function (i) {
+    Editor.session.replace($scope.suggestions[i].range, $scope.suggestions[i].fix);
+    $scope.hide_right();
+  };
+  
+  $scope.generate_spell_menu = function (event, i) {
+    $scope.suggestions_menu.push([
+      $scope.suggestions[i].fix, '', function () { $scope.fix_word(i); }]);
+      
+    if (i + 1 < $scope.suggestions.length) {
+      $scope.generate_spell_menu(event, i + 1);
+    }
+    
+    else {
+      $scope.suggestions_menu.push('-');
+      $scope.suggestions_menu.push(['Cancel', 'times', $scope.hide_right]);
+      $rootScope.$emit('showRightMenu', event, $scope.suggestions_menu);
+    }
+  };
+  
+  $scope.load_suggestions = function (event, word, range) {
+    var suggestions = SpellCheck.dictionary.suggest(word);
+    $scope.suggestions_menu = [];
+    $scope.suggestions = [];
+    $scope.hide_right();
+    
+    if (suggestions && suggestions.length > 0) {
+      for (var i=0; i < suggestions.length; i++) {
+        $scope.suggestions.push({range: range, fix: suggestions[i]});
+      }
+      $scope.suggestions_menu = [['Suggestions', 'life-ring', $scope.hide_right], '-'];
+      $scope.generate_spell_menu(event, 0);
+    }
+    
+    else {
+      $rootScope.$emit('showRightMenu', event, [['No Suggestions Available', 'exclamation-triangle', $scope.hide_right]]);
+    }
+  };
+  
+  $scope.editor_right_click = function (event) {
+    var c = Editor.getCursorPosition();
+    var r = Editor.session.getWordRange(c.row, c.column);
+    var w = Editor.session.getTextRange(r);
+    
+    if (w) {
+      if (w.length > 12) {
+        $rootScope.$emit('showRightMenu', event, [['No Suggestions Available', 'exclamation-triangle', $scope.hide_right]]);
+      }
+      
+      else if (!SpellCheck.dictionary.check(w)) {
+        $rootScope.$emit('showRightMenu', event, [['Loading Suggestions', 'cog fa-spin', null, null]]);
+        $timeout(function () { $scope.load_suggestions(event, w, r); }, 10);
+      }
+    }
   };
   
   $scope.hide_right = function () {
@@ -81,6 +139,14 @@ ndrive.controller('MainCtrl', function($scope, $rootScope, AuthService) {
   $scope.set_session_prefs = function (session) {
     session.setTabSize(PREFS.tabsize);
     session.setUseSoftTabs(PREFS.softab);
+    
+    if (PREFS.spellcheck) {
+      SpellCheck._spell_check(null, session);
+    }
+    
+    else {
+      SpellCheck.clear_markers(session, true);
+    }
     
     switch (PREFS.soft_wrap) {
       case "off":
@@ -158,6 +224,8 @@ ndrive.controller('MainCtrl', function($scope, $rootScope, AuthService) {
     var session = new EditSession(text);
     session.setUndoManager(new UndoManager());
     session.setMode("ace/mode/" + $scope.get_mode(file.name));
+    SpellCheck._spell_check(null, session);
+    SpellCheck.bind_spellcheck(session, debounce);
     
     $scope.set_session_prefs(session);
     $scope.set_editor_prefs();
@@ -338,6 +406,18 @@ ndrive.controller('MainCtrl', function($scope, $rootScope, AuthService) {
     }
   };
   
+  $scope.toggle_spellcheck = function (event) {
+    if (PREFS.spellcheck) {
+      $scope.set_prefs(null, {spellcheck: false});
+    }
+    
+    else {
+      $scope.set_prefs(null, {spellcheck: true});
+    }
+    
+    
+  };
+  
   $scope.close_tab = function (event) {
     $scope.remove_tab($scope.current_tab);
     
@@ -444,6 +524,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope, AuthService) {
   $rootScope.$on('keyboard-error-sim', $scope.error_simulation);
   $rootScope.$on('keyboard-save', $scope.save_current);
   $rootScope.$on('keyboard-save-all', $scope.save_all);
+  $rootScope.$on('keyboard-spellcheck', $scope.toggle_spellcheck);
   $rootScope.$on('keyboard-close-tab', $scope.close_tab);
   $rootScope.$on('keyboard-close-tabs-all', $scope.close_tab_all);
 });

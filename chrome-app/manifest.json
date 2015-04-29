@@ -2,7 +2,7 @@
   "name": "Super Neutron Drive",
   "short_name": "Neutron",
   "description": "The honey badger of code editors",
-  "version": "15.3.1",
+  "version": "15.4.1",
   
   "app": {
     "background": {

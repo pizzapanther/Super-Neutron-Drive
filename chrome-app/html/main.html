@@ -18,7 +18,10 @@
               <a ng-if="is_function(m)" ng-click="m[2](modal)" class="clickme">
                 <i class="fa fa-{{ m[1] }}"></i> {{ m[0] }}
               </a>
-              <a ng-if="!is_function(m)" target="_blank" href="{{ m[3] }}" ng-click="hide_right()">
+              <a ng-if="!is_function(m) && m[3]" target="_blank" href="{{ m[3] }}" ng-click="hide_right()">
+                <i class="fa fa-{{ m[1] }}"></i> {{ m[0] }}
+              </a>
+              <a ng-if="!is_function(m) && !m[3]" ng-click="hide_right()">
                 <i class="fa fa-{{ m[1] }}"></i> {{ m[0] }}
               </a>
             </span>
@@ -47,12 +50,17 @@
     
     <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="/lib/ng/angular.min.js"></script>
+    <script src="/lib/ng/angular-debounce.js"></script>
     <script src="/lib/ng/ui-utils.min.js"></script>
     <script src="/lib/ng/ui-bootstrap-tpls-0.11.0.min.js"></script>
     
-    <script src="/lib/ace.1.1.8/src-min/ace.js"></script>
-    <script src="/lib/ace.1.1.8/src-min/keybinding-emacs.js"></script>
-    <script src="/lib/ace.1.1.8/src-min/keybinding-vim.js"></script>
+    <script src="/lib/ace.1.1.9/src-min/ace.js"></script>
+    <script src="/lib/ace.1.1.9/src-min/keybinding-emacs.js"></script>
+    <script src="/lib/ace.1.1.9/src-min/keybinding-vim.js"></script>
+    <script src="/lib/ace.1.1.9/src-min/ext-language_tools.js"></script>
+    
+    <script src="/lib/typo.js"></script>
+    <script src="/js/spellcheck.js"></script>
     
     <script src="/js/custom-modes/minecraft.js"></script>
     

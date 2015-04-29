@@ -10,7 +10,7 @@ var Editor = null;
 var EditSession = require('ace/edit_session').EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 
-var ndrive = angular.module('ndrive', ['ui.utils', 'ui.bootstrap']);
+var ndrive = angular.module('ndrive', ['ui.utils', 'ui.bootstrap', 'debounce']);
 
 var LAST_EXCEPTION = null;
 
