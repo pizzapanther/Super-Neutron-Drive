@@ -13,7 +13,8 @@ var DEFAULT_PREFS = {
   softab: true,
   behave: true,
   show_login: true,
-  spellcheck: false
+  spellcheck: false,
+  autocomplete: true
 };
 
 var PREFS = {};

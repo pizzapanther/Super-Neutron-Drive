@@ -113,6 +113,7 @@ ndrive.controller('MainCtrl', function($scope, $rootScope, $timeout, debounce, A
   
   $scope.hide_right = function () {
     $rootScope.$emit('hideRightMenu');
+    Editor.focus();
   };
   
   $scope.update_hash = function (index) {
@@ -189,6 +190,16 @@ ndrive.controller('MainCtrl', function($scope, $rootScope, $timeout, debounce, A
     Editor.renderer.setShowGutter(PREFS.gutter);
     Editor.renderer.setShowPrintMargin(PREFS.pmargin);
     Editor.renderer.setPrintMarginColumn(PREFS.print_margin);
+    Editor.setOption('enableSnippets', true);
+    Editor.setOption('enableBasicAutocompletion', true);
+    
+    if (PREFS.autocomplete) {
+      Editor.setOption('enableLiveAutocompletion', true);
+    }
+    
+    else {
+      Editor.setOption('enableLiveAutocompletion', false);
+    }
     
     $('body').attr("class", PREFS.theme + "-theme");
   };

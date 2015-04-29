@@ -46,7 +46,7 @@ var MODES = {
   
   "asciidoc": {
     name: 'AsciiDoc',
-    ext: ['asciidoc'],
+    ext: ['asciidoc', 'adoc'],
     cat: MODE_CATS.M
   },
   
