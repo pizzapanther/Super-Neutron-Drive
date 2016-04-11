@@ -113,7 +113,12 @@ def print_map (m):
     
 @csrf_exempt
 def report_error (request):
-  data = json.loads(request.body)
+  try:
+    data = json.loads(request.body)
+    
+  except:
+    raise http.Http404
+    
   if data['apikey'] == 'errors-are-a-bitch':
     print_map({'username': data['username']})
     print_map({'error': json.loads(data['error'])})
