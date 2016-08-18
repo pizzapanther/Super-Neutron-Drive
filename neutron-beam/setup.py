@@ -20,7 +20,7 @@ setup(
     install_requires = [
       'tornado==4.0.2',
       'begins==0.9',
-      'python-daemon==1.5.5',
+      'python-daemon==2.1.1',
       'cryptography>=1.4',
       'PyJWT>=1.4.2',
       'pycrypto',
